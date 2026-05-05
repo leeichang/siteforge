@@ -1,16 +1,23 @@
 # SiteForge — 網站建構器專案規劃
 
 > 類比 Wix / GoDaddy / Bricks Builder 的 AI 網站建構器
+> **Template First, AI Assist** — 從模板快速啟動，AI 幫你微調細節
 > 技術棧：Vue 3 + .NET 8 + SqlSugar + PostgreSQL + AI
 
 ---
 
 ## 一、專案願景
 
-讓使用者透過自然語言描述，搭配拖拽式視覺編輯器，快速建立專業網站。不需要寫任何程式碼。
+讓使用者從專業模板開始，搭配 AI 微調與視覺編輯器，快速建立專業網站。不需要從零設計。
+
+### 核心理念：Template First, AI Assist
+1. **選擇模板** → 從內建產業模板開始（防偽驗證 / 掃碼集點 / 產品介紹 / 生產履歷 / DPP）
+2. **AI 微調** → 用自然語言描述小修改（「圖片縮到 1/3」、「文字間距加大」）
+3. **視覺編輯** → GrapesJS 精細調整（拖拽、改樣式、換圖片）
 
 ### 核心價值
-- **AI First**：描述即可生成頁面，降低建站門檻
+- **快速啟動**：專業模板讓你 5 分鐘有雛形
+- **AI 輔助**：自然語言微調，不用手動調 CSS
 - **所見即所得**：即時預覽，編輯與成果一致
 - **一鍵部署**：從編輯到上線一條龍
 
@@ -29,11 +36,11 @@
 ┌─────────────────────▼────────────────────────────────┐
 │              Backend Gateway (.NET 8)                 │
 │  ┌─────────────┐ ┌──────────┐ ┌────────────────────┐ │
-│  │ Core Service│ │ AI Orc  │ │ Deploy Service     │ │
-│  │ Page CRUD   │ │ LLM Call│ │ Static Render      │ │
-│  │ Section Mgr │ │ Prompt  │ │ DNS + SSL          │ │
-│  │ Theme Mgr   │ │ Image   │ │ CDN Push           │ │
-│  │ Widget Temp │ │ Gen     │ │                    │ │
+│  │ Core Service│ │ AI Assist│ │ Deploy Service     │ │
+│  │ Page CRUD   │ │ Prompt  │ │ Static Render      │ │
+│  │ Section Mgr │ │ Refine  │ │ DNS + SSL          │ │
+│  │ Theme Mgr   │ │ Adjust  │ │ CDN Push           │ │
+│  │ Widget Temp │ │ Layout  │ │                    │ │
 │  └──────┬──────┘ └────┬─────┘ └────────────────────┘ │
 │         └─────────────┴─────────────────────────┐    │
 │  SqlSugar ORM + PostgreSQL                     │    │
@@ -119,18 +126,23 @@ SiteForge.sln
 └──────┴──────────────────────────────┴────────────────────────┘
 ```
 
-### 左側 Icon Bar (GrapesJS Panels 配置)
+### 左側 Icon Bar (重新設計 — Template First)
 
-| Icon | 功能 | 對應 GrapesJS Panel |
-|------|------|---------------------|
-| 🧩 Blocks | 區塊面板 | `show-blocks` — 拖拽區塊 (Hero, Features, Team, FAQ, Contact, Footer...) |
-| 🗂️ Layers | 層級結構 | `show-layers` — DOM tree 視圖，可選中/重排/刪除區塊 |
-| ⚡ Code | 代碼編輯 | `open-code` — 手動編輯選中組件的 HTML |
-| 🤖 AI | AI 助手 | 自訂 AI Assistant 側邊面板 (對話式生成/修改) |
-| 🎨 Styles | 樣式面板 | `show-styles` — GrapesJS Style Manager (背景/間距/邊框/陰影) |
-| 📱 Devices | 裝置切換 | **不是 icon 按鈕**，放在 Header 右側按鈕組 (Desktop / Tablet / Mobile) |
+| 順序 | Icon | 功能 | 對應 GrapesJS Panel / 自訂 |
+|:---:|------|------|---------------------------|
+| 1 | 📁 Project | **專案管理** | 自訂 — 頁面列表、專案設定、域名配置 |
+| 2 | 🗂️ Layers | 層級結構 | `show-layers` — DOM tree 視圖，可選中/重排/刪除區塊 |
+| 3 | 🧩 Blocks | **區塊模板** | `show-blocks` — 內建模板區塊 (Hero, Features, Team, FAQ, Contact, Footer...) |
+| 4 | 🎨 Global CSS | 全域樣式 | 自訂 — 主題色、字型、間距、圓角設定 |
+| 5 | 🖼️ Assets | 資源庫 | `show-assets` — 圖片、影片、SVG 資源管理 |
+| 6 | ⚡ Element CSS | 元素樣式 | `show-styles` — 選中元素的 Style Manager |
+| 7 | 🤖 AI Chatbot | AI 助手 | 自訂 — 對話式微調面板 |
 
-> **重要**：GrapesJS 提供了 Blocks / Layers / Styles / Code / Devices 等面板開箱即用，我們只需要自訂 **AI 助手** 面板。
+### Top Bar — Device Selector
+放在 Header 右側：
+`[Desktop] [Tablet] [Mobile]` — 響應式預覽切換
+
+> **設計原則**：第一個面板永遠是 **Project**，讓使用者先管理頁面結構，再進入編輯。
 
 ---
 

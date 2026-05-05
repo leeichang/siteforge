@@ -62,7 +62,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity, new()
         entity.CreatedAt = DateTime.UtcNow;
         entity.UpdatedAt = DateTime.UtcNow;
         
-        await _db.Insertable(entity).ExecuteReturnSnowflakeIdAsync();
+        await _db.Insertable(entity).ExecuteCommandAsync();
         return entity;
     }
 
@@ -74,7 +74,7 @@ public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity, new()
             entity.CreatedAt = DateTime.UtcNow;
             entity.UpdatedAt = DateTime.UtcNow;
         }
-        await _db.Insertable(entities).ExecuteReturnSnowflakeIdAsync();
+        await _db.Insertable(entities).ExecuteCommandAsync();
     }
 
     public virtual async Task<bool> UpdateAsync(T entity)

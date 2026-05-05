@@ -1,4 +1,5 @@
 using SqlSugar;
+using Microsoft.Extensions.Configuration;
 using SiteForge.Core.Entities;
 
 namespace SiteForge.Infrastructure.Data;
@@ -452,8 +453,8 @@ public class AppDbContext
             }
         };
 
-        // 先插入 Layouts 取得 ID
-        var layoutIds = await db.Insertable(layouts).ExecuteReturnSnowflakeIdListAsync();
+        // 先插入 Layouts，BaseEntity 已預先產生 Guid ID。
+        await db.Insertable(layouts).ExecuteCommandAsync();
         
         // 再插入 LayoutZones（已透過 Navigation 自動處理）
         foreach (var layout in layouts)
