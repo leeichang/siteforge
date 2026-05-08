@@ -7,7 +7,7 @@ export const useThemeStore = defineStore('theme', () => {
 
   // Apply theme class to html element
   function apply(t) {
-    document.documentElement.className = `theme-${t}`
+    document.documentElement.setAttribute('data-theme', t)
     localStorage.setItem('sf-theme', t)
   }
 

@@ -1,423 +1,429 @@
 <template>
-  <main class="login-page">
-    <section class="product-preview" aria-label="SiteForge preview">
-      <div class="brand-lockup">
-        <div class="brand-mark">SF</div>
+  <main class="sf-login">
+    <section class="sf-login-preview">
+      <div class="sf-login-brand">
+        <span class="material-symbols-outlined material-symbols-filled" style="font-size: 40px; color: var(--sf-primary);">architecture</span>
         <div>
-          <p class="sf-kicker">SiteForge</p>
-          <h1>Template First, AI Assist</h1>
+          <p style="font-size: 12px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; color: var(--sf-on-surface-variant);">SiteForge</p>
+          <h1 style="font-size: 32px; font-weight: 700; line-height: 40px; color: var(--sf-on-surface); margin-top: 4px;">AI 網站建置器</h1>
         </div>
       </div>
 
-      <div class="preview-frame">
-        <div class="preview-toolbar">
-          <span></span>
-          <span></span>
-          <span></span>
-          <strong>Editor workspace</strong>
-        </div>
-        <div class="preview-body">
-          <aside class="preview-rail">
-            <span class="active"></span>
-            <span></span>
-            <span></span>
-            <span></span>
-          </aside>
-          <div class="preview-canvas">
-            <div class="preview-hero">
-              <small>Product launch</small>
-              <h2>專業網站從模板開始</h2>
-              <p>Hero、Features、FAQ、Contact 直接拖曳，內容與樣式可即時保存。</p>
+      <div class="sf-login-visual">
+        <div class="sf-login-browser">
+          <div class="sf-browser-bar">
+            <span></span><span></span><span></span>
+          </div>
+          <div class="sf-browser-body">
+            <div class="sf-browser-sidebar">
+              <span class="sf-browser-active"></span>
+              <span></span><span></span><span></span>
             </div>
-            <div class="preview-grid">
-              <div></div>
-              <div></div>
-              <div></div>
+            <div class="sf-browser-canvas">
+              <div class="sf-browser-hero">
+                <small style="color: var(--sf-on-surface-variant);">Product launch</small>
+                <h3 style="font-size: 18px; font-weight: 600; margin: 8px 0; color: var(--sf-on-surface);">專業網站從模板開始</h3>
+                <p style="font-size: 13px; color: var(--sf-on-surface-variant);">拖曳區塊，AI 輔助編輯</p>
+              </div>
+              <div class="sf-browser-grid">
+                <div></div><div></div><div></div>
+              </div>
             </div>
           </div>
-          <aside class="preview-props">
-            <p>Style Manager</p>
-            <span></span>
-            <span class="short"></span>
-            <span></span>
-          </aside>
         </div>
       </div>
 
-      <div class="preview-stats">
+      <div class="sf-login-stats">
         <div>
           <strong>7</strong>
           <span>系統區塊</span>
         </div>
         <div>
-          <strong>3</strong>
-          <span>裝置預覽</span>
+          <strong>12+</strong>
+          <span>專業模板</span>
         </div>
         <div>
-          <strong>1</strong>
-          <span>鍵發佈</span>
+          <strong>GPT</strong>
+          <span>AI 文案</span>
         </div>
       </div>
     </section>
 
-    <section class="auth-panel" aria-label="Account form">
-      <div class="auth-header">
-        <p class="sf-kicker">{{ isLogin ? 'Welcome back' : 'Create account' }}</p>
-        <h2>{{ isLogin ? '登入工作台' : '建立 SiteForge 帳號' }}</h2>
-        <p>{{ isLogin ? '繼續編輯你的網站與發佈內容。' : '建立帳號後會直接進入網站管理。' }}</p>
+    <section class="sf-login-form-wrap">
+      <div class="sf-login-card">
+        <div class="sf-login-tabs">
+          <button 
+            :class="['sf-login-tab', { active: mode === 'login' }]" 
+            @click="mode = 'login'"
+          >
+            登入
+          </button>
+          <button 
+            :class="['sf-login-tab', { active: mode === 'register' }]" 
+            @click="mode = 'register'"
+          >
+            註冊
+          </button>
+        </div>
+
+        <form @submit.prevent="handleSubmit">
+          <div class="sf-login-field">
+            <label class="sf-label-sm" style="color: var(--sf-on-surface-variant); display: block; margin-bottom: 8px;">Email</label>
+            <div class="sf-login-input-wrap">
+              <span class="material-symbols-outlined sf-login-input-icon">mail</span>
+              <input 
+                v-model="form.email" 
+                type="email" 
+                class="sf-input sf-login-input" 
+                placeholder="you@example.com"
+                required
+              />
+            </div>
+          </div>
+
+          <div class="sf-login-field" style="margin-top: 16px;">
+            <label class="sf-label-sm" style="color: var(--sf-on-surface-variant); display: block; margin-bottom: 8px;">Password</label>
+            <div class="sf-login-input-wrap">
+              <span class="material-symbols-outlined sf-login-input-icon">lock</span>
+              <input 
+                v-model="form.password" 
+                :type="showPassword ? 'text' : 'password'" 
+                class="sf-input sf-login-input" 
+                placeholder="輸入密碼"
+                required
+              />
+              <button type="button" class="sf-login-eye" @click="showPassword = !showPassword">
+                <span class="material-symbols-outlined">{{ showPassword ? 'visibility_off' : 'visibility' }}</span>
+              </button>
+            </div>
+          </div>
+
+          <div v-if="mode === 'register'" class="sf-login-field" style="margin-top: 16px;">
+            <label class="sf-label-sm" style="color: var(--sf-on-surface-variant); display: block; margin-bottom: 8px;">Display Name</label>
+            <div class="sf-login-input-wrap">
+              <span class="material-symbols-outlined sf-login-input-icon">person</span>
+              <input 
+                v-model="form.displayName" 
+                type="text" 
+                class="sf-input sf-login-input" 
+                placeholder="Your name"
+              />
+            </div>
+          </div>
+
+          <button type="submit" class="sf-btn-primary sf-login-submit" :disabled="loading">
+            <span v-if="loading" class="material-symbols-outlined" style="animation: spin 1s linear infinite;">progress_activity</span>
+            <span>{{ mode === 'login' ? '登入' : '註冊' }}</span>
+          </button>
+        </form>
+
+        <p v-if="error" class="sf-login-error">{{ error }}</p>
+
+        <p class="sf-login-hint">
+          {{ mode === 'login' ? '還沒有帳號？' : '已有帳號？' }}
+          <a href="#" @click.prevent="mode = mode === 'login' ? 'register' : 'login'">
+            {{ mode === 'login' ? '立即註冊' : '立即登入' }}
+          </a>
+        </p>
       </div>
-
-      <form @submit.prevent="handleSubmit" class="auth-form">
-        <label>
-          Email
-          <input v-model="form.email" class="sf-input" type="email" autocomplete="email" required placeholder="you@example.com" />
-        </label>
-        <label>
-          Password
-          <input v-model="form.password" class="sf-input" type="password" autocomplete="current-password" required placeholder="輸入密碼" />
-        </label>
-        <label v-if="!isLogin">
-          Display name
-          <input v-model="form.displayName" class="sf-input" type="text" autocomplete="name" placeholder="你的名稱" />
-        </label>
-
-        <button type="submit" class="sf-button primary submit-button">
-          {{ isLogin ? '登入' : '註冊' }}
-        </button>
-      </form>
-
-      <p class="toggle">
-        {{ isLogin ? '還沒有帳號？' : '已有帳號？' }}
-        <a href="#" @click.prevent="isLogin = !isLogin">
-          {{ isLogin ? '建立帳號' : '回到登入' }}
-        </a>
-      </p>
-
-      <p v-if="error" class="error" role="alert">{{ error }}</p>
     </section>
   </main>
 </template>
 
 <script setup>
-import { ref } from 'vue'
+import { ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 
 const router = useRouter()
 const auth = useAuthStore()
-const isLogin = ref(true)
-const error = ref('')
-const form = ref({ email: '', password: '', displayName: '' })
 
-async function handleSubmit() {
+const mode = ref('login')
+const loading = ref(false)
+const error = ref('')
+const showPassword = ref(false)
+
+const form = reactive({
+  email: '',
+  password: '',
+  displayName: ''
+})
+
+const handleSubmit = async () => {
+  loading.value = true
   error.value = ''
   try {
-    if (isLogin.value) {
-      await auth.login(form.value.email, form.value.password)
+    if (mode.value === 'login') {
+      await auth.login(form.email, form.password)
     } else {
-      await auth.register(form.value.email, form.value.password, form.value.displayName)
+      await auth.register({
+        email: form.email,
+        password: form.password,
+        displayName: form.displayName
+      })
     }
     router.push('/')
   } catch (e) {
-    error.value = e.response?.data?.message || e.message || '發生錯誤'
+    error.value = e.response?.data?.message || e.message || '操作失敗'
+  } finally {
+    loading.value = false
   }
 }
 </script>
 
 <style scoped>
-.login-page {
+.sf-login {
   min-height: 100vh;
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(380px, 0.85fr);
-  gap: 0;
-}
-
-.product-preview {
-  position: relative;
   display: flex;
-  min-height: 100vh;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 46px;
-  overflow: hidden;
-  background:
-    linear-gradient(120deg, rgba(19, 111, 99, 0.94), rgba(24, 92, 118, 0.88)),
-    linear-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-  background-size: auto, 34px 34px, 34px 34px;
-  color: white;
+  background: var(--sf-bg);
+  color: var(--sf-on-bg);
 }
 
-.brand-lockup {
+.sf-login-preview {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 48px;
+  background: linear-gradient(135deg, var(--sf-surface-container-low) 0%, var(--sf-bg) 100%);
+}
+
+.sf-login-brand {
   display: flex;
   align-items: center;
-  gap: 14px;
-  max-width: 640px;
+  gap: 16px;
+  margin-bottom: 32px;
 }
 
-.brand-mark {
-  width: 48px;
-  height: 48px;
-  display: grid;
-  place-items: center;
-  border: 1px solid rgba(255, 255, 255, 0.38);
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.12);
-  font-weight: 900;
+.sf-login-visual {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.brand-lockup .sf-kicker {
-  color: #bff8e9;
-}
-
-.brand-lockup h1 {
-  max-width: 620px;
-  font-size: clamp(34px, 5vw, 66px);
-  line-height: 1.02;
-}
-
-.preview-frame {
-  width: min(920px, 100%);
-  margin: 48px 0;
-  border: 1px solid rgba(255, 255, 255, 0.34);
-  border-radius: 12px;
-  background: rgba(255, 255, 255, 0.12);
-  box-shadow: 0 28px 80px rgba(3, 18, 22, 0.38);
+.sf-login-browser {
+  width: 100%;
+  max-width: 500px;
+  background: var(--sf-surface-container);
+  border: 1px solid var(--sf-outline-variant);
+  border-radius: 16px;
   overflow: hidden;
+  box-shadow: 0 20px 60px var(--sf-shadow);
 }
 
-.preview-toolbar {
-  height: 48px;
+.sf-browser-bar {
+  height: 36px;
+  background: var(--sf-surface-container-high);
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 0 16px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.22);
-  background: rgba(7, 27, 31, 0.26);
 }
 
-.preview-toolbar span {
+.sf-browser-bar span {
   width: 10px;
   height: 10px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.55);
+  background: var(--sf-outline-variant);
 }
 
-.preview-toolbar strong {
-  margin-left: 8px;
-  font-size: 13px;
+.sf-browser-body {
+  display: flex;
+  height: 300px;
 }
 
-.preview-body {
-  display: grid;
-  grid-template-columns: 56px minmax(0, 1fr) 190px;
-  min-height: 370px;
+.sf-browser-sidebar {
+  width: 48px;
+  background: var(--sf-surface-container-low);
+  border-right: 1px solid var(--sf-outline-variant);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 16px 0;
+  gap: 16px;
 }
 
-.preview-rail,
-.preview-props {
-  background: rgba(8, 32, 37, 0.34);
-  padding: 16px;
-}
-
-.preview-rail {
-  display: grid;
-  align-content: start;
-  gap: 12px;
-}
-
-.preview-rail span {
+.sf-browser-sidebar span {
   width: 24px;
   height: 24px;
   border-radius: 6px;
-  background: rgba(255, 255, 255, 0.24);
+  background: var(--sf-surface-variant);
 }
 
-.preview-rail span.active {
-  background: #f6c177;
+.sf-browser-sidebar span.sf-browser-active {
+  background: var(--sf-primary-container);
 }
 
-.preview-canvas {
-  padding: 26px;
-  background: #f4f7f6;
-  color: var(--sf-ink);
+.sf-browser-canvas {
+  flex: 1;
+  padding: 24px;
+  overflow: hidden;
 }
 
-.preview-hero {
-  min-height: 190px;
-  border: 1px solid #dbe7e3;
-  border-radius: 10px;
-  padding: 28px;
-  background: linear-gradient(135deg, white, #eaf7f2);
-}
-
-.preview-hero small {
-  color: var(--sf-primary);
-  font-weight: 850;
-}
-
-.preview-hero h2 {
-  max-width: 420px;
-  margin: 12px 0;
-  font-size: 34px;
-  line-height: 1.05;
-}
-
-.preview-hero p {
-  max-width: 460px;
-  color: var(--sf-muted);
-}
-
-.preview-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-top: 16px;
-}
-
-.preview-grid div {
-  min-height: 72px;
-  border: 1px solid #dbe7e3;
-  border-radius: 8px;
-  background: white;
-}
-
-.preview-props p {
+.sf-browser-hero {
+  background: linear-gradient(135deg, var(--sf-primary-container), var(--sf-secondary-container));
+  border-radius: 12px;
+  padding: 20px;
   margin-bottom: 16px;
-  font-size: 13px;
-  font-weight: 850;
 }
 
-.preview-props span {
-  display: block;
-  height: 10px;
-  border-radius: 999px;
-  margin-bottom: 12px;
-  background: rgba(255, 255, 255, 0.34);
-}
-
-.preview-props .short {
-  width: 68%;
-}
-
-.preview-stats {
+.sf-browser-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   gap: 12px;
-  max-width: 640px;
 }
 
-.preview-stats div {
-  border: 1px solid rgba(255, 255, 255, 0.22);
+.sf-browser-grid div {
+  height: 80px;
+  background: var(--sf-surface-variant);
   border-radius: 8px;
-  padding: 14px;
-  background: rgba(255, 255, 255, 0.10);
 }
 
-.preview-stats strong {
+.sf-login-stats {
+  display: flex;
+  gap: 32px;
+  margin-top: 32px;
+}
+
+.sf-login-stats div {
+  text-align: center;
+}
+
+.sf-login-stats strong {
   display: block;
   font-size: 24px;
-}
-
-.preview-stats span {
-  color: #d9fff3;
-  font-size: 13px;
-}
-
-.auth-panel {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 46px;
-  background: rgba(255, 255, 255, 0.86);
-  border-left: 1px solid rgba(217, 226, 236, 0.8);
-}
-
-.auth-header {
-  max-width: 440px;
-  margin-bottom: 28px;
-}
-
-.auth-header h2 {
-  margin: 8px 0;
-  font-size: 32px;
-  line-height: 1.12;
-}
-
-.auth-header p:last-child {
-  color: var(--sf-muted);
-}
-
-.auth-form {
-  display: grid;
-  gap: 16px;
-  max-width: 440px;
-}
-
-.auth-form label {
-  color: var(--sf-ink);
-  font-weight: 750;
-}
-
-.auth-form input {
-  margin-top: 7px;
-}
-
-.submit-button {
-  width: 100%;
-  min-height: 48px;
-  margin-top: 4px;
-}
-
-.toggle {
-  max-width: 440px;
-  margin-top: 18px;
-  color: var(--sf-muted);
-}
-
-.toggle a {
+  font-weight: 700;
   color: var(--sf-primary);
-  font-weight: 850;
-  text-decoration: none;
 }
 
-.error {
-  max-width: 440px;
+.sf-login-stats span {
+  font-size: 12px;
+  color: var(--sf-on-surface-variant);
+}
+
+.sf-login-form-wrap {
+  width: 420px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 48px;
+  background: var(--sf-surface-container);
+  border-left: 1px solid var(--sf-outline-variant);
+}
+
+.sf-login-card {
+  width: 100%;
+}
+
+.sf-login-tabs {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--sf-outline-variant);
+}
+
+.sf-login-tab {
+  background: none;
+  border: none;
+  padding: 12px 20px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--sf-on-surface-variant);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.2s;
+}
+
+.sf-login-tab.active {
+  color: var(--sf-primary);
+  border-bottom-color: var(--sf-primary);
+}
+
+.sf-login-field {
+  margin-bottom: 16px;
+}
+
+.sf-login-input-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.sf-login-input-icon {
+  position: absolute;
+  left: 14px;
+  color: var(--sf-on-surface-variant);
+  font-size: 18px;
+  z-index: 1;
+}
+
+.sf-login-input {
+  padding-left: 44px;
+  padding-right: 44px;
+  border-radius: 12px;
+  width: 100%;
+}
+
+.sf-login-eye {
+  position: absolute;
+  right: 12px;
+  background: none;
+  border: none;
+  color: var(--sf-on-surface-variant);
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+}
+
+.sf-login-submit {
+  width: 100%;
+  margin-top: 24px;
+  justify-content: center;
+  padding: 14px;
+  font-size: 16px;
+}
+
+.sf-login-error {
   margin-top: 16px;
-  border: 1px solid #f4b8b2;
-  border-radius: 8px;
   padding: 12px;
-  background: #fff4f2;
-  color: var(--sf-danger);
+  background: var(--sf-error-container);
+  color: var(--sf-on-error-container);
+  border-radius: 12px;
+  font-size: 14px;
 }
 
-@media (max-width: 940px) {
-  .login-page {
-    grid-template-columns: 1fr;
-  }
-
-  .product-preview {
-    min-height: auto;
-    padding: 28px;
-  }
-
-  .auth-panel {
-    border-left: 0;
-    padding: 28px;
-  }
+.sf-login-hint {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 14px;
+  color: var(--sf-on-surface-variant);
 }
 
-@media (max-width: 640px) {
-  .preview-body {
-    grid-template-columns: 42px minmax(0, 1fr);
-  }
+.sf-login-hint a {
+  color: var(--sf-primary);
+  text-decoration: none;
+  font-weight: 500;
+}
 
-  .preview-props {
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+@media (max-width: 768px) {
+  .sf-login {
+    flex-direction: column;
+  }
+  .sf-login-preview {
     display: none;
   }
-
-  .preview-stats {
-    grid-template-columns: 1fr;
+  .sf-login-form-wrap {
+    width: 100%;
+    border-left: none;
+    padding: 24px;
   }
 }
 </style>
