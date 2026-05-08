@@ -16,6 +16,7 @@ public class AiConversation : BaseEntity
     /// <summary>
     /// 關聯頁面（可為空，表示全域對話）
     /// </summary>
+    [SugarColumn(IsNullable = true)]
     public Guid? PageId { get; set; }
 
     /// <summary>
@@ -39,7 +40,7 @@ public class AiConversation : BaseEntity
     /// <summary>
     /// Token 使用統計（JSON）
     /// </summary>
-    [SugarColumn(ColumnDataType = "jsonb", IsNullable = true)]
+    [SugarColumn(ColumnDataType = "text", IsNullable = true)]
     public string? TokenUsage { get; set; }
 
     /// <summary>

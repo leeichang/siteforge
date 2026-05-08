@@ -27,25 +27,7 @@ public class AppDbContext
             ConnectionString = _connectionString,
             DbType = DbType.PostgreSQL,
             IsAutoCloseConnection = true,
-            InitKeyType = InitKeyType.Attribute,
-            ConfigureExternalServices = new ConfigureExternalServices
-            {
-                EntityService = (type, column) =>
-                {
-                    // 處理 JSONB 欄位
-                    if (column.DbType == null && 
-                        (column.PropertyInfo?.PropertyType == typeof(string) || 
-                         column.PropertyInfo?.PropertyType == typeof(string?)))
-                    {
-                        var attr = column.PropertyInfo?.GetCustomAttributes(typeof(SugarColumn), false)
-                            ?.FirstOrDefault() as SugarColumn;
-                        if (attr?.ColumnDataType == "jsonb")
-                        {
-                            column.IsJson = true;
-                        }
-                    }
-                }
-            }
+            InitKeyType = InitKeyType.Attribute
         });
 
         // 設置 SQL 日誌

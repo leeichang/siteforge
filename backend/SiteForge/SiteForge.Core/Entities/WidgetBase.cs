@@ -27,13 +27,13 @@ public class WidgetBase : BaseEntity
     /// <summary>
     /// 區塊內容（JSON，包含標題、圖片、按鈕等數據）
     /// </summary>
-    [SugarColumn(ColumnDataType = "jsonb")]
-    public string Content { get; set; } = "{}";
+    [SugarColumn(ColumnDataType = "text", IsNullable = true)]
+    public string? Content { get; set; }
 
     /// <summary>
     /// 區塊樣式覆蓋（JSON）
     /// </summary>
-    [SugarColumn(ColumnDataType = "jsonb", IsNullable = true)]
+    [SugarColumn(ColumnDataType = "text", IsNullable = true)]
     public string? Style { get; set; }
 
     /// <summary>

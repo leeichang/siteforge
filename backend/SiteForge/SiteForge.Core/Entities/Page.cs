@@ -13,11 +13,13 @@ public class Page : BaseEntity
     /// <summary>
     /// 父頁面（階層式導航）
     /// </summary>
+    [SugarColumn(IsNullable = true)]
     public Guid? ParentId { get; set; }
 
     /// <summary>
     /// 頁面佈局
     /// </summary>
+    [SugarColumn(IsNullable = true)]
     public Guid? LayoutId { get; set; }
 
     /// <summary>
@@ -62,16 +64,16 @@ public class Page : BaseEntity
     public string? JsContent { get; set; }
 
     /// <summary>
-    /// GrapesJS 組件結構（JSONB）
+    /// GrapesJS 組件結構（JSON）
     /// </summary>
-    [SugarColumn(ColumnDataType = "jsonb", IsNullable = true)]
-    public string? Components { get; set; }
+    [SugarColumn(ColumnDataType = "text", IsNullable = true)]
+    public string Components { get; set; } = "[]";
 
     /// <summary>
-    /// GrapesJS 樣式定義（JSONB）
+    /// GrapesJS 樣式定義（JSON）
     /// </summary>
-    [SugarColumn(ColumnDataType = "jsonb", IsNullable = true)]
-    public string? Styles { get; set; }
+    [SugarColumn(ColumnDataType = "text", IsNullable = true)]
+    public string Styles { get; set; } = "[]";
 
     // SEO
     [SugarColumn(Length = 256, IsNullable = true)]
@@ -96,6 +98,7 @@ public class Page : BaseEntity
     /// </summary>
     public bool ShowInNav { get; set; } = true;
 
+    [SugarColumn(IsNullable = true)]
     public DateTime? PublishedAt { get; set; }
 
     // Navigation properties

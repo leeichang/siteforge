@@ -16,7 +16,7 @@ public class SiteDomain : BaseEntity
     /// <summary>
     /// 完整域名，如 "example.com"
     /// </summary>
-    [SugarColumn(Length = 256, IsNullable = false, IndexGroupName = "idx_domain")]
+    [SugarColumn(Length = 256, IsNullable = false)]
     public string Domain { get; set; } = string.Empty;
 
     /// <summary>
@@ -55,6 +55,7 @@ public class SiteDomain : BaseEntity
     /// <summary>
     /// SSL 到期日
     /// </summary>
+    [SugarColumn(IsNullable = true)]
     public DateTime? SslExpiry { get; set; }
 
     /// <summary>

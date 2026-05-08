@@ -34,13 +34,13 @@ public class AiMessage : BaseEntity
     /// <summary>
     /// 動作結果（JSON，包含生成的區塊資料等）
     /// </summary>
-    [SugarColumn(ColumnDataType = "jsonb", IsNullable = true)]
+    [SugarColumn(ColumnDataType = "text", IsNullable = true)]
     public string? ActionResult { get; set; }
 
     /// <summary>
     /// 擴展資訊（JSON，token用量、生成延遲等）
     /// </summary>
-    [SugarColumn(ColumnDataType = "jsonb", IsNullable = true)]
+    [SugarColumn(ColumnDataType = "text", IsNullable = true)]
     public string? Metadata { get; set; }
 
     /// <summary>

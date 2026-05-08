@@ -1,0 +1,219 @@
+{
+  "format": 1,
+  "restore": {
+    "/Users/leeichang/Documents/siteforge/backend/SiteForge/SiteForge.Api/SiteForge.Api.csproj": {}
+  },
+  "projects": {
+    "/Users/leeichang/Documents/siteforge/backend/SiteForge/SiteForge.Api/SiteForge.Api.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/leeichang/Documents/siteforge/backend/SiteForge/SiteForge.Api/SiteForge.Api.csproj",
+        "projectName": "SiteForge.Api",
+        "projectPath": "/Users/leeichang/Documents/siteforge/backend/SiteForge/SiteForge.Api/SiteForge.Api.csproj",
+        "packagesPath": "/Users/leeichang/.nuget/packages/",
+        "outputPath": "/Users/leeichang/Documents/siteforge/backend/SiteForge/SiteForge.Api/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/leeichang/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/Users/leeichang/Documents/siteforge/backend/SiteForge/SiteForge.Core/SiteForge.Core.csproj": {
+                "projectPath": "/Users/leeichang/Documents/siteforge/backend/SiteForge/SiteForge.Core/SiteForge.Core.csproj"
+              },
+              "/Users/leeichang/Documents/siteforge/backend/SiteForge/SiteForge.Infrastructure/SiteForge.Infrastructure.csproj": {
+                "projectPath": "/Users/leeichang/Documents/siteforge/backend/SiteForge/SiteForge.Infrastructure/SiteForge.Infrastructure.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.AspNetCore.Authentication.JwtBearer": {
+              "target": "Package",
+              "version": "[8.0.4, )"
+            },
+            "SqlSugarCore": {
+              "target": "Package",
+              "version": "[5.1.4.168, )"
+            },
+            "Swashbuckle.AspNetCore": {
+              "target": "Package",
+              "version": "[6.5.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.AspNetCore.App": {
+              "privateAssets": "none"
+            },
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/opt/homebrew/Cellar/dotnet@8/8.0.125/libexec/sdk/8.0.125/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/leeichang/Documents/siteforge/backend/SiteForge/SiteForge.Core/SiteForge.Core.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/leeichang/Documents/siteforge/backend/SiteForge/SiteForge.Core/SiteForge.Core.csproj",
+        "projectName": "SiteForge.Core",
+        "projectPath": "/Users/leeichang/Documents/siteforge/backend/SiteForge/SiteForge.Core/SiteForge.Core.csproj",
+        "packagesPath": "/Users/leeichang/.nuget/packages/",
+        "outputPath": "/Users/leeichang/Documents/siteforge/backend/SiteForge/SiteForge.Core/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/leeichang/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "SqlSugarCore": {
+              "target": "Package",
+              "version": "[5.1.4.168, )"
+            },
+            "System.IdentityModel.Tokens.Jwt": {
+              "target": "Package",
+              "version": "[7.5.1, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/opt/homebrew/Cellar/dotnet@8/8.0.125/libexec/sdk/8.0.125/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "/Users/leeichang/Documents/siteforge/backend/SiteForge/SiteForge.Infrastructure/SiteForge.Infrastructure.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/Users/leeichang/Documents/siteforge/backend/SiteForge/SiteForge.Infrastructure/SiteForge.Infrastructure.csproj",
+        "projectName": "SiteForge.Infrastructure",
+        "projectPath": "/Users/leeichang/Documents/siteforge/backend/SiteForge/SiteForge.Infrastructure/SiteForge.Infrastructure.csproj",
+        "packagesPath": "/Users/leeichang/.nuget/packages/",
+        "outputPath": "/Users/leeichang/Documents/siteforge/backend/SiteForge/SiteForge.Infrastructure/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/Users/leeichang/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net8.0"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net8.0": {
+            "targetAlias": "net8.0",
+            "projectReferences": {
+              "/Users/leeichang/Documents/siteforge/backend/SiteForge/SiteForge.Core/SiteForge.Core.csproj": {
+                "projectPath": "/Users/leeichang/Documents/siteforge/backend/SiteForge/SiteForge.Core/SiteForge.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net8.0": {
+          "targetAlias": "net8.0",
+          "dependencies": {
+            "Microsoft.Extensions.Configuration.Abstractions": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            },
+            "SqlSugarCore": {
+              "target": "Package",
+              "version": "[5.1.4.168, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48",
+            "net481"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/opt/homebrew/Cellar/dotnet@8/8.0.125/libexec/sdk/8.0.125/PortableRuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

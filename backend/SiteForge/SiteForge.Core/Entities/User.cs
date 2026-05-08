@@ -8,7 +8,7 @@ public class User : BaseEntity
     /// <summary>
     /// 電子郵件（登入用）
     /// </summary>
-    [SugarColumn(Length = 256, IsNullable = false, IndexGroupName = "idx_email")]
+    [SugarColumn(Length = 256, IsNullable = false)]
     public string Email { get; set; } = string.Empty;
 
     /// <summary>
@@ -26,13 +26,13 @@ public class User : BaseEntity
     /// <summary>
     /// 顯示名稱
     /// </summary>
-    [SugarColumn(Length = 128)]
+    [SugarColumn(Length = 128, IsNullable = true)]
     public string? DisplayName { get; set; }
 
     /// <summary>
     /// 頭像 URL
     /// </summary>
-    [SugarColumn(Length = 1024)]
+    [SugarColumn(Length = 1024, IsNullable = true)]
     public string? AvatarUrl { get; set; }
 
     /// <summary>
@@ -49,6 +49,7 @@ public class User : BaseEntity
     /// <summary>
     /// 最後登入時間
     /// </summary>
+    [SugarColumn(IsNullable = true)]
     public DateTime? LastLoginAt { get; set; }
 
     /// <summary>
@@ -60,6 +61,7 @@ public class User : BaseEntity
     /// <summary>
     /// Refresh Token 過期時間
     /// </summary>
+    [SugarColumn(IsNullable = true)]
     public DateTime? RefreshTokenExpiry { get; set; }
 
     // Navigation properties

@@ -153,7 +153,13 @@ if (app.Environment.IsDevelopment() || swaggerEnabled)
 app.UseCors("SiteForgeCors");
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseDefaultFiles();
+app.UseStaticFiles();
+
 app.MapControllers();
+
+app.MapFallbackToFile("index.html");
 
 using (var scope = app.Services.CreateScope())
 {

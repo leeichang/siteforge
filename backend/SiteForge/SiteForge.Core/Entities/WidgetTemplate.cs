@@ -47,7 +47,7 @@ public class WidgetTemplate : BaseEntity
     /// <summary>
     /// 可編輯參數定義（JSON，定義哪些屬性可編輯）
     /// </summary>
-    [SugarColumn(ColumnDataType = "jsonb", IsNullable = true)]
+    [SugarColumn(ColumnDataType = "text", IsNullable = true)]
     public string? EditableProps { get; set; }
 
     /// <summary>

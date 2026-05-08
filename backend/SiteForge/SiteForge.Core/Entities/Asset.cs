@@ -45,11 +45,13 @@ public class Asset : BaseEntity
     /// <summary>
     /// 寬度（圖片）
     /// </summary>
+    [SugarColumn(IsNullable = true)]
     public int? Width { get; set; }
 
     /// <summary>
     /// 高度（圖片）
     /// </summary>
+    [SugarColumn(IsNullable = true)]
     public int? Height { get; set; }
 
     /// <summary>

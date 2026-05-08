@@ -34,13 +34,13 @@ public class Theme : BaseEntity
     /// <summary>
     /// 顏色配置 JSON：{ primary, secondary, accent, background, text, success, warning, danger }
     /// </summary>
-    [SugarColumn(ColumnDataType = "jsonb")]
+    [SugarColumn(ColumnDataType = "text")]
     public string Colors { get; set; } = "{}";
 
     /// <summary>
     /// 字型配置 JSON：{ heading: "Inter", body: "Inter" }
     /// </summary>
-    [SugarColumn(ColumnDataType = "jsonb")]
+    [SugarColumn(ColumnDataType = "text")]
     public string Fonts { get; set; } = "{}";
 
     /// <summary>
@@ -52,19 +52,19 @@ public class Theme : BaseEntity
     /// <summary>
     /// 間距配置 JSON：{ unit: "px", baseSize: 16 }
     /// </summary>
-    [SugarColumn(ColumnDataType = "jsonb", IsNullable = true)]
+    [SugarColumn(ColumnDataType = "text", IsNullable = true)]
     public string? Spacing { get; set; }
 
     /// <summary>
     /// 圓角配置 JSON：{ sm: "4px", md: "8px", lg: "16px", full: "9999px" }
     /// </summary>
-    [SugarColumn(ColumnDataType = "jsonb", IsNullable = true)]
+    [SugarColumn(ColumnDataType = "text", IsNullable = true)]
     public string? BorderRadius { get; set; }
 
     /// <summary>
     /// 陰影配置 JSON：{ sm, md, lg }
     /// </summary>
-    [SugarColumn(ColumnDataType = "jsonb", IsNullable = true)]
+    [SugarColumn(ColumnDataType = "text", IsNullable = true)]
     public string? Shadows { get; set; }
 
     /// <summary>

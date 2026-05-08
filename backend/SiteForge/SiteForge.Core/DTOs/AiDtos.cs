@@ -43,6 +43,58 @@ public class MessageDto
     public DateTime CreatedAt { get; set; }
 }
 
+public class AiGenerateSiteRequest
+{
+    public string SiteName { get; set; } = string.Empty;
+    public string Prompt { get; set; } = string.Empty;
+    public string? Description { get; set; }
+    public string Style { get; set; } = "studio";
+    public string ContentLength { get; set; } = "medium";
+    public List<string>? PageTypes { get; set; }
+}
+
+public class AiGeneratePageRequest
+{
+    public Guid SiteId { get; set; }
+    public Guid? PageId { get; set; }
+    public string PageName { get; set; } = string.Empty;
+    public string PageType { get; set; } = "custom";
+    public string Prompt { get; set; } = string.Empty;
+    public string? Slug { get; set; }
+    public string Style { get; set; } = "studio";
+    public string ContentLength { get; set; } = "medium";
+}
+
+public class AiGeneratedPageDto
+{
+    public Guid PageId { get; set; }
+    public Guid SiteId { get; set; }
+    public string PageName { get; set; } = string.Empty;
+    public string Slug { get; set; } = string.Empty;
+    public string PageType { get; set; } = string.Empty;
+    public string HtmlContent { get; set; } = string.Empty;
+    public string CssContent { get; set; } = string.Empty;
+    public string? JsContent { get; set; }
+    public string Components { get; set; } = "[]";
+    public string Styles { get; set; } = "[]";
+    public List<string> AiSuggestions { get; set; } = new();
+    public long GenerationTimeMs { get; set; }
+    public bool Success { get; set; } = true;
+    public string? ErrorMessage { get; set; }
+}
+
+public class AiGenerateSiteResponse
+{
+    public Guid SiteId { get; set; }
+    public string SiteName { get; set; } = string.Empty;
+    public string Slug { get; set; } = string.Empty;
+    public List<AiGeneratedPageDto> Pages { get; set; } = new();
+    public List<string> AiSuggestions { get; set; } = new();
+    public long GenerationTimeMs { get; set; }
+    public bool Success { get; set; } = true;
+    public string? ErrorMessage { get; set; }
+}
+
 public class AiActionRequest
 {
     public string Instruction { get; set; } = string.Empty;

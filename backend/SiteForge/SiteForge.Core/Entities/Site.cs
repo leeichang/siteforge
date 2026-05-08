@@ -37,6 +37,7 @@ public class Site : BaseEntity
     /// <summary>
     /// 啟用中的主題
     /// </summary>
+    [SugarColumn(IsNullable = true)]
     public Guid? ActiveThemeId { get; set; }
 
     /// <summary>
@@ -48,7 +49,7 @@ public class Site : BaseEntity
     /// <summary>
     /// 網站 Slug（用於子網域）
     /// </summary>
-    [SugarColumn(Length = 128, IsNullable = true, IndexGroupName = "idx_site_slug")]
+    [SugarColumn(Length = 128, IsNullable = true)]
     public string? Slug { get; set; }
 
     /// <summary>
@@ -60,11 +61,13 @@ public class Site : BaseEntity
     /// <summary>
     /// 自訂 Header Script
     /// </summary>
+    [SugarColumn(ColumnDataType = "text", IsNullable = true)]
     public string? CustomHeaderScript { get; set; }
 
     /// <summary>
     /// 自訂 Footer Script
     /// </summary>
+    [SugarColumn(ColumnDataType = "text", IsNullable = true)]
     public string? CustomFooterScript { get; set; }
 
     /// <summary>
@@ -76,6 +79,7 @@ public class Site : BaseEntity
     /// <summary>
     /// 最後發佈時間
     /// </summary>
+    [SugarColumn(IsNullable = true)]
     public DateTime? PublishedAt { get; set; }
 
     // Navigation properties

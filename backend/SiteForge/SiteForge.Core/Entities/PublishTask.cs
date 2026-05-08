@@ -56,10 +56,12 @@ public class PublishTask : BaseEntity
     /// <summary>
     /// 開始時間
     /// </summary>
+    [SugarColumn(IsNullable = true)]
     public DateTime? StartedAt { get; set; }
 
     /// <summary>
     /// 完成時間
     /// </summary>
+    [SugarColumn(IsNullable = true)]
     public DateTime? CompletedAt { get; set; }
 }

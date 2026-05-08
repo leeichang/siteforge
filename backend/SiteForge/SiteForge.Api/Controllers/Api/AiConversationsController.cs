@@ -33,4 +33,29 @@ public class AiConversationsController : ApiControllerBase
     [HttpPost("{conversationId:guid}/messages")]
     public async Task<ActionResult<ApiResponse<MessageDto>>> SendMessage(Guid conversationId, SendMessageRequest request) =>
         OkResponse(await _conversations.SendMessageAsync(conversationId, request), "Message saved.");
+
+    [HttpPost("generate-site")]
+    public async Task<ActionResult<ApiResponse<AiGenerateSiteResponse>>> GenerateSite(AiGenerateSiteRequest request) =>
+        OkResponse(await _conversations.GenerateSiteAsync(CurrentUserId, request), "Website generated.");
+
+    [HttpPost("generate-page")]
+    public async Task<ActionResult<ApiResponse<AiGeneratedPageDto>>> GeneratePage(AiGeneratePageRequest request) =>
+        OkResponse(await _conversations.GeneratePageAsync(CurrentUserId, request), "Page generated.");
+
+    [HttpGet("page-types")]
+    public ActionResult<ApiResponse<List<object>>> GetPageTypes()
+    {
+        var pageTypes = new List<object>
+        {
+            new { value = "home", label = "Home", description = "Homepage with hero, features, proof, and CTA" },
+            new { value = "about", label = "About", description = "Brand story, positioning, mission, and team narrative" },
+            new { value = "services", label = "Services", description = "Service cards and value proposition sections" },
+            new { value = "product", label = "Products", description = "Product showcase and benefits grid" },
+            new { value = "portfolio", label = "Portfolio", description = "Case studies and work highlights" },
+            new { value = "blog", label = "Blog", description = "Editorial landing page and article cards" },
+            new { value = "contact", label = "Contact", description = "Contact form and next-step information" }
+        };
+
+        return OkResponse(pageTypes);
+    }
 }
