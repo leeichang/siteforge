@@ -1,0 +1,75 @@
+# ============================================================
+# macOS
+# ============================================================
+.DS_Store
+**/.DS_Store
+
+# ============================================================
+# IDE / Editor
+# ============================================================
+.vscode/
+.idea/
+*.user
+*.suo
+*.swp
+*~
+
+# ============================================================
+# Frontend (Node / Vite)
+# ============================================================
+node_modules/
+**/node_modules/
+frontend/siteforge-ui/dist/
+**/dist/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# ============================================================
+# Backend (.NET)
+# ============================================================
+# Build output
+**/bin/
+**/obj/
+
+# User-specific files
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build results
+[Dd]ebug/
+[Dd]ebugPublic/
+[Rr]elease/
+[Rr]eleases/
+x64/
+x86/
+
+# NuGet
+*.nupkg
+**/packages/*
+!**/packages/build/
+
+# ============================================================
+# Backend wwwroot - Frontend build output served by API
+# (keep index.html and published/ which are runtime assets)
+# ============================================================
+backend/SiteForge/SiteForge.Api/wwwroot/assets/
+
+# ============================================================
+# Test / E2E artifacts
+# ============================================================
+artifacts/
+
+# ============================================================
+# Environment / Secrets
+# ============================================================
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
