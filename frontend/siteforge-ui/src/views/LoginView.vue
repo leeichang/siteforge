@@ -5,7 +5,7 @@
         <span class="material-symbols-outlined material-symbols-filled" style="font-size: 40px; color: var(--sf-primary);">architecture</span>
         <div>
           <p style="font-size: 12px; font-weight: 500; letter-spacing: 0.5px; text-transform: uppercase; color: var(--sf-on-surface-variant);">SiteForge</p>
-          <h1 style="font-size: 32px; font-weight: 700; line-height: 40px; color: var(--sf-on-surface); margin-top: 4px;">AI 網站建置器</h1>
+          <h1 style="font-size: 32px; font-weight: 700; line-height: 40px; color: var(--sf-on-surface); margin-top: 4px;">{{ t('login.headline') }}</h1>
         </div>
       </div>
 
@@ -21,9 +21,9 @@
             </div>
             <div class="sf-browser-canvas">
               <div class="sf-browser-hero">
-                <small style="color: var(--sf-on-surface-variant);">Product launch</small>
-                <h3 style="font-size: 18px; font-weight: 600; margin: 8px 0; color: var(--sf-on-surface);">專業網站從模板開始</h3>
-                <p style="font-size: 13px; color: var(--sf-on-surface-variant);">拖曳區塊，AI 輔助編輯</p>
+                <small style="color: var(--sf-on-surface-variant);">{{ t('login.productLaunch') }}</small>
+                <h3 style="font-size: 18px; font-weight: 600; margin: 8px 0; color: var(--sf-on-surface);">{{ t('login.previewTitle') }}</h3>
+                <p style="font-size: 13px; color: var(--sf-on-surface-variant);">{{ t('login.previewBody') }}</p>
               </div>
               <div class="sf-browser-grid">
                 <div></div><div></div><div></div>
@@ -36,33 +36,36 @@
       <div class="sf-login-stats">
         <div>
           <strong>7</strong>
-          <span>系統區塊</span>
+          <span>{{ t('login.systemBlocks') }}</span>
         </div>
         <div>
           <strong>12+</strong>
-          <span>專業模板</span>
+          <span>{{ t('login.templates') }}</span>
         </div>
         <div>
           <strong>GPT</strong>
-          <span>AI 文案</span>
+          <span>{{ t('login.copywriting') }}</span>
         </div>
       </div>
     </section>
 
     <section class="sf-login-form-wrap">
       <div class="sf-login-card">
+        <button class="sf-login-locale" type="button" @click="localeStore.toggleLocale()">
+          {{ locale === 'en' ? '繁中' : 'English' }}
+        </button>
         <div class="sf-login-tabs">
           <button 
             :class="['sf-login-tab', { active: mode === 'login' }]" 
             @click="mode = 'login'"
           >
-            登入
+            {{ t('login.login') }}
           </button>
           <button 
             :class="['sf-login-tab', { active: mode === 'register' }]" 
             @click="mode = 'register'"
           >
-            註冊
+            {{ t('login.register') }}
           </button>
         </div>
 
@@ -82,14 +85,14 @@
           </div>
 
           <div class="sf-login-field" style="margin-top: 16px;">
-            <label class="sf-label-sm" style="color: var(--sf-on-surface-variant); display: block; margin-bottom: 8px;">Password</label>
+            <label class="sf-label-sm" style="color: var(--sf-on-surface-variant); display: block; margin-bottom: 8px;">{{ t('login.password') }}</label>
             <div class="sf-login-input-wrap">
               <span class="material-symbols-outlined sf-login-input-icon">lock</span>
               <input 
                 v-model="form.password" 
                 :type="showPassword ? 'text' : 'password'" 
                 class="sf-input sf-login-input" 
-                placeholder="輸入密碼"
+                :placeholder="t('login.passwordPlaceholder')"
                 required
               />
               <button type="button" class="sf-login-eye" @click="showPassword = !showPassword">
@@ -99,30 +102,30 @@
           </div>
 
           <div v-if="mode === 'register'" class="sf-login-field" style="margin-top: 16px;">
-            <label class="sf-label-sm" style="color: var(--sf-on-surface-variant); display: block; margin-bottom: 8px;">Display Name</label>
+            <label class="sf-label-sm" style="color: var(--sf-on-surface-variant); display: block; margin-bottom: 8px;">{{ t('login.displayName') }}</label>
             <div class="sf-login-input-wrap">
               <span class="material-symbols-outlined sf-login-input-icon">person</span>
               <input 
                 v-model="form.displayName" 
                 type="text" 
                 class="sf-input sf-login-input" 
-                placeholder="Your name"
+                :placeholder="t('login.namePlaceholder')"
               />
             </div>
           </div>
 
           <button type="submit" class="sf-btn-primary sf-login-submit" :disabled="loading">
             <span v-if="loading" class="material-symbols-outlined" style="animation: spin 1s linear infinite;">progress_activity</span>
-            <span>{{ mode === 'login' ? '登入' : '註冊' }}</span>
+            <span>{{ mode === 'login' ? t('login.login') : t('login.register') }}</span>
           </button>
         </form>
 
         <p v-if="error" class="sf-login-error">{{ error }}</p>
 
         <p class="sf-login-hint">
-          {{ mode === 'login' ? '還沒有帳號？' : '已有帳號？' }}
+          {{ mode === 'login' ? t('login.noAccount') : t('login.hasAccount') }}
           <a href="#" @click.prevent="mode = mode === 'login' ? 'register' : 'login'">
-            {{ mode === 'login' ? '立即註冊' : '立即登入' }}
+            {{ mode === 'login' ? t('login.createAccount') : t('login.signInNow') }}
           </a>
         </p>
       </div>
@@ -131,12 +134,16 @@
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { computed, ref, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import { useLocaleStore } from '../stores/locale'
 
 const router = useRouter()
 const auth = useAuthStore()
+const localeStore = useLocaleStore()
+const locale = computed(() => localeStore.locale)
+const t = localeStore.t
 
 const mode = ref('login')
 const loading = ref(false)
@@ -156,15 +163,11 @@ const handleSubmit = async () => {
     if (mode.value === 'login') {
       await auth.login(form.email, form.password)
     } else {
-      await auth.register({
-        email: form.email,
-        password: form.password,
-        displayName: form.displayName
-      })
+      await auth.register(form.email, form.password, form.displayName)
     }
     router.push('/')
   } catch (e) {
-    error.value = e.response?.data?.message || e.message || '操作失敗'
+    error.value = e.response?.data?.message || e.message || t('common.operationFailed')
   } finally {
     loading.value = false
   }
@@ -173,19 +176,45 @@ const handleSubmit = async () => {
 
 <style scoped>
 .sf-login {
+  width: 100vw;
+  min-width: 100%;
+  box-sizing: border-box;
   min-height: 100vh;
-  display: flex;
+  display: grid;
+  grid-template-columns: auto auto;
+  place-content: center;
+  place-items: center;
+  padding: 48px;
   background: var(--sf-bg);
   color: var(--sf-on-bg);
 }
 
+.sf-login::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(circle at 24% 20%, rgba(208, 188, 255, 0.18), transparent 32%),
+    radial-gradient(circle at 74% 72%, rgba(119, 183, 255, 0.12), transparent 34%);
+}
+
+.sf-login > section {
+  position: relative;
+  z-index: 1;
+}
+
 .sf-login-preview {
-  flex: 1;
+  width: min(50vw, 560px);
+  min-height: 760px;
   display: flex;
   flex-direction: column;
   justify-content: center;
   padding: 48px;
   background: linear-gradient(135deg, var(--sf-surface-container-low) 0%, var(--sf-bg) 100%);
+  border: 1px solid var(--sf-outline-variant);
+  border-right: 0;
+  border-radius: 24px 0 0 24px;
 }
 
 .sf-login-brand {
@@ -303,17 +332,38 @@ const handleSubmit = async () => {
 }
 
 .sf-login-form-wrap {
-  width: 420px;
+  width: min(42vw, 480px);
+  min-height: 760px;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 48px;
   background: var(--sf-surface-container);
-  border-left: 1px solid var(--sf-outline-variant);
+  border: 1px solid var(--sf-outline-variant);
+  border-radius: 0 24px 24px 0;
 }
 
 .sf-login-card {
   width: 100%;
+  max-width: 380px;
+}
+
+.sf-login-locale {
+  display: block;
+  margin: 0 0 16px auto;
+  border: 1px solid var(--sf-outline-variant);
+  border-radius: 999px;
+  background: transparent;
+  color: var(--sf-on-surface-variant);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 7px 12px;
+}
+
+.sf-login-locale:hover {
+  border-color: var(--sf-primary);
+  color: var(--sf-primary);
 }
 
 .sf-login-tabs {
@@ -415,14 +465,17 @@ const handleSubmit = async () => {
 
 @media (max-width: 768px) {
   .sf-login {
-    flex-direction: column;
+    grid-template-columns: 1fr;
+    padding: 24px;
   }
   .sf-login-preview {
     display: none;
   }
   .sf-login-form-wrap {
     width: 100%;
+    min-height: auto;
     border-left: none;
+    border-radius: 20px;
     padding: 24px;
   }
 }

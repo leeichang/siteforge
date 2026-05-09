@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-TW"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:ital,wght@0,400;0,500;0,700;1,400&amp;family=Manrope:wght@400;500;700&amp;family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "inverse-surface": "#30312e",
+                        "primary-fixed-dim": "#c8c6c5",
+                        "secondary-fixed": "#ffdea5",
+                        "on-secondary-fixed": "#261900",
+                        "inverse-on-surface": "#f2f1ec",
+                        "surface-bright": "#fbf9f4",
+                        "on-primary": "#ffffff",
+                        "error-container": "#ffdad6",
+                        "secondary-fixed-dim": "#e9c176",
+                        "on-secondary": "#ffffff",
+                        "surface-container": "#f0eee9",
+                        "surface-tint": "#5f5e5e",
+                        "tertiary": "#000000",
+                        "on-secondary-fixed-variant": "#5d4201",
+                        "on-primary-container": "#858383",
+                        "outline-variant": "#c4c7c7",
+                        "on-background": "#1b1c19",
+                        "surface": "#fbf9f4",
+                        "tertiary-container": "#410007",
+                        "secondary": "#775a19",
+                        "on-primary-fixed-variant": "#474746",
+                        "background": "#fbf9f4",
+                        "on-surface-variant": "#444748",
+                        "on-error": "#ffffff",
+                        "surface-dim": "#dbdad5",
+                        "on-error-container": "#93000a",
+                        "primary-fixed": "#e5e2e1",
+                        "on-primary-fixed": "#1c1b1b",
+                        "surface-container-low": "#f5f3ee",
+                        "tertiary-fixed-dim": "#ffb3b1",
+                        "on-surface": "#1b1c19",
+                        "error": "#ba1a1a",
+                        "on-tertiary-container": "#d16162",
+                        "surface-container-high": "#eae8e3",
+                        "outline": "#747878",
+                        "tertiary-fixed": "#ffdad8",
+                        "secondary-container": "#fed488",
+                        "on-tertiary-fixed": "#410007",
+                        "on-tertiary": "#ffffff",
+                        "inverse-primary": "#c8c6c5",
+                        "surface-variant": "#e4e2dd",
+                        "surface-container-lowest": "#ffffff",
+                        "surface-container-highest": "#e4e2dd",
+                        "on-secondary-container": "#785a1a",
+                        "primary-container": "#1c1b1b",
+                        "primary": "#000000",
+                        "on-tertiary-fixed-variant": "#82252a"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "md": "24px",
+                        "lg": "48px",
+                        "xl": "80px",
+                        "gutter": "24px",
+                        "xs": "4px",
+                        "sm": "12px",
+                        "container-max": "1280px",
+                        "base": "8px"
+                    },
+                    "fontFamily": {
+                        "body-md": ["Manrope"],
+                        "legal-sm": ["Manrope"],
+                        "headline-xl": ["EB Garamond"],
+                        "display-lg": ["EB Garamond"],
+                        "headline-md": ["EB Garamond"],
+                        "label-caps": ["Manrope"],
+                        "body-lg": ["Manrope"]
+                    },
+                    "fontSize": {
+                        "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "legal-sm": ["11px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                        "headline-xl": ["48px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                        "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+                        "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                        "label-caps": ["12px", {"lineHeight": "1.4", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                        "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .curated-gradient {
+            background: linear-gradient(180deg, rgba(251, 249, 244, 0) 0%, rgba(251, 249, 244, 1) 100%);
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 bg-surface border-b border-outline-variant flex justify-between items-center px-gutter py-sm max-w-container-max mx-auto">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary cursor-pointer" data-icon="menu">menu</span>
+<span class="font-display-lg text-headline-md tracking-widest text-primary">VINTAGE &amp; VINE</span>
+</div>
+<nav class="hidden md:flex gap-lg">
+<a class="text-on-surface-variant font-medium font-label-caps text-label-caps hover:text-secondary transition-colors duration-300" href="#">HOME</a>
+<a class="text-on-surface-variant font-medium font-label-caps text-label-caps hover:text-secondary transition-colors duration-300" href="#">ABOUT BRAND</a>
+<a class="text-primary font-bold border-b-2 border-secondary font-label-caps text-label-caps" href="#">EVENTS</a>
+</nav>
+<button class="bg-primary text-on-primary px-md py-xs font-label-caps text-label-caps tracking-widest hover:opacity-80 transition-all">
+            B2B PARTNERSHIP
+        </button>
+</header>
+<main class="pt-[80px]">
+<!-- Hero Section -->
+<section class="relative h-[618px] flex items-center justify-center overflow-hidden">
+<div class="absolute inset-0 bg-cover bg-center" data-alt="A sophisticated evening tasting room with high ceilings and warm, moody lighting. In the foreground, elegant crystal wine glasses are arranged on a dark mahogany table, reflecting the amber glow of candlelight. The background shows a curated wall of vintage wine bottles in a professional cellar. The atmosphere is premium and exclusive, using a palette of deep charcoal and warm gold tones." style="background-image: url('https://lh3.googleusercontent.com/aida-public/AB6AXuBMBVsXTrg6QY0ma73ZSu-9pzWtW2qW-QlOkUE5GGUKVBFITC3N7sAUJpLesnaHJuaNtdFmlm7mPCFRk_88rhxKpAmVqSXga6pXZlWUDOe9gvQV8OsKeR6wyk9-KPWItd5GqAXByqNNUpsjlLLI2e-wkJaz8TM1ED8EHz2ZB-A8KKBnzvdCANtegnnQEPNvwdN75nEJgrueIZ00OB5OiFTbukFbhOF03iqqYBH6oGd223hlyiF6LBVxPhC_QcZbsv1-btqTSsIFTq8')"></div>
+<div class="absolute inset-0 bg-black/40"></div>
+<div class="relative z-10 text-center text-on-primary px-gutter">
+<p class="font-label-caps text-label-caps tracking-[0.3em] mb-md text-secondary-fixed">CURATED EXPERIENCES</p>
+<h1 class="font-display-lg text-display-lg mb-lg">品味傳承之美</h1>
+<p class="font-body-lg text-body-lg max-w-2xl mx-auto opacity-90">探索我們精心策劃的線下體驗，從私人莊園品鑑會到跨界藝術聯名晚宴，每一場活動都是對感官極致的追求。</p>
+</div>
+</section>
+<!-- Bento Grid Events -->
+<section class="max-w-container-max mx-auto px-gutter py-xl">
+<div class="flex flex-col md:flex-row justify-between items-end mb-xl">
+<div>
+<h2 class="font-headline-xl text-headline-xl text-primary mb-sm">近期活動</h2>
+<p class="text-on-surface-variant font-body-md">UPCOMING SESSIONS &amp; SOIRÉES</p>
+</div>
+<div class="hidden md:block">
+<button class="flex items-center gap-xs text-primary font-label-caps text-label-caps group">
+                        VIEW ALL CALENDAR <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-md">
+<!-- Featured Event 1: Private Tasting -->
+<div class="md:col-span-8 group relative overflow-hidden border border-outline-variant bg-surface-container-low transition-all hover:border-secondary">
+<div class="aspect-[16/9] overflow-hidden">
+<img alt="Featured Tasting" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A professional sommelier pouring a deep red vintage wine into a pristine glass during a high-end private tasting event. The setting is a minimalist gallery with clean white walls and subtle gold accents. Natural light streams in from a large window, creating a serene and authoritative atmosphere. The composition is clean and magazine-like." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD1Kh0-SZ_JGl1qR6L35kVa4jdF43XizsKkQG7E9E_i12mD-RgDVpwX80HCSh_YK0Opbf4HNMv06Ybn-POQt42REgGYciQUKZVR2KO7S6fy7oFsFb8hb62XGBhv67ZGDC35Ljc38LzJVCyGbx78nUWZJ40sptEdoiRQb4Az7F_H917gXwsqzJuwVmeECser_8zojAc8NRKYH6g1l5P0riVQI7y-gPg04p25TnmyKk38R8ZtdNGeKy0KLwkk4NBT5xzv_6nloLnx6Zs"/>
+</div>
+<div class="p-lg flex flex-col md:flex-row justify-between gap-md">
+<div class="flex-1">
+<span class="inline-block bg-secondary-container text-on-secondary-container px-sm py-1 font-label-caps text-[10px] mb-sm">PRIVATE TASTING</span>
+<h3 class="font-headline-md text-headline-md mb-sm">波爾多 1982 傳奇品鑑之夜</h3>
+<p class="text-on-surface-variant mb-md max-w-lg">由首席品酒師領銜，深入探索波爾多黃金年份的深邃底蘊。包含五款精選特級莊園珍釀與法式手工點心配餐。</p>
+<div class="flex flex-wrap gap-md text-primary font-label-caps text-[11px] mb-md">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]" data-icon="calendar_today">calendar_today</span> 2024.11.15</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]" data-icon="location_on">location_on</span> TAIPEI CELLAR V</span>
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-[16px]" data-icon="group">group</span> 12 SLOTS REMAINING</span>
+</div>
+</div>
+<div class="flex items-end">
+<button class="bg-primary text-on-primary px-lg py-md font-label-caps text-label-caps hover:bg-secondary transition-colors w-full md:w-auto">立即預約</button>
+</div>
+</div>
+</div>
+<!-- Small Event 2: Pop-up -->
+<div class="md:col-span-4 group relative overflow-hidden border border-outline-variant bg-surface-container-low transition-all hover:border-secondary flex flex-col">
+<div class="aspect-square overflow-hidden">
+<img alt="Pop-up Event" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A modern pop-up bar scene featuring minimalist wooden structures and glowing glass shelves. The lighting is crisp and contemporary, highlighting the vibrant colors of premium spirits. A young, professional audience is seen in a soft-focus background, suggesting a trendy, social atmosphere. The color palette is predominantly cream and deep burgundy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWbHe0r-kNtzHkyRZnLmRlVJdclvFUeTlKLLx-0lEOzt-K1tZhsnV_eQ8JkfpHGwfUNU9wHRuidnTC-ZUibDXlUwp7oHRMqZQqxdBV-TWivoiP8V2-2yfmxKnNX9REZdoyf7_E38OWOe_37f5rt3ZJfskcNJBZ2s0fIgwJ9A3gYAvqtx9JaMx1hcNJzmp9zCoiar51AvNvjlGuTXqUpSGyo1WVVpRTu98BpfBcnx6ZDINo0J3qf4n35lCGCB-qMThkJztWmg6sB-E"/>
+</div>
+<div class="p-md flex-1 flex flex-col">
+<span class="inline-block border border-secondary text-secondary px-sm py-1 font-label-caps text-[10px] self-start mb-sm">POP-UP BAR</span>
+<h3 class="font-headline-md text-[24px] mb-sm">極境：高地威士忌快閃店</h3>
+<p class="text-on-surface-variant text-body-md mb-md">於信義區精品街區展開為期一週的味覺實驗室。</p>
+<div class="mt-auto pt-md border-t border-outline-variant">
+<button class="w-full border border-primary text-primary py-sm font-label-caps text-label-caps hover:bg-primary hover:text-on-primary transition-all">瞭解詳情</button>
+</div>
+</div>
+</div>
+<!-- Event 3: Dining -->
+<div class="md:col-span-4 group border border-outline-variant bg-surface-container-low transition-all hover:border-secondary">
+<div class="aspect-square overflow-hidden">
+<img alt="Gala Dinner" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="An exquisitely set dining table for a high-end gala dinner. Silverware gleams under warm chandeliers, and fine china plates are laid out on a crisp white linen tablecloth. Floral arrangements of deep red roses add a touch of luxury. The mood is authoritative and celebratory, embodying the essence of a premium distribution event." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA8febs9BNZhw8u5xKIlWK9duF6f4Hr6-QgZgBUbIPPLLiydciQdnw2g-a9TGkcx8eriBONcqaLmxDNeZfistpEhBc_UdPLlfpjEMoY6lBxDuDtaz3AyuxGdwvUzPbJ8tS0zy82K7F5nlT-TClyaHNxJIcfE-KXGcVSYWlvkyKetG0eatz03b2J3gLVi43FOaJ68vqszEhp9iJx2bPBbxLBj6_kG6PwKsuAUTAMPkx1qP30lWmjoXDIBmURkx_eg8BSHIctCi2oQnE"/>
+</div>
+<div class="p-md">
+<span class="inline-block bg-primary text-on-primary px-sm py-1 font-label-caps text-[10px] mb-sm">GALA DINNER</span>
+<h3 class="font-headline-md text-[24px] mb-sm">味蕾饗宴：米其林聯名晚宴</h3>
+<p class="text-on-surface-variant text-body-md mb-md">與名廚聯手，打造威士忌與法式料理的完美和弦。</p>
+<button class="w-full border border-primary text-primary py-sm font-label-caps text-label-caps hover:bg-primary hover:text-on-primary transition-all">立即預約</button>
+</div>
+</div>
+<!-- Event 4: Large Horizontal -->
+<div class="md:col-span-8 flex flex-col md:flex-row border border-outline-variant bg-surface-container-low group hover:border-secondary transition-all">
+<div class="md:w-1/2 overflow-hidden">
+<img alt="Heritage Session" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700" data-alt="A close-up shot of a vintage oak barrel in a dimly lit warehouse, with dust motes dancing in a single beam of sunlight. The texture of the weathered wood and the iron hoops conveys a sense of history and heritage. This evocative image represents the deep roots and multi-generational expertise of a premium wine distributor." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDCxH2puqxA4EyiF8wEBpbYSPrbU3zsUxiJmtPuZLMvHAXdMaCA7QOW4iSyVyNaoT7zYYspA_AqX-0fZnHIiRy8a_dei5ySslwPZiANWOG9FZ82DZmDODhXYrPo9xcG9FkB2mOjzQVNYB_xHbqavWbqBTBpl7dZ0wxNBJGxj6XnAzW1gKXCII6fNyRc2x_R4igCsFOHXn3XHRSU9Y--B-IKzoqxa91R_8dXC64NG6ejUwkOLLCcYbHyiBOHxv7pUUolVD4IwtLAGAI"/>
+</div>
+<div class="md:w-1/2 p-lg flex flex-col">
+<span class="inline-block bg-secondary-fixed text-on-secondary-fixed px-sm py-1 font-label-caps text-[10px] self-start mb-sm">HERITAGE CLASS</span>
+<h3 class="font-headline-md text-headline-md mb-md">窖藏奧秘：威士忌陳年講座</h3>
+<p class="text-on-surface-variant mb-lg">解構橡木桶對酒液的魔幻影響。包含四款不同桶型原酒對比品嚐。</p>
+<div class="mt-auto space-y-sm">
+<div class="flex justify-between text-label-caps font-label-caps text-on-surface-variant border-b border-outline-variant pb-2">
+<span>DATE</span>
+<span class="text-primary">DEC 05, 2024</span>
+</div>
+<div class="flex justify-between text-label-caps font-label-caps text-on-surface-variant border-b border-outline-variant pb-2">
+<span>LOCATION</span>
+<span class="text-primary">CENTRAL STUDIO</span>
+</div>
+<div class="pt-md">
+<button class="w-full bg-primary text-on-primary py-md font-label-caps text-label-caps hover:bg-secondary transition-all">預約席次</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Newsletter / B2B Section -->
+<section class="bg-primary text-on-primary py-xl">
+<div class="max-w-container-max mx-auto px-gutter grid grid-cols-1 md:grid-cols-2 gap-xl items-center">
+<div>
+<h2 class="font-headline-xl text-headline-xl mb-md">私人定製體驗</h2>
+<p class="font-body-lg text-body-lg opacity-80 mb-lg">為您的品牌或私人招待會提供專屬的品飲策劃。從酒單挑選到侍酒服務，我們將品牌遺產與現代美學完美結合。</p>
+<a class="inline-flex items-center gap-xs font-label-caps text-label-caps border-b-2 border-secondary-fixed text-secondary-fixed pb-xs group" href="#">
+                        CONTACT OUR SOMMELIER TEAM <span class="material-symbols-outlined group-hover:translate-x-1 transition-transform" data-icon="mail">mail</span>
+</a>
+</div>
+<div class="border border-outline p-lg bg-surface-container/5">
+<p class="font-label-caps text-label-caps mb-md text-secondary-fixed">INQUIRY FORM</p>
+<div class="space-y-md">
+<div>
+<label class="block font-label-caps text-[10px] opacity-60 mb-1 uppercase">Name</label>
+<input class="w-full bg-transparent border-b border-outline focus:border-secondary-fixed outline-none py-2 font-body-md text-on-primary placeholder:text-on-primary/30" placeholder="貴姓大名" type="text"/>
+</div>
+<div>
+<label class="block font-label-caps text-[10px] opacity-60 mb-1 uppercase">Interest</label>
+<select class="w-full bg-transparent border-b border-outline focus:border-secondary-fixed outline-none py-2 font-body-md text-on-primary appearance-none">
+<option class="bg-primary">企業聯名活動</option>
+<option class="bg-primary">私人莊園品飲</option>
+<option class="bg-primary">婚宴餐酒顧問</option>
+</select>
+</div>
+<button class="w-full bg-secondary-fixed text-on-secondary-fixed py-md font-label-caps text-label-caps font-bold tracking-widest mt-lg hover:opacity-90 transition-opacity">SEND INQUIRY</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-inverse-surface text-on-primary w-full px-gutter py-xl flex flex-col items-center gap-md max-w-container-max mx-auto">
+<div class="font-display-lg text-headline-md text-surface-bright tracking-widest mb-lg">VINTAGE &amp; VINE</div>
+<div class="flex flex-wrap justify-center gap-lg mb-xl">
+<a class="text-surface-variant font-label-caps text-label-caps hover:text-secondary-fixed transition-colors" href="#">PRIVACY POLICY</a>
+<a class="text-surface-variant font-label-caps text-label-caps hover:text-secondary-fixed transition-colors" href="#">TERMS OF SERVICE</a>
+<a class="text-secondary-fixed underline font-label-caps text-label-caps" href="#">RESPONSIBLE DRINKING</a>
+<a class="text-surface-variant font-label-caps text-label-caps hover:text-secondary-fixed transition-colors" href="#">B2B INQUIRY</a>
+</div>
+<p class="font-legal-sm text-legal-sm opacity-60 text-center uppercase tracking-widest border-t border-outline/30 pt-lg w-full">
+            © 2024 VINTAGE &amp; VINE DISTRIBUTORS. ALL RIGHTS RESERVED.
+        </p>
+<!-- Mandatory Legal Warning -->
+<div class="w-full bg-black text-white py-lg mt-md px-gutter text-center">
+<div class="flex flex-col md:flex-row items-center justify-center gap-md md:gap-xl">
+<span class="font-headline-md text-[24px] tracking-[0.2em] whitespace-nowrap">飲酒過量 有礙健康</span>
+<div class="h-px w-20 md:h-8 md:w-px bg-white/30 hidden md:block"></div>
+<span class="font-headline-md text-[24px] tracking-[0.2em] whitespace-nowrap">未滿十八歲 禁止飲酒</span>
+<div class="h-px w-20 md:h-8 md:w-px bg-white/30 hidden md:block"></div>
+<span class="font-headline-md text-[24px] tracking-[0.2em] whitespace-nowrap">酒後不開車 安全有保障</span>
+</div>
+</div>
+</footer>
+<!-- Side Navigation Drawer (Hidden by default) -->
+<aside class="fixed inset-y-0 right-0 z-[60] flex flex-col py-lg bg-surface-bright shadow-xl w-80 translate-x-full transition-transform duration-500">
+<div class="px-md mb-xl flex justify-between items-center">
+<span class="font-headline-md text-headline-md text-primary">THE DISTRIBUTOR</span>
+<span class="material-symbols-outlined cursor-pointer" data-icon="close">close</span>
+</div>
+<nav class="flex flex-col gap-xs">
+<div class="text-on-surface-variant hover:bg-surface-container rounded-lg mx-2 px-4 py-3 flex items-center gap-md transition-all">
+<span class="material-symbols-outlined" data-icon="home">home</span>
+<span class="font-label-caps text-label-caps">HOME</span>
+</div>
+<div class="text-on-surface-variant hover:bg-surface-container rounded-lg mx-2 px-4 py-3 flex items-center gap-md transition-all">
+<span class="material-symbols-outlined" data-icon="auto_awesome">auto_awesome</span>
+<span class="font-label-caps text-label-caps">ABOUT BRAND</span>
+</div>
+<div class="text-on-surface-variant hover:bg-surface-container rounded-lg mx-2 px-4 py-3 flex items-center gap-md transition-all">
+<span class="material-symbols-outlined" data-icon="liquor">liquor</span>
+<span class="font-label-caps text-label-caps">COLLECTIONS</span>
+</div>
+<div class="bg-secondary-container text-on-secondary-container rounded-lg mx-2 px-4 py-3 flex items-center gap-md translate-x-1 transition-transform">
+<span class="material-symbols-outlined" data-icon="event">event</span>
+<span class="font-label-caps text-label-caps">EVENTS</span>
+</div>
+<div class="text-on-surface-variant hover:bg-surface-container rounded-lg mx-2 px-4 py-3 flex items-center gap-md transition-all">
+<span class="material-symbols-outlined" data-icon="menu_book">menu_book</span>
+<span class="font-label-caps text-label-caps">JOURNAL</span>
+</div>
+<div class="text-on-surface-variant hover:bg-surface-container rounded-lg mx-2 px-4 py-3 flex items-center gap-md transition-all">
+<span class="material-symbols-outlined" data-icon="mail">mail</span>
+<span class="font-label-caps text-label-caps">CONTACT</span>
+</div>
+</nav>
+</aside>
+</body></html>

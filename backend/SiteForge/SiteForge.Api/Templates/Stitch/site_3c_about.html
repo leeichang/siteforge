@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-Hant"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-tint": "#004ced",
+                    "surface-variant": "#e0e3e5",
+                    "outline": "#737688",
+                    "on-surface-variant": "#434656",
+                    "inverse-on-surface": "#eff1f3",
+                    "secondary-fixed-dim": "#b9c7df",
+                    "on-tertiary-container": "#dde4ff",
+                    "on-secondary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "tertiary-container": "#5e667d",
+                    "background": "#f7f9fb",
+                    "primary-container": "#0052ff",
+                    "surface": "#f7f9fb",
+                    "surface-container-highest": "#e0e3e5",
+                    "on-secondary-container": "#57657a",
+                    "on-primary-fixed": "#001452",
+                    "tertiary": "#464e64",
+                    "secondary-container": "#d5e3fc",
+                    "secondary": "#515f74",
+                    "surface-bright": "#f7f9fb",
+                    "primary-fixed-dim": "#b7c4ff",
+                    "inverse-primary": "#b7c4ff",
+                    "on-secondary-fixed-variant": "#3a485b",
+                    "on-primary-fixed-variant": "#0038b6",
+                    "secondary-fixed": "#d5e3fc",
+                    "inverse-surface": "#2d3133",
+                    "on-tertiary-fixed-variant": "#3f465c",
+                    "tertiary-fixed": "#dae2fd",
+                    "surface-container-high": "#e6e8ea",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed": "#131b2e",
+                    "primary-fixed": "#dde1ff",
+                    "outline-variant": "#c3c5d9",
+                    "on-primary-container": "#dfe3ff",
+                    "on-surface": "#191c1e",
+                    "on-tertiary": "#ffffff",
+                    "on-background": "#191c1e",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#f2f4f6",
+                    "error": "#ba1a1a",
+                    "surface-container": "#eceef0",
+                    "primary": "#003ec7",
+                    "surface-dim": "#d8dadc",
+                    "tertiary-fixed-dim": "#bec6e0",
+                    "on-primary": "#ffffff",
+                    "on-secondary-fixed": "#0d1c2e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-edge": "32px",
+                    "stack-md": "16px",
+                    "gutter": "24px",
+                    "section-gap": "80px",
+                    "unit": "8px",
+                    "stack-sm": "8px",
+                    "container-max": "1280px",
+                    "stack-lg": "32px"
+            },
+            "fontFamily": {
+                    "body-md": ["Hanken Grotesk"],
+                    "data-tabular": ["Hanken Grotesk"],
+                    "display-lg": ["Hanken Grotesk"],
+                    "headline-md": ["Hanken Grotesk"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "label-sm": ["Hanken Grotesk"],
+                    "label-md": ["Hanken Grotesk"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "data-tabular": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body { font-family: 'Hanken Grotesk', sans-serif; background-color: #f7f9fb; }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="text-on-background">
+<!-- TopAppBar Component -->
+<header class="bg-surface docked full-width top-0 sticky z-50 border-b border-outline-variant">
+<div class="flex justify-between items-center max-w-container-max mx-auto px-margin-edge h-20 w-full">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="devices">devices</span>
+<span class="text-headline-md font-headline-md font-bold tracking-tight text-primary">TECH-ELITE</span>
+</div>
+<nav class="hidden md:flex items-center gap-gutter">
+<a class="text-secondary font-label-md hover:text-primary transition-colors" href="#">Products</a>
+<a class="text-secondary font-label-md hover:text-primary transition-colors" href="#">Solutions</a>
+<a class="text-primary font-bold border-b-2 border-primary pb-1" href="#">Support Center</a>
+<a class="text-secondary font-label-md hover:text-primary transition-colors" href="#">Warranty Policy</a>
+</nav>
+<button class="bg-primary text-on-primary px-6 py-2 rounded-lg font-label-md hover:opacity-90 active:scale-95 transition-all">
+                Corporate Sales
+            </button>
+</div>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="py-section-gap bg-surface">
+<div class="max-w-container-max mx-auto px-margin-edge">
+<div class="max-w-3xl">
+<span class="text-primary font-label-sm uppercase tracking-widest mb-stack-sm block">Case Studies</span>
+<h1 class="font-display-lg text-display-lg text-on-surface mb-stack-md">卓越技術，成就客戶成功。</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant">探索我們如何協助全球企業、教育機構及商業合作夥伴，透過頂尖硬體解決方案實現數位轉型與效率飛躍。</p>
+</div>
+</div>
+</section>
+<!-- Success Metrics Section (Bento Style) -->
+<section class="py-stack-lg border-y border-outline-variant bg-white">
+<div class="max-w-container-max mx-auto px-margin-edge">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter">
+<div class="p-stack-lg border border-outline-variant rounded-xl flex flex-col items-center text-center">
+<span class="font-display-lg text-display-lg text-primary mb-2">99.9%</span>
+<span class="font-label-md text-label-md text-secondary uppercase">系統運作時間</span>
+</div>
+<div class="p-stack-lg border border-outline-variant rounded-xl flex flex-col items-center text-center">
+<span class="font-display-lg text-display-lg text-primary mb-2">30%</span>
+<span class="font-label-md text-label-md text-secondary uppercase">營運效率提升</span>
+</div>
+<div class="p-stack-lg border border-outline-variant rounded-xl flex flex-col items-center text-center">
+<span class="font-display-lg text-display-lg text-primary mb-2">500+</span>
+<span class="font-label-md text-label-md text-secondary uppercase">跨國企業合作</span>
+</div>
+<div class="p-stack-lg border border-outline-variant rounded-xl flex flex-col items-center text-center">
+<span class="font-display-lg text-display-lg text-primary mb-2">15ms</span>
+<span class="font-label-md text-label-md text-secondary uppercase">平均延遲降低</span>
+</div>
+</div>
+</div>
+</section>
+<!-- Enterprise Solutions Section -->
+<section class="py-section-gap">
+<div class="max-w-container-max mx-auto px-margin-edge">
+<div class="flex items-end justify-between mb-stack-lg">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">企業解決方案</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">大型硬體部署與雲端整合實績</p>
+</div>
+<a class="text-primary font-label-md flex items-center gap-1 hover:underline" href="#">
+                        查看全部 <span class="material-symbols-outlined text-[18px]" data-icon="arrow_forward">arrow_forward</span>
+</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Case Card 1 -->
+<div class="bg-white border border-outline-variant rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
+<div class="aspect-video relative overflow-hidden">
+<img alt="Data Center" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A clean, professionally lit high-tech data center featuring rows of server racks with glowing blue LED indicators. The environment is sterile and modern, emphasizing precision engineering and cold, metallic surfaces. The perspective is a low-angle shot, highlighting the vast scale of the hardware infrastructure under bright, clinical white ceiling lights." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDqOAtnoX5ExwgzXOX6deOZ4BjSn3wuRW_A1uc6gvx999lNpA3h5OJsN5JphT5OkAuDi6T8N03nNTc2cocWwJWFxOtFk1chDCsijsTybrK6tTMV93pCKmpJXTZXf5alydPZuMP7qzqAUhXnzPxSLArbm5DcLN84cGEOkkb9XGmssM2i5DN_pNrgPxBrjW5WxL1wmLnmJ3yAUE2UN_nF4sA7Fzd0ZxL8lvdCVT3Uc1yp9iDCudwSngYldorn2fG4aACA9DNps2D1OSuB"/>
+<div class="absolute top-4 left-4 bg-primary text-on-primary px-3 py-1 rounded-sm font-label-sm">金融科技</div>
+</div>
+<div class="p-stack-lg">
+<h3 class="font-headline-md text-headline-md mb-stack-sm">全球領先銀行伺服器架構升級</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">為亞洲最大金融機構之一重新定義其核心運算能力，部署超過 2,000 台 Tech-Elite Pro 系列工作站，確保交易安全與零時差響應。</p>
+<div class="flex flex-wrap gap-2 border-t border-outline-variant pt-4">
+<span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full text-label-sm">高效能運算</span>
+<span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full text-label-sm">硬體加密</span>
+<span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full text-label-sm">24/7 監控</span>
+</div>
+</div>
+</div>
+<!-- Case Card 2 -->
+<div class="bg-white border border-outline-variant rounded-xl overflow-hidden shadow-sm hover:shadow-md transition-shadow group">
+<div class="aspect-video relative overflow-hidden">
+<img alt="Smart Manufacturing" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A futuristic industrial manufacturing floor with robotic arms assembling electronic components in a high-key lighting setting. The scene is characterized by pristine white floors and sleek metallic surfaces. Soft blue ambient lighting accents the high-tech machinery, creating a sense of organized efficiency and advanced technological progress within a clean, professional space." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDV1i3hA5wbiVHpTuVCr6_WKaRLhn6Pf1y0cLUc91cYZyoUvky8f8I59bbsMFFjdOsvMq0tTFv4PAz4UAZ72-2gH0TGYVIWercvaew9EIgQE4qYiMrqfK-m9XccelnEu6wZ5ckZtmXElWol-oTjg04lR_D-UXNlNTTCdDCHdKgxw2f8AfS2aeNPAny9U1iqf2oweI0CwUgZ8BA92zNpb9vBvRn_TY_ACN3LCFwN5bvdyAZHXcRryN78qRZXHGORfiKJ7KSz98oIJVkU"/>
+<div class="absolute top-4 left-4 bg-primary text-on-primary px-3 py-1 rounded-sm font-label-sm">智慧製造</div>
+</div>
+<div class="p-stack-lg">
+<h3 class="font-headline-md text-headline-md mb-stack-sm">工業 4.0 生產線自動化控制系統</h3>
+<p class="font-body-md text-body-md text-on-surface-variant mb-6">透過邊緣運算硬體整合，協助半導體製造商實現生產線 100% 自動化監控，故障預測準確率提升至 95%。</p>
+<div class="flex flex-wrap gap-2 border-t border-outline-variant pt-4">
+<span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full text-label-sm">邊緣運算</span>
+<span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full text-label-sm">IoT 整合</span>
+<span class="bg-surface-container text-on-surface-variant px-3 py-1 rounded-full text-label-sm">AI 分析</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Education & Commercial Section -->
+<section class="py-section-gap bg-surface-container-low">
+<div class="max-w-container-max mx-auto px-margin-edge">
+<div class="mb-stack-lg">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">教育與商務應用</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">智慧教室與未來辦公空間整合方案</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<!-- Education Card 1 -->
+<div class="bg-white border border-outline-variant rounded-xl overflow-hidden flex flex-col">
+<img alt="Smart Classroom" class="w-full h-48 object-cover" data-alt="A modern, minimalist smart classroom featuring clean white desks and ergonomic chairs. Large interactive digital displays cover the front wall, showing complex mathematical equations and vibrant educational graphics. The room is flooded with bright, natural sunlight, creating an inspiring and professional atmosphere focused on advanced learning and technological integration." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtNc2a9oK86TLiEE9s0y_mlkw-YoYxDGLQE5hvQlakWSG22SOPDX7gZJiREwD8AY3IR6qKIirnGq9vQSoIqPo_ZsoWU7OIG3dbIwVbxytDGCSx0-uLZc69O9sy5erVzjLg8-lrejw26Rwsm6UOxVqXalUqOiA0TV3Aa0A-gAyZ811UIQVQgxXi4EVJaOgXmlUN_0pYamkJA1oFVYjsArdvhU1XUlSdOuucRlHCPZVjvigBpEoSGpTOpzdmwTVK_L7sEKqjTD6FA9_C"/>
+<div class="p-stack-md flex-grow">
+<h4 class="font-headline-md text-headline-md text-on-surface mb-2">國立科技大學智慧校園</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">全面部署 Elite-Touch 互動平板與雲端教學系統，覆蓋 50 間教室，提升學生互動率達 45%。</p>
+<div class="space-y-2">
+<div class="flex justify-between text-label-sm py-1 border-b border-outline-variant border-dotted">
+<span class="text-secondary uppercase">部署數量</span>
+<span class="text-on-surface font-bold">120+ Units</span>
+</div>
+<div class="flex justify-between text-label-sm py-1 border-b border-outline-variant border-dotted">
+<span class="text-secondary uppercase">實施週期</span>
+<span class="text-on-surface font-bold">3 Months</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Education Card 2 -->
+<div class="bg-white border border-outline-variant rounded-xl overflow-hidden flex flex-col">
+<img alt="Modern Office" class="w-full h-48 object-cover" data-alt="A high-end, contemporary corporate office lobby with glass walls and minimalist furniture. The lighting is soft and diffused, creating a professional and calm ambiance. Sleek informational kiosks with high-resolution screens are strategically placed, reflecting a commitment to high-tech professional hardware and a sophisticated corporate modernism aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAN0FTIlv89yirwxgRgX-lzy9-jBomHhYRqKUX42oMXKuMCEX3N6gWBZLd7t8CPvRDgqofD97rZ0YldcU11bxuaRdy4Ok9qnvEcdwkppZmON8VZM3uU5_rmS8rw53WyB_VF9FLXg_ZkGZRpfql-ehmxGwI_MZEHxFKCL3cVXM5yGc5tWcHtKubisT5_RIjsTfXl8fTzcusAiXOR1TOmPv8v9tHSQICAt7b9Uw-a5jCbc0vVVbWRULGx9xSfmXLjeDCqZ8esymhTFLBa"/>
+<div class="p-stack-md flex-grow">
+<h4 class="font-headline-md text-headline-md text-on-surface mb-2">跨國總部混合辦公優化</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">為 Fortune 500 企業設計視訊會議與彈性辦公桌面解決方案，支援 3,000 名員工的高效遠端協作。</p>
+<div class="space-y-2">
+<div class="flex justify-between text-label-sm py-1 border-b border-outline-variant border-dotted">
+<span class="text-secondary uppercase">連線穩定度</span>
+<span class="text-on-surface font-bold">99.98%</span>
+</div>
+<div class="flex justify-between text-label-sm py-1 border-b border-outline-variant border-dotted">
+<span class="text-secondary uppercase">能源省電率</span>
+<span class="text-on-surface font-bold">22%</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Education Card 3 -->
+<div class="bg-white border border-outline-variant rounded-xl overflow-hidden flex flex-col">
+<img alt="Commercial Building" class="w-full h-48 object-cover" data-alt="A low-angle view of a sleek, glass skyscraper reflecting a clear blue sky. The architectural lines are sharp and precise, embodying modern corporate stability. The overall lighting is bright and crisp, with a cool blue and silver color palette that suggests a high-performance environment for B2B technological excellence and industrial grade reliability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDZnJdbl-HDXfO7OFqkZ1xiu85IQclgs8sHpFDlfwnVssz-pNdPvN5zHOqfLtY-Zw25I3XJr19MlX1DsaQCA8yWUDGnOWcBnBMHFIP_VvZ7k5zlycjyak1pvuZwz3ILEiFjDL_fdvJdMwPxs1bIeZ_FYT5RDEu2me_34EOoxBZTPqP74zyEbjAJWsEVcDmAz6N0jBF7zDV1LT4hQg0TKKqP6uSgioQ-vmAGVQa8d40oQeDS0tjc8DzhcchvifChXVHxbt_VpenxaPol"/>
+<div class="p-stack-md flex-grow">
+<h4 class="font-headline-md text-headline-md text-on-surface mb-2">旗艦零售數位轉型</h4>
+<p class="font-body-md text-body-md text-on-surface-variant mb-4">整合大型顯示牆與即時庫存查詢硬體，打造全通路零售體驗，提升顧客店內停留時間。</p>
+<div class="space-y-2">
+<div class="flex justify-between text-label-sm py-1 border-b border-outline-variant border-dotted">
+<span class="text-secondary uppercase">營收成長</span>
+<span class="text-on-surface font-bold">+18% YoY</span>
+</div>
+<div class="flex justify-between text-label-sm py-1 border-b border-outline-variant border-dotted">
+<span class="text-secondary uppercase">維護頻率</span>
+<span class="text-on-surface font-bold">Bi-Annual</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Testimonials Section -->
+<section class="py-section-gap">
+<div class="max-w-container-max mx-auto px-margin-edge">
+<h2 class="font-headline-lg text-headline-lg text-on-surface text-center mb-stack-lg">合作夥伴評價</h2>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<!-- Testimonial 1 -->
+<div class="p-stack-lg bg-white border border-outline-variant rounded-xl shadow-sm italic relative">
+<span class="material-symbols-outlined text-primary-container opacity-20 text-[64px] absolute top-4 right-4" data-icon="format_quote">format_quote</span>
+<p class="font-body-lg text-body-lg text-on-surface mb-6 leading-relaxed relative z-10">
+                            「Tech-Elite 的硬體部署極大化了我們的營運效率。他們提供的不僅是產品，更是從規劃到後續維護的一站式專業服務，是我們最信賴的 B2B 夥伴。」
+                        </p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="person">person</span>
+</div>
+<div>
+<h5 class="font-label-md text-on-surface">陳偉雄</h5>
+<p class="text-label-sm text-secondary">亞太區 IT 營運總監 | 宏達環球科技</p>
+</div>
+</div>
+</div>
+<!-- Testimonial 2 -->
+<div class="p-stack-lg bg-white border border-outline-variant rounded-xl shadow-sm italic relative">
+<span class="material-symbols-outlined text-primary-container opacity-20 text-[64px] absolute top-4 right-4" data-icon="format_quote">format_quote</span>
+<p class="font-body-lg text-body-lg text-on-surface mb-6 leading-relaxed relative z-10">
+                            「在轉型智慧校園的過程中，硬體的耐用性與相容性是我們的首要考量。Tech-Elite 的解決方案完美契合我們的需求，大幅降低了維護成本。」
+                        </p>
+<div class="flex items-center gap-4">
+<div class="w-12 h-12 rounded-full bg-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-secondary" data-icon="person">person</span>
+</div>
+<div>
+<h5 class="font-label-md text-on-surface">林雅婷</h5>
+<p class="text-label-sm text-secondary">數位教學發展中心主任 | 台灣聯合大學</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Section -->
+<section class="py-section-gap bg-primary text-on-primary">
+<div class="max-w-container-max mx-auto px-margin-edge text-center">
+<h2 class="font-display-lg text-display-lg mb-stack-md">準備好提升您的企業效能了嗎？</h2>
+<p class="font-body-lg text-body-lg mb-stack-lg opacity-90 max-w-2xl mx-auto">聯繫我們的企業顧問，為您量身打造專屬的 3C 硬體整合方案與數位轉型路徑。</p>
+<div class="flex flex-col sm:flex-row gap-4 justify-center">
+<button class="bg-white text-primary px-8 py-3 rounded-lg font-label-md hover:bg-surface-container transition-all">預約專家諮詢</button>
+<button class="border border-white text-white px-8 py-3 rounded-lg font-label-md hover:bg-white/10 transition-all">下載企業案例集 (PDF)</button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Component -->
+<footer class="bg-surface-container-high border-t border-outline-variant">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter max-w-container-max mx-auto px-margin-edge py-stack-lg w-full">
+<div class="space-y-stack-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="devices">devices</span>
+<span class="font-headline-md text-on-surface font-bold">TECH-ELITE</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                    專業級硬體解決方案領導者，致力於為企業與教育機構提供最高標準的科技產品。
+                </p>
+</div>
+<div>
+<h6 class="font-label-md text-on-surface mb-stack-md uppercase">產品中心</h6>
+<ul class="space-y-2">
+<li><a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">Enterprise Servers</a></li>
+<li><a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">Pro Workstations</a></li>
+<li><a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">Interactive Displays</a></li>
+<li><a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">Smart IoT Devices</a></li>
+</ul>
+</div>
+<div>
+<h6 class="font-label-md text-on-surface mb-stack-md uppercase">解決方案</h6>
+<ul class="space-y-2">
+<li><a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">Smart Education</a></li>
+<li><a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">Digital Retail</a></li>
+<li><a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">Smart Manufacturing</a></li>
+<li><a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">Hybrid Office</a></li>
+</ul>
+</div>
+<div>
+<h6 class="font-label-md text-on-surface mb-stack-md uppercase">聯絡我們</h6>
+<ul class="space-y-2">
+<li class="text-on-surface-variant font-label-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]" data-icon="mail">mail</span>
+                        sales@tech-elite.com
+                    </li>
+<li class="text-on-surface-variant font-label-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]" data-icon="phone">phone</span>
+                        +886-2-2345-6789
+                    </li>
+<li class="text-on-surface-variant font-label-sm flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px]" data-icon="location_on">location_on</span>
+                        台北市信義區經貿路一段 8 號
+                    </li>
+</ul>
+</div>
+</div>
+<div class="border-t border-outline-variant py-6">
+<div class="max-w-container-max mx-auto px-margin-edge flex flex-col md:flex-row justify-between items-center gap-4">
+<span class="text-on-surface-variant font-label-sm text-center md:text-left">© 2024 Tech-Elite Electronics Professional Grade Hardware. All rights reserved.</span>
+<div class="flex gap-stack-lg">
+<a class="text-on-surface-variant font-label-sm hover:text-primary underline" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant font-label-sm hover:text-primary underline" href="#">Terms of Service</a>
+<a class="text-on-surface-variant font-label-sm hover:text-primary underline" href="#">Sitemap</a>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

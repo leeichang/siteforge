@@ -4,7 +4,7 @@
     <!-- Top Header -->
     <header class="sf-header">
       <div class="sf-header-left">
-        <h2 class="sf-title-lg" style="color: var(--sf-on-surface);">My Projects</h2>
+        <h2 class="sf-title-lg" style="color: var(--sf-on-surface);">{{ t('dashboard.myProjects') }}</h2>
         <span class="sf-count-badge">{{ sites.length }}</span>
       </div>
       <div class="sf-header-right">
@@ -14,7 +14,7 @@
             v-model="search" 
             type="text" 
             class="sf-input sf-search-input" 
-            placeholder="Search projects..."
+            :placeholder="t('dashboard.searchPlaceholder')"
           />
         </div>
         <button class="sf-icon-btn">
@@ -25,7 +25,7 @@
 
     <!-- Projects Grid -->
     <div class="sf-content">
-      <div v-if="loading" class="sf-loading">載入專案中...</div>
+      <div v-if="loading" class="sf-loading">{{ t('dashboard.loadingProjects') }}</div>
       
       <div v-else-if="filteredSites.length > 0" class="sf-grid">
         <!-- Featured card (first project, spans 2 columns on large) -->
@@ -41,7 +41,7 @@
             <div class="sf-card-gradient"></div>
             <div class="sf-card-status">
               <span class="sf-badge" :class="filteredSites[0].status === 'published' ? 'sf-badge-published' : 'sf-badge-draft'">
-                {{ filteredSites[0].status === 'published' ? 'Published' : 'Draft' }}
+                {{ filteredSites[0].status === 'published' ? t('common.published') : t('common.draft') }}
               </span>
             </div>
           </div>
@@ -52,7 +52,7 @@
                 <span class="material-symbols-outlined" style="font-size: 20px;">more_vert</span>
               </button>
             </div>
-            <p class="sf-body-md sf-card-desc">{{ filteredSites[0].description || 'No description' }}</p>
+            <p class="sf-body-md sf-card-desc">{{ filteredSites[0].description || t('common.noDescription') }}</p>
             <div class="sf-card-meta">
               <span class="sf-label-sm">
                 <span class="material-symbols-outlined" style="font-size: 14px;">edit_calendar</span>
@@ -76,7 +76,7 @@
             <div class="sf-card-gradient"></div>
             <div class="sf-card-status">
               <span class="sf-badge" :class="site.status === 'published' ? 'sf-badge-published' : 'sf-badge-draft'">
-                {{ site.status === 'published' ? 'Published' : 'Draft' }}
+                {{ site.status === 'published' ? t('common.published') : t('common.draft') }}
               </span>
             </div>
           </div>
@@ -102,18 +102,18 @@
             <div class="sf-new-icon">
               <span class="material-symbols-outlined" style="font-size: 28px;">add</span>
             </div>
-            <h3 class="sf-title-md" style="color: var(--sf-on-surface);">Create New Site</h3>
-            <p class="sf-label-sm" style="color: var(--sf-on-surface-variant);">Start from scratch or a template</p>
+            <h3 class="sf-title-md" style="color: var(--sf-on-surface);">{{ t('dashboard.createNewSite') }}</h3>
+            <p class="sf-label-sm" style="color: var(--sf-on-surface-variant);">{{ t('dashboard.startFromScratch') }}</p>
           </div>
         </div>
       </div>
 
       <div v-else class="sf-empty">
         <span class="material-symbols-outlined" style="font-size: 48px; color: var(--sf-on-surface-variant); opacity: 0.5;">folder_open</span>
-        <h3 class="sf-title-md" style="color: var(--sf-on-surface-variant); margin-top: 16px;">No projects yet</h3>
+        <h3 class="sf-title-md" style="color: var(--sf-on-surface-variant); margin-top: 16px;">{{ t('dashboard.noProjects') }}</h3>
         <button class="sf-btn-primary" @click="showCreate = true" style="margin-top: 16px;">
           <span class="material-symbols-outlined material-symbols-filled">add</span>
-          Create your first project
+          {{ t('dashboard.createFirstProject') }}
         </button>
       </div>
     </div>
@@ -121,30 +121,81 @@
     <!-- Create Modal -->
     <div v-if="showCreate" class="sf-modal-overlay" @click.self="showCreate = false">
       <div class="sf-modal">
-        <h2 class="sf-headline-sm" style="margin-bottom: 24px; color: var(--sf-on-surface);">Create New Project</h2>
+        <h2 class="sf-headline-sm" style="margin-bottom: 24px; color: var(--sf-on-surface);">{{ t('dashboard.createNewProject') }}</h2>
+        <p v-if="createError" class="sf-create-error">{{ createError }}</p>
         <div class="sf-form-field">
-          <label class="sf-label-lg" style="color: var(--sf-on-surface-variant); display: block; margin-bottom: 8px;">Site Name</label>
+          <label class="sf-label-lg" style="color: var(--sf-on-surface-variant); display: block; margin-bottom: 8px;">{{ t('dashboard.siteName') }}</label>
           <input 
             v-model="newSite.name" 
             type="text" 
             class="sf-input" 
-            placeholder="例如：Pebisnis Ulung"
+            :placeholder="t('dashboard.siteNamePlaceholder')"
             style="padding-left: 16px; border-radius: 12px;"
           />
         </div>
         <div class="sf-form-field" style="margin-top: 16px;">
-          <label class="sf-label-lg" style="color: var(--sf-on-surface-variant); display: block; margin-bottom: 8px;">Description</label>
+          <label class="sf-label-lg" style="color: var(--sf-on-surface-variant); display: block; margin-bottom: 8px;">{{ t('dashboard.description') }}</label>
           <input 
             v-model="newSite.description" 
             type="text" 
             class="sf-input" 
-            placeholder="描述網站用途或客戶產業"
+            :placeholder="t('dashboard.descriptionPlaceholder')"
             style="padding-left: 16px; border-radius: 12px;"
           />
         </div>
+        <div class="sf-form-field" style="margin-top: 16px;">
+          <label class="sf-label-lg" style="color: var(--sf-on-surface-variant); display: block; margin-bottom: 8px;">{{ t('dashboard.siteTemplate') }}</label>
+          <div class="template-picker site-template-picker">
+            <button
+              type="button"
+              class="template-card blank"
+              :class="{ selected: selectedTemplate === '' }"
+              @click="selectedTemplate = ''"
+            >
+              <div class="template-preview blank-preview">
+                <span class="material-symbols-outlined">add</span>
+              </div>
+              <strong>{{ t('dashboard.blankSite') }}</strong>
+              <small>{{ t('dashboard.blankSiteHint') }}</small>
+            </button>
+            <button
+              v-for="template in siteTemplates"
+              :key="template.key"
+              type="button"
+              class="template-card"
+              :class="{ selected: selectedTemplate === template.key }"
+              @click="selectedTemplate = template.key"
+            >
+              <div
+                class="template-preview"
+                :class="[templatePreviewClass(template.key), { 'has-image': template.thumbnailUrl }]"
+              >
+                <img
+                  v-if="template.thumbnailUrl"
+                  class="template-preview-image"
+                  :src="template.thumbnailUrl"
+                  :alt="`${template.label} preview`"
+                  loading="lazy"
+                />
+                <template v-else>
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </template>
+              </div>
+              <strong>{{ template.label }}</strong>
+              <small>{{ template.category }} / {{ t('dashboard.pagesCount', { count: template.pageCount }) }}</small>
+            </button>
+          </div>
+          <p class="template-hint">
+            {{ selectedTemplateInfo?.description || t('dashboard.templateHint') }}
+          </p>
+        </div>
         <div class="sf-modal-actions">
-          <button class="sf-btn-text" @click="showCreate = false">取消</button>
-          <button class="sf-btn-primary" @click="createSite">建立並進入工作區</button>
+          <button class="sf-btn-text" @click="showCreate = false" :disabled="creatingSite">{{ t('common.cancel') }}</button>
+          <button class="sf-btn-primary" @click="createSite" :disabled="creatingSite">
+            {{ creatingSite ? t('dashboard.creating') : selectedTemplate ? t('dashboard.applyTemplate') : t('dashboard.createAndOpen') }}
+          </button>
         </div>
       </div>
     </div>
@@ -155,16 +206,23 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import { useLocaleStore } from '../stores/locale'
 import api from '../api/client'
 
 const router = useRouter()
 const auth = useAuthStore()
+const localeStore = useLocaleStore()
+const t = localeStore.t
 
 const sites = ref([])
+const templates = ref([])
 const loading = ref(true)
+const creatingSite = ref(false)
+const createError = ref('')
 const search = ref('')
 const showCreate = ref(false)
 const newSite = ref({ name: '', description: '' })
+const selectedTemplate = ref('')
 
 const filteredSites = computed(() => {
   if (!search.value) return sites.value
@@ -172,15 +230,18 @@ const filteredSites = computed(() => {
   return sites.value.filter(s => s.name?.toLowerCase().includes(q))
 })
 
+const siteTemplates = computed(() => templates.value.filter((template) => template.kind === 'site'))
+const selectedTemplateInfo = computed(() => siteTemplates.value.find((template) => template.key === selectedTemplate.value))
+
 const formatDate = (d) => {
-  if (!d) return 'Recently'
+  if (!d) return t('common.recently')
   const date = new Date(d)
   const now = new Date()
   const diff = (now - date) / 1000 / 60 / 60 // hours
-  if (diff < 1) return 'Just now'
-  if (diff < 24) return `${Math.floor(diff)} hrs ago`
-  if (diff < 48) return 'Yesterday'
-  return date.toLocaleDateString('zh-TW', { month: 'short', day: 'numeric' })
+  if (diff < 1) return t('common.justNow')
+  if (diff < 24) return t('common.hoursAgo', { count: Math.floor(diff) })
+  if (diff < 48) return t('common.yesterday')
+  return date.toLocaleDateString(localeStore.locale === 'en' ? 'en-US' : 'zh-TW', { month: 'short', day: 'numeric' })
 }
 
 const loadSites = async () => {
@@ -197,17 +258,49 @@ const loadSites = async () => {
   }
 }
 
-const createSite = async () => {
-  if (!newSite.value.name) return
+const loadTemplates = async () => {
   try {
-    const res = await api.post('/Sites', newSite.value)
+    const res = await api.get('/AiConversations/templates?kind=site')
+    templates.value = res.data?.data || res.data || []
+  } catch (e) {
+    console.error('Failed to load templates:', e)
+    templates.value = []
+  }
+}
+
+const createSite = async () => {
+  if (creatingSite.value) return
+  createError.value = ''
+  creatingSite.value = true
+  try {
+    const fallbackName = selectedTemplateInfo.value?.label || 'SiteForge Project'
+    const siteName = newSite.value.name.trim() || `${fallbackName} ${Date.now()}`
+    const description = newSite.value.description.trim()
+
+    if (selectedTemplate.value) {
+      const res = await api.post('/AiConversations/generate-site', {
+        siteName,
+        description,
+        prompt: description || `Create a complete business website for ${siteName}.`,
+        templateKey: selectedTemplate.value
+      })
+      const generated = res.data?.data || res.data
+      if (generated?.siteId) {
+        router.push(`/sites/${generated.siteId}`)
+      }
+      return
+    }
+
+    const res = await api.post('/Sites', { name: siteName, description })
     const site = res.data?.data || res.data
     if (site?.id) {
       router.push(`/sites/${site.id}`)
     }
   } catch (e) {
     console.error('Failed to create site:', e)
-    alert('建立失敗: ' + (e.response?.data?.message || e.message))
+    createError.value = `${t('common.operationFailed')}: ${e.response?.data?.message || e.message}`
+  } finally {
+    creatingSite.value = false
   }
 }
 
@@ -220,8 +313,11 @@ const showSiteMenu = (site) => {
   console.log('Site menu:', site.name)
 }
 
+const templatePreviewClass = (key) => `preview-${key.replace(/[^a-z0-9]+/gi, '-')}`
+
 onMounted(() => {
   loadSites()
+  loadTemplates()
 })
 </script>
 
@@ -527,12 +623,141 @@ onMounted(() => {
   border: 1px solid var(--sf-outline-variant);
   border-radius: 24px;
   padding: 32px;
-  max-width: 500px;
+  max-width: 860px;
   width: 90%;
+  max-height: min(86vh, 820px);
+  overflow: auto;
 }
 
 .sf-form-field {
   margin-bottom: 16px;
+}
+
+.sf-create-error {
+  margin: 0 0 16px;
+  border: 1px solid color-mix(in srgb, var(--sf-error) 45%, var(--sf-outline-variant));
+  border-radius: 12px;
+  padding: 12px 14px;
+  background: var(--sf-error-container);
+  color: var(--sf-on-error-container);
+  font-size: 14px;
+  line-height: 1.45;
+}
+
+.template-hint {
+  margin: 8px 0 0;
+  color: var(--sf-on-surface-variant);
+  font-size: 12px;
+  line-height: 1.5;
+}
+
+.template-picker {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 12px;
+}
+
+.template-card {
+  min-height: 190px;
+  border: 1px solid var(--sf-outline-variant);
+  border-radius: 12px;
+  background: var(--sf-surface-container-low);
+  color: var(--sf-on-surface);
+  cursor: pointer;
+  padding: 10px;
+  text-align: left;
+  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+}
+
+.template-card:hover,
+.template-card.selected {
+  border-color: var(--sf-primary);
+  background: var(--sf-surface-container-high);
+}
+
+.template-card.selected {
+  box-shadow: inset 0 0 0 1px var(--sf-primary);
+}
+
+.template-card strong {
+  display: block;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.template-card small {
+  display: block;
+  margin-top: 4px;
+  color: var(--sf-on-surface-variant);
+  font-size: 12px;
+  line-height: 1.35;
+}
+
+.template-preview {
+  position: relative;
+  height: 96px;
+  display: grid;
+  grid-template-rows: 24px 1fr 18px;
+  gap: 7px;
+  overflow: hidden;
+  border: 1px solid var(--sf-outline-variant);
+  border-radius: 8px;
+  padding: 8px;
+  background: linear-gradient(135deg, #2a2440, #15161b);
+}
+
+.template-preview.has-image {
+  display: block;
+  padding: 0;
+  background: #101116;
+}
+
+.template-preview-image {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+}
+
+.template-preview span {
+  display: block;
+  border-radius: 5px;
+  background: rgba(255,255,255,.68);
+}
+
+.template-preview span:nth-child(2) {
+  width: 70%;
+}
+
+.template-preview span:nth-child(3) {
+  width: 48%;
+}
+
+.blank-preview {
+  place-items: center;
+  grid-template-rows: 1fr;
+  color: var(--sf-on-surface-variant);
+  background: var(--sf-surface-container);
+}
+
+.blank-preview .material-symbols-outlined {
+  font-size: 34px;
+}
+
+.preview-site-retail {
+  background: linear-gradient(135deg, #f7f2ea, #173154);
+}
+
+.preview-site-beauty {
+  background: linear-gradient(135deg, #f5dfcf, #6b5c4c);
+}
+
+.preview-site-beverage {
+  background: linear-gradient(135deg, #381c18, #d8a85d);
+}
+
+.preview-site-3c {
+  background: linear-gradient(135deg, #071827, #2f80ed);
 }
 
 .sf-modal-actions {

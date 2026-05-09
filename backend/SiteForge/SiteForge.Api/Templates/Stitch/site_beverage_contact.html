@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-TW"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500&amp;family=Manrope:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-surface": "#30312e",
+                    "primary-fixed-dim": "#c8c6c5",
+                    "secondary-fixed": "#ffdea5",
+                    "on-secondary-fixed": "#261900",
+                    "inverse-on-surface": "#f2f1ec",
+                    "surface-bright": "#fbf9f4",
+                    "on-primary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#e9c176",
+                    "on-secondary": "#ffffff",
+                    "surface-container": "#f0eee9",
+                    "surface-tint": "#5f5e5e",
+                    "tertiary": "#000000",
+                    "on-secondary-fixed-variant": "#5d4201",
+                    "on-primary-container": "#858383",
+                    "outline-variant": "#c4c7c7",
+                    "on-background": "#1b1c19",
+                    "surface": "#fbf9f4",
+                    "tertiary-container": "#410007",
+                    "secondary": "#775a19",
+                    "on-primary-fixed-variant": "#474746",
+                    "background": "#fbf9f4",
+                    "on-surface-variant": "#444748",
+                    "on-error": "#ffffff",
+                    "surface-dim": "#dbdad5",
+                    "on-error-container": "#93000a",
+                    "primary-fixed": "#e5e2e1",
+                    "on-primary-fixed": "#1c1b1b",
+                    "surface-container-low": "#f5f3ee",
+                    "tertiary-fixed-dim": "#ffb3b1",
+                    "on-surface": "#1b1c19",
+                    "error": "#ba1a1a",
+                    "on-tertiary-container": "#d16162",
+                    "surface-container-high": "#eae8e3",
+                    "outline": "#747878",
+                    "tertiary-fixed": "#ffdad8",
+                    "secondary-container": "#fed488",
+                    "on-tertiary-fixed": "#410007",
+                    "on-tertiary": "#ffffff",
+                    "inverse-primary": "#c8c6c5",
+                    "surface-variant": "#e4e2dd",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-highest": "#e4e2dd",
+                    "on-secondary-container": "#785a1a",
+                    "primary-container": "#1c1b1b",
+                    "primary": "#000000",
+                    "on-tertiary-fixed-variant": "#82252a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "md": "24px",
+                    "lg": "48px",
+                    "xl": "80px",
+                    "gutter": "24px",
+                    "xs": "4px",
+                    "sm": "12px",
+                    "container-max": "1280px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "body-md": ["Manrope"],
+                    "legal-sm": ["Manrope"],
+                    "headline-xl": ["EB Garamond"],
+                    "display-lg": ["EB Garamond"],
+                    "headline-md": ["EB Garamond"],
+                    "label-caps": ["Manrope"],
+                    "body-lg": ["Manrope"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "legal-sm": ["11px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                    "headline-xl": ["48px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                    "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+                    "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "1.4", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .bg-tactile {
+            background-image: radial-gradient(#c4c7c7 0.5px, transparent 0.5px);
+            background-size: 24px 24px;
+            opacity: 0.1;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md overflow-x-hidden">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-gutter py-sm max-w-container-max mx-auto bg-surface border-b border-outline-variant">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary cursor-pointer">menu</span>
+<span class="font-display-lg text-headline-md tracking-widest text-primary">VINTAGE &amp; VINE</span>
+</div>
+<nav class="hidden md:flex gap-lg items-center">
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-secondary transition-colors" href="#">HOME</a>
+<a class="font-label-caps text-label-caps text-on-surface-variant hover:text-secondary transition-colors" href="#">COLLECTIONS</a>
+<a class="font-label-caps text-label-caps text-primary font-bold border-b-2 border-secondary" href="#">CONTACT</a>
+</nav>
+<button class="font-label-caps text-label-caps px-md py-xs border border-secondary text-secondary hover:bg-secondary hover:text-white transition-all">
+            B2B PARTNERSHIP
+        </button>
+</header>
+<main class="pt-xl mt-xl">
+<!-- Hero Section -->
+<section class="max-w-container-max mx-auto px-gutter mb-xl text-center">
+<h1 class="font-display-lg text-display-lg text-primary mb-sm">CONNECT WITH THE SOURCE</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                Whether you are a connoisseur seeking a rare vintage or a business partner looking for elite distribution, our team is at your service.
+            </p>
+</section>
+<!-- Main Content Grid -->
+<section class="max-w-container-max mx-auto px-gutter mb-xl grid grid-cols-1 md:grid-cols-12 gap-lg">
+<!-- Contact Info Column -->
+<div class="md:col-span-5 space-y-lg">
+<!-- Multi-Channel Bento -->
+<div class="grid grid-cols-1 gap-md">
+<!-- General Service -->
+<div class="p-lg border border-outline-variant hover:border-secondary transition-colors group">
+<span class="material-symbols-outlined text-secondary mb-sm" style="font-variation-settings: 'FILL' 1;">support_agent</span>
+<h3 class="font-label-caps text-label-caps mb-xs">GENERAL ENQUIRIES</h3>
+<p class="font-headline-md text-headline-md mb-xs">Customer Concierge</p>
+<p class="font-body-md text-body-md text-on-surface-variant mb-md">Daily 09:00 — 18:00</p>
+<a class="font-body-md text-primary underline block" href="tel:+886223456789">+886 2 2345 6789</a>
+<a class="font-body-md text-primary underline block" href="mailto:service@vintagevine.com">service@vintagevine.com</a>
+</div>
+<!-- Distribution -->
+<div class="p-lg border border-outline-variant hover:border-secondary transition-colors">
+<span class="material-symbols-outlined text-secondary mb-sm" style="font-variation-settings: 'FILL' 1;">handshake</span>
+<h3 class="font-label-caps text-label-caps mb-xs">PARTNERSHIP</h3>
+<p class="font-headline-md text-headline-md mb-xs">Distribution &amp; B2B</p>
+<p class="font-body-md text-body-md text-on-surface-variant">Access our exclusive wholesale inventory and temperature-controlled logistics network.</p>
+<div class="mt-md flex gap-sm items-center">
+<span class="material-symbols-outlined text-on-surface-variant">qr_code_2</span>
+<span class="font-label-caps text-label-caps">OFFICIAL LINE ID: @VINTAGEVINE_B2B</span>
+</div>
+</div>
+<!-- Purchasing -->
+<div class="p-lg border border-outline-variant hover:border-secondary transition-colors">
+<span class="material-symbols-outlined text-secondary mb-sm" style="font-variation-settings: 'FILL' 1;">liquor</span>
+<h3 class="font-label-caps text-label-caps mb-xs">PROCUREMENT</h3>
+<p class="font-headline-md text-headline-md mb-xs">Global Sourcing</p>
+<p class="font-body-md text-body-md text-on-surface-variant">For wineries and estates looking for representation in the Asian market.</p>
+</div>
+</div>
+<!-- Social Links -->
+<div class="flex gap-md pt-md items-center">
+<span class="font-label-caps text-label-caps">FOLLOW US</span>
+<a class="w-10 h-10 border border-outline-variant flex items-center justify-center hover:bg-secondary hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined text-body-lg">public</span>
+</a>
+<a class="w-10 h-10 border border-outline-variant flex items-center justify-center hover:bg-secondary hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined text-body-lg">share</span>
+</a>
+<a class="w-10 h-10 border border-outline-variant flex items-center justify-center hover:bg-secondary hover:text-white transition-all" href="#">
+<span class="material-symbols-outlined text-body-lg">mail</span>
+</a>
+</div>
+</div>
+<!-- Form Column -->
+<div class="md:col-span-7 bg-surface-container-low p-lg md:p-xl relative overflow-hidden">
+<div class="absolute top-0 right-0 w-full h-full bg-tactile pointer-events-none"></div>
+<h2 class="font-headline-md text-headline-md mb-lg relative z-10">Direct Message</h2>
+<form class="space-y-md relative z-10">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md">
+<div class="space-y-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant">FULL NAME</label>
+<input class="w-full bg-transparent border-0 border-b border-outline px-0 py-xs focus:ring-0 focus:border-secondary transition-colors" placeholder="Enter your name" type="text"/>
+</div>
+<div class="space-y-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant">ORGANIZATION</label>
+<input class="w-full bg-transparent border-0 border-b border-outline px-0 py-xs focus:ring-0 focus:border-secondary transition-colors" placeholder="Company (Optional)" type="text"/>
+</div>
+</div>
+<div class="space-y-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant">EMAIL ADDRESS</label>
+<input class="w-full bg-transparent border-0 border-b border-outline px-0 py-xs focus:ring-0 focus:border-secondary transition-colors" placeholder="email@example.com" type="email"/>
+</div>
+<div class="space-y-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant">INQUIRY TYPE</label>
+<select class="w-full bg-transparent border-0 border-b border-outline px-0 py-xs focus:ring-0 focus:border-secondary transition-colors appearance-none">
+<option>Product Information</option>
+<option>Distribution Application</option>
+<option>Events &amp; Tasting</option>
+<option>Career Opportunities</option>
+</select>
+</div>
+<div class="space-y-xs">
+<label class="font-label-caps text-label-caps text-on-surface-variant">YOUR MESSAGE</label>
+<textarea class="w-full bg-transparent border-0 border-b border-outline px-0 py-xs focus:ring-0 focus:border-secondary transition-colors resize-none" placeholder="How can we assist you?" rows="4"></textarea>
+</div>
+<button class="w-full bg-primary text-white py-md font-label-caps text-label-caps tracking-widest hover:bg-secondary transition-all" type="submit">
+                        SEND ENQUIRY
+                    </button>
+</form>
+</div>
+</section>
+<!-- Map Section -->
+<section class="max-w-container-max mx-auto px-gutter mb-xl">
+<div class="w-full h-[500px] bg-surface-container relative">
+<img class="w-full h-full object-cover grayscale opacity-60" data-alt="A sophisticated, high-contrast black and white architectural map illustration of a metropolitan area. The style is minimalist and clean, matching a premium distribution brand's aesthetic. Tonal layering creates a sense of depth and heritage, featuring deep charcoal tones against a soft cream background, suggesting elegance and authority." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCa-N57Um6J5NcLEAqA6mie4PNnUdRuU4zyW4vLE4Az-K1fyZEsfAiefZv2XJ7uEW1oDWHkivFjLJmy1L2x4iqS4ECP1JpNF9xCObK18jghV34IsOh-9Cm6tkAnrHx_X7nVbyUPIXolNlmP3lfh8Ia5cTQHYcBGXJuK7NqA2GL5WGNx5V2k2Vbt9HEwJVQ4YhJMaq9wufM8x7rJcEoBx-lhGRfxLaVhk7D9WusHSZFrzkptvUzMj3VsVpKSvpt00QJRWo9OiVRAEcg"/>
+<div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 p-lg bg-surface border border-secondary shadow-xl max-w-xs">
+<h4 class="font-label-caps text-label-caps text-secondary mb-xs">HEADQUARTERS</h4>
+<p class="font-body-md text-body-md text-primary mb-sm">No. 88, Section 5, Xinyi Road, Xinyi District, Taipei City, Taiwan</p>
+<a class="font-label-caps text-label-caps underline hover:text-secondary transition-colors" href="https://maps.google.com" target="_blank">GET DIRECTIONS</a>
+</div>
+<!-- Location Metadata for Map -->
+<div data-location="Taipei City" style=""></div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full px-gutter py-xl flex flex-col items-center gap-md max-w-container-max mx-auto bg-inverse-surface text-on-primary">
+<div class="font-display-lg text-headline-md text-surface-bright tracking-widest">VINTAGE &amp; VINE</div>
+<nav class="flex flex-wrap justify-center gap-lg my-md">
+<a class="font-label-caps text-label-caps text-surface-variant hover:text-secondary-fixed transition-colors" href="#">PRIVACY POLICY</a>
+<a class="font-label-caps text-label-caps text-surface-variant hover:text-secondary-fixed transition-colors" href="#">TERMS OF SERVICE</a>
+<a class="font-label-caps text-label-caps text-secondary-fixed underline" href="#">RESPONSIBLE DRINKING</a>
+<a class="font-label-caps text-label-caps text-surface-variant hover:text-secondary-fixed transition-colors" href="#">B2B INQUIRY</a>
+</nav>
+<div class="w-full max-w-4xl text-center py-md border-y border-outline">
+<p class="font-legal-sm text-legal-sm text-surface-variant">© 2024 VINTAGE &amp; VINE DISTRIBUTORS. EXCESSIVE DRINKING IS HAZARDOUS TO HEALTH.</p>
+</div>
+<div class="bg-black text-white w-full py-sm text-center font-bold tracking-[0.2em]">
+<p class="text-body-lg">飲 酒 過 量 • 有 礙 健 康</p>
+</div>
+</footer>
+<!-- Navigation Drawer (Hidden by default) -->
+<aside class="fixed inset-y-0 right-0 z-[60] flex flex-col py-lg bg-surface-bright w-80 translate-x-full transition-transform duration-300" id="drawer">
+<div class="px-lg mb-lg">
+<h2 class="font-headline-md text-headline-md text-primary">THE DISTRIBUTOR</h2>
+</div>
+<div class="flex flex-col gap-xs">
+<div class="text-on-surface-variant hover:bg-surface-container rounded-lg mx-2 px-4 py-3 flex items-center gap-sm cursor-pointer">
+<span class="material-symbols-outlined">home</span>
+<span class="font-label-caps text-label-caps">HOME</span>
+</div>
+<div class="text-on-surface-variant hover:bg-surface-container rounded-lg mx-2 px-4 py-3 flex items-center gap-sm cursor-pointer">
+<span class="material-symbols-outlined">auto_awesome</span>
+<span class="font-label-caps text-label-caps">ABOUT BRAND</span>
+</div>
+<div class="text-on-surface-variant hover:bg-surface-container rounded-lg mx-2 px-4 py-3 flex items-center gap-sm cursor-pointer">
+<span class="material-symbols-outlined">liquor</span>
+<span class="font-label-caps text-label-caps">COLLECTIONS</span>
+</div>
+<div class="text-on-surface-variant hover:bg-surface-container rounded-lg mx-2 px-4 py-3 flex items-center gap-sm cursor-pointer">
+<span class="material-symbols-outlined">handshake</span>
+<span class="font-label-caps text-label-caps">PARTNERSHIP</span>
+</div>
+<div class="bg-secondary-container text-on-secondary-container rounded-lg mx-2 px-4 py-3 flex items-center gap-sm translate-x-1 transition-transform">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">mail</span>
+<span class="font-label-caps text-label-caps">CONTACT</span>
+</div>
+</div>
+</aside>
+</body></html>

@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-TW"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;family=IBM+Plex+Sans:wght@600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "on-secondary-container": "#00714e",
+                    "on-error-container": "#93000a",
+                    "surface-container-highest": "#e0e3e5",
+                    "on-primary-container": "#7c839b",
+                    "primary-container": "#131b2e",
+                    "on-secondary-fixed-variant": "#005137",
+                    "primary-fixed-dim": "#bec6e0",
+                    "surface-bright": "#f7f9fb",
+                    "tertiary": "#000000",
+                    "background": "#f7f9fb",
+                    "on-secondary": "#ffffff",
+                    "tertiary-fixed-dim": "#bcc7de",
+                    "tertiary-fixed": "#d8e3fb",
+                    "primary-fixed": "#dae2fd",
+                    "inverse-surface": "#2d3133",
+                    "on-surface-variant": "#45464d",
+                    "outline-variant": "#c6c6cd",
+                    "on-tertiary-fixed": "#111c2d",
+                    "error-container": "#ffdad6",
+                    "error": "#ba1a1a",
+                    "on-secondary-fixed": "#002114",
+                    "tertiary-container": "#111c2d",
+                    "outline": "#76777d",
+                    "on-primary": "#ffffff",
+                    "primary": "#000000",
+                    "inverse-primary": "#bec6e0",
+                    "surface-variant": "#e0e3e5",
+                    "surface-tint": "#565e74",
+                    "on-primary-fixed-variant": "#3f465c",
+                    "secondary-container": "#82f5c1",
+                    "on-tertiary-container": "#79849a",
+                    "on-surface": "#191c1e",
+                    "on-error": "#ffffff",
+                    "surface": "#f7f9fb",
+                    "surface-container-lowest": "#ffffff",
+                    "inverse-on-surface": "#eff1f3",
+                    "secondary-fixed-dim": "#68dba9",
+                    "surface-container-low": "#f2f4f6",
+                    "secondary-fixed": "#85f8c4",
+                    "on-background": "#191c1e",
+                    "surface-container-high": "#e6e8ea",
+                    "on-primary-fixed": "#131b2e",
+                    "surface-container": "#eceef0",
+                    "surface-dim": "#d8dadc",
+                    "on-tertiary-fixed-variant": "#3c475a",
+                    "on-tertiary": "#ffffff",
+                    "secondary": "#006c4a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "sm": "12px",
+                    "container-max": "1200px",
+                    "xs": "4px",
+                    "base": "8px",
+                    "lg": "40px",
+                    "gutter": "24px",
+                    "md": "24px",
+                    "xl": "64px"
+            },
+            "fontFamily": {
+                    "label-caps": ["Inter"],
+                    "body-base": ["Inter"],
+                    "headline-xl": ["Inter"],
+                    "code-trace": ["IBM Plex Sans"],
+                    "headline-md": ["Inter"]
+            },
+            "fontSize": {
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.08em", "fontWeight": "700"}],
+                    "body-base": ["16px", {"lineHeight": "1.6", "letterSpacing": "0", "fontWeight": "400"}],
+                    "headline-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "code-trace": ["14px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            left: 15px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background-color: #e2e8f0;
+            z-index: 0;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-base text-body-base pb-32">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-gutter py-sm bg-surface dark:bg-on-background border-b border-outline-variant dark:border-outline max-w-container-max mx-auto h-16">
+<div class="flex items-center gap-base">
+<span class="material-symbols-outlined text-primary dark:text-inverse-primary">arrow_back</span>
+<h1 class="text-headline-md font-headline-md font-bold text-primary dark:text-inverse-primary">產品追溯資訊</h1>
+</div>
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-on-surface-variant dark:text-outline-variant">search</span>
+</div>
+</header>
+<main class="mt-20 px-gutter space-y-md">
+<!-- Status Overview: Hero Card -->
+<section class="bg-surface-container-lowest border border-outline-variant rounded-lg p-md shadow-sm relative overflow-hidden border-l-4 border-l-secondary">
+<div class="absolute top-0 right-0 p-base">
+<div class="bg-secondary-container text-on-secondary-container px-sm py-xs rounded-full flex items-center gap-xs">
+<span class="material-symbols-outlined text-[16px]" data-weight="fill" style="font-variation-settings: 'FILL' 1;">verified</span>
+<span class="font-label-caps text-label-caps">Verification Successful</span>
+</div>
+</div>
+<div class="space-y-sm pt-base">
+<div class="flex items-center gap-sm">
+<div class="w-20 h-20 bg-surface-container-high rounded-xl overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="A professional product photography of a premium glass olive oil bottle with a minimalist label, set against a clean, clinical white background with soft overhead lighting. The composition is centered, conveying high-end luxury and pharmaceutical-grade purity. The color palette is dominated by deep navy and emerald green accents, reflecting an authoritative and trustworthy corporate brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDlt_n7ay3fttuY6f7a53zmJcg2aIj2lC7Ho4oVB97_mZIMOCvMRYs5OLhJuS_woxH5AYyAc1YMcslJYX1uEzkaPYkC9YJMDQXv-kOhb0IX9sngV8cTHcmljYyZrH3h971mm6bEOXrXvxQrUD-PQbo5Cz6hfPnWTvf_GVLLYMvjlN36hyquNlEi6BXPCWloHRIEg41nrICwGEaSg7a1hs3kWlfAWMwtW6W0VtRBI1GMfDo2ASVazic8HvO4k8pO0i_EFgcb86X-WWw"/>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md text-primary">Premium Organic Olive Oil</h2>
+<p class="text-on-surface-variant font-label-caps text-label-caps">Batch: {{DATA:batchNumber}}</p>
+</div>
+</div>
+<div class="grid grid-cols-2 gap-sm pt-base border-t border-outline-variant">
+<div>
+<p class="text-on-surface-variant font-label-caps text-label-caps">Trace Code</p>
+<p class="font-code-trace text-code-trace text-primary">{{DATA:traceCode}}</p>
+</div>
+<div>
+<p class="text-on-surface-variant font-label-caps text-label-caps">Scanned At</p>
+<p class="font-code-trace text-code-trace text-primary">{{DATA:scannedAt}}</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Basic Info Section: Bento Grid -->
+<section class="grid grid-cols-2 gap-base">
+<div class="bg-surface-container-low p-sm rounded-lg border border-outline-variant">
+<p class="text-on-surface-variant font-label-caps text-label-caps mb-xs">Brand</p>
+<p class="font-bold text-primary">Heritage Farms</p>
+</div>
+<div class="bg-surface-container-low p-sm rounded-lg border border-outline-variant">
+<p class="text-on-surface-variant font-label-caps text-label-caps mb-xs">Specification</p>
+<p class="font-bold text-primary">500ml</p>
+</div>
+<div class="bg-surface-container-low p-sm rounded-lg border border-outline-variant">
+<p class="text-on-surface-variant font-label-caps text-label-caps mb-xs">Manufactured</p>
+<p class="font-bold text-primary">2024.05.01</p>
+</div>
+<div class="bg-surface-container-low p-sm rounded-lg border border-outline-variant">
+<p class="text-on-surface-variant font-label-caps text-label-caps mb-xs">Expiry Date</p>
+<p class="font-bold text-primary">2026.05.01</p>
+</div>
+<div class="col-span-2 bg-surface-container-low p-sm rounded-lg border border-outline-variant flex justify-between items-center">
+<div>
+<p class="text-on-surface-variant font-label-caps text-label-caps mb-xs">Factory</p>
+<p class="font-bold text-primary">{{DATA:factoryName}}</p>
+</div>
+<div class="text-right">
+<p class="text-on-surface-variant font-label-caps text-label-caps mb-xs">Origin</p>
+<p class="font-bold text-primary">{{DATA:origin}}</p>
+</div>
+</div>
+</section>
+<!-- Traceability Timeline -->
+<section class="space-y-md">
+<h3 class="font-headline-md text-headline-md text-primary px-xs">Traceability Journey</h3>
+<div class="relative pl- base space-y-lg timeline-line">
+<!-- Row 1 -->
+<div class="relative z-10 flex items-start gap-md">
+<div class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-on-secondary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex-1">
+<p class="font-bold text-primary">原料來源 (Raw Materials)</p>
+<p class="text-sm text-on-surface-variant">Certified Organic Grove, Mediterranean Basin</p>
+<p class="text-xs font-code-trace text-outline mt-xs">2024.04.15 08:30</p>
+</div>
+</div>
+<!-- Row 2 -->
+<div class="relative z-10 flex items-start gap-md">
+<div class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-on-secondary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex-1">
+<p class="font-bold text-primary">生產製造 (Manufacturing)</p>
+<p class="text-sm text-on-surface-variant">Cold Extraction Process - Facility A1</p>
+<p class="text-xs font-code-trace text-outline mt-xs">2024.04.28 14:15</p>
+</div>
+</div>
+<!-- Row 3: Active/Quality -->
+<div class="relative z-10 flex items-start gap-md">
+<div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary ring-4 ring-primary-container">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-center">
+<p class="font-bold text-primary">品質檢驗 (Quality Inspection)</p>
+<span class="bg-secondary-container text-on-secondary-container px-base py-0.5 rounded-full text-xs font-bold uppercase">Pass</span>
+</div>
+<p class="text-sm text-on-surface-variant">Acidity &amp; Peroxide Value Verification</p>
+<p class="text-xs font-code-trace text-outline mt-xs">2024.04.30 10:00</p>
+</div>
+</div>
+<!-- Row 4 -->
+<div class="relative z-10 flex items-start gap-md">
+<div class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-on-secondary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex-1">
+<p class="font-bold text-primary">包裝入庫 (Packaging)</p>
+<p class="text-sm text-on-surface-variant">Nitrogen Sealed Packaging</p>
+<p class="text-xs font-code-trace text-outline mt-xs">2024.05.01 16:45</p>
+</div>
+</div>
+<!-- Row 5 -->
+<div class="relative z-10 flex items-start gap-md">
+<div class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-on-secondary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex-1">
+<p class="font-bold text-primary">物流配送 (Logistics)</p>
+<p class="text-sm text-on-surface-variant">Temperature Controlled Transit - {{DATA:logisticsStatus}}</p>
+<p class="text-xs font-code-trace text-outline mt-xs">2024.05.05 09:20</p>
+</div>
+</div>
+<!-- Row 6 -->
+<div class="relative z-10 flex items-start gap-md">
+<div class="w-8 h-8 rounded-full bg-secondary flex items-center justify-center text-on-secondary">
+<span class="material-symbols-outlined text-[18px]" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<div class="flex-1">
+<p class="font-bold text-primary">通路上架 (Retail)</p>
+<p class="text-sm text-on-surface-variant">Central Distribution Hub</p>
+<p class="text-xs font-code-trace text-outline mt-xs">2024.05.10 11:30</p>
+</div>
+</div>
+<!-- Row 7 -->
+<div class="relative z-10 flex items-start gap-md">
+<div class="w-8 h-8 rounded-full bg-secondary-container flex items-center justify-center text-on-secondary-container">
+<span class="material-symbols-outlined text-[18px]">qr_code_scanner</span>
+</div>
+<div class="flex-1">
+<p class="font-bold text-primary">消費者掃碼 (Current Scan)</p>
+<p class="text-sm text-on-surface-variant">Verified by User</p>
+<p class="text-xs font-code-trace text-outline mt-xs">JUST NOW</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Quality & Inspection Details -->
+<section class="bg-surface-container-low rounded-xl p-md border border-outline-variant space-y-sm">
+<div class="flex justify-between items-center">
+<h4 class="font-bold text-primary flex items-center gap-xs">
+<span class="material-symbols-outlined text-secondary">fact_check</span>
+                    Quality Assurance
+                </h4>
+<p class="text-xs text-on-surface-variant">Report ID: QA-7729</p>
+</div>
+<div class="space-y-xs">
+<div class="flex justify-between text-sm py-xs border-b border-outline-variant">
+<span class="text-on-surface-variant">Microbial Testing</span>
+<span class="text-on-secondary-container font-bold">PASS</span>
+</div>
+<div class="flex justify-between text-sm py-xs border-b border-outline-variant">
+<span class="text-on-surface-variant">Heavy Metals</span>
+<span class="text-on-secondary-container font-bold">PASS</span>
+</div>
+<div class="flex justify-between text-sm py-xs border-b border-outline-variant">
+<span class="text-on-surface-variant">Pesticide Residue</span>
+<span class="text-on-secondary-container font-bold">PASS</span>
+</div>
+</div>
+<button class="w-full mt-base py-sm bg-primary text-on-primary rounded-lg font-bold flex items-center justify-center gap-sm active:scale-95 transition-transform duration-150">
+<span class="material-symbols-outlined">download</span>
+                Download Inspection Report
+            </button>
+</section>
+<!-- Logistics & Storage -->
+<section class="bg-white rounded-xl p-md border border-outline-variant space-y-md">
+<h4 class="font-bold text-primary flex items-center gap-xs">
+<span class="material-symbols-outlined text-primary">thermostat</span>
+                Storage &amp; Logistics
+            </h4>
+<div class="flex items-center gap-md">
+<div class="flex-1">
+<p class="text-on-surface-variant font-label-caps text-label-caps">Storage Temp</p>
+<p class="text-headline-md font-headline-md text-primary">18°C - 24°C</p>
+</div>
+<div class="w-px h-10 bg-outline-variant"></div>
+<div class="flex-1">
+<p class="text-on-surface-variant font-label-caps text-label-caps">Status</p>
+<p class="text-headline-md font-headline-md text-secondary">Optimal</p>
+</div>
+</div>
+<div class="pt-base border-t border-outline-variant">
+<p class="text-on-surface-variant font-label-caps text-label-caps">Distributor</p>
+<p class="font-bold text-primary">Global Fine Foods Logistics Co.</p>
+</div>
+</section>
+<!-- CTA Cluster -->
+<section class="grid grid-cols-2 gap-sm pt-base">
+<button class="flex flex-col items-center justify-center gap-xs py-md bg-surface-container-high rounded-xl border border-outline-variant hover:bg-surface-variant transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-primary">support_agent</span>
+<span class="font-bold text-primary">聯絡客服</span>
+</button>
+<button class="flex flex-col items-center justify-center gap-xs py-md bg-surface-container-high rounded-xl border border-outline-variant hover:bg-surface-variant transition-colors active:scale-95 duration-150">
+<span class="material-symbols-outlined text-error">report_problem</span>
+<span class="font-bold text-primary">回報異常</span>
+</button>
+<button class="col-span-2 py-md bg-primary-container text-on-primary-container rounded-xl font-bold border border-primary flex items-center justify-center gap-sm active:scale-95 transition-transform">
+                更多詳情
+                <span class="material-symbols-outlined">chevron_right</span>
+</button>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full py-xl px-gutter flex flex-col items-center gap-base bg-surface-container-low dark:bg-surface-container-highest border-t border-outline-variant dark:border-outline">
+<p class="text-primary font-bold">Corporate Quality Assurance Seal</p>
+<p class="text-on-surface dark:text-on-surface-variant text-body-base text-center">© 2024 Corporate Quality Assurance Seal. All rights reserved.</p>
+<div class="flex flex-wrap justify-center gap-md">
+<a class="text-on-surface-variant dark:text-outline font-label-caps text-label-caps hover:text-primary transition-colors" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant dark:text-outline font-label-caps text-label-caps hover:text-primary transition-colors" href="#">Legal Disclaimer</a>
+<a class="text-on-surface-variant dark:text-outline font-label-caps text-label-caps hover:text-primary transition-colors" href="#">Terms of Service</a>
+</div>
+</footer>
+<!-- BottomNavBar (Navigation Shell) -->
+<nav class="fixed bottom-0 left-0 w-full z-50 flex justify-around items-center px-sm py-xs bg-surface dark:bg-on-background border-t border-outline-variant dark:border-outline shadow-sm">
+<div class="flex flex-col items-center justify-center bg-primary-container dark:bg-tertiary-container text-on-primary-container dark:text-on-tertiary-container rounded-full px-4 py-1 scale-95 transition-all duration-200">
+<span class="material-symbols-outlined">qr_code_scanner</span>
+<span class="text-label-caps font-label-caps">Trace</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-low dark:hover:bg-surface-variant rounded-full px-4 py-1">
+<span class="material-symbols-outlined">description</span>
+<span class="text-label-caps font-label-caps">Report</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-low dark:hover:bg-surface-variant rounded-full px-4 py-1">
+<span class="material-symbols-outlined">support_agent</span>
+<span class="text-label-caps font-label-caps">Support</span>
+</div>
+<div class="flex flex-col items-center justify-center text-on-surface-variant dark:text-outline-variant hover:bg-surface-container-low dark:hover:bg-surface-variant rounded-full px-4 py-1">
+<span class="material-symbols-outlined">report_problem</span>
+<span class="text-label-caps font-label-caps">Issue</span>
+</div>
+</nav>
+</body></html>

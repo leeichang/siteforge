@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-Hant"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;500;700&amp;family=Manrope:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-surface": "#30312e",
+                    "primary-fixed-dim": "#c8c6c5",
+                    "secondary-fixed": "#ffdea5",
+                    "on-secondary-fixed": "#261900",
+                    "inverse-on-surface": "#f2f1ec",
+                    "surface-bright": "#fbf9f4",
+                    "on-primary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#e9c176",
+                    "on-secondary": "#ffffff",
+                    "surface-container": "#f0eee9",
+                    "surface-tint": "#5f5e5e",
+                    "tertiary": "#000000",
+                    "on-secondary-fixed-variant": "#5d4201",
+                    "on-primary-container": "#858383",
+                    "outline-variant": "#c4c7c7",
+                    "on-background": "#1b1c19",
+                    "surface": "#fbf9f4",
+                    "tertiary-container": "#410007",
+                    "secondary": "#775a19",
+                    "on-primary-fixed-variant": "#474746",
+                    "background": "#fbf9f4",
+                    "on-surface-variant": "#444748",
+                    "on-error": "#ffffff",
+                    "surface-dim": "#dbdad5",
+                    "on-error-container": "#93000a",
+                    "primary-fixed": "#e5e2e1",
+                    "on-primary-fixed": "#1c1b1b",
+                    "surface-container-low": "#f5f3ee",
+                    "tertiary-fixed-dim": "#ffb3b1",
+                    "on-surface": "#1b1c19",
+                    "error": "#ba1a1a",
+                    "on-tertiary-container": "#d16162",
+                    "surface-container-high": "#eae8e3",
+                    "outline": "#747878",
+                    "tertiary-fixed": "#ffdad8",
+                    "secondary-container": "#fed488",
+                    "on-tertiary-fixed": "#410007",
+                    "on-tertiary": "#ffffff",
+                    "inverse-primary": "#c8c6c5",
+                    "surface-variant": "#e4e2dd",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-highest": "#e4e2dd",
+                    "on-secondary-container": "#785a1a",
+                    "primary-container": "#1c1b1b",
+                    "primary": "#000000",
+                    "on-tertiary-fixed-variant": "#82252a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "md": "24px",
+                    "lg": "48px",
+                    "xl": "80px",
+                    "gutter": "24px",
+                    "xs": "4px",
+                    "sm": "12px",
+                    "container-max": "1280px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "body-md": ["Manrope"],
+                    "legal-sm": ["Manrope"],
+                    "headline-xl": ["EB Garamond"],
+                    "display-lg": ["EB Garamond"],
+                    "headline-md": ["EB Garamond"],
+                    "label-caps": ["Manrope"],
+                    "body-lg": ["Manrope"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "legal-sm": ["11px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                    "headline-xl": ["48px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                    "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+                    "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "1.4", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .text-label-caps { text-transform: uppercase; }
+        .product-card-hover { transition: all 0.3s ease; }
+        .product-card-hover:hover { border-color: #c5a059; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-surface text-on-surface font-body-md">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-gutter py-sm max-w-container-max mx-auto bg-surface border-b border-outline-variant">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary cursor-pointer">menu</span>
+<span class="font-display-lg text-headline-md tracking-widest text-primary">VINTAGE &amp; VINE</span>
+</div>
+<nav class="hidden md:flex items-center gap-lg">
+<a class="text-primary font-bold border-b-2 border-secondary font-label-caps text-label-caps" href="#">COLLECTIONS</a>
+<a class="text-on-surface-variant font-medium hover:text-secondary transition-colors duration-300 font-label-caps text-label-caps" href="#">JOURNAL</a>
+<a class="text-on-surface-variant font-medium hover:text-secondary transition-colors duration-300 font-label-caps text-label-caps" href="#">ABOUT BRAND</a>
+</nav>
+<button class="bg-primary text-on-primary px-md py-xs font-label-caps text-label-caps hover:opacity-80 transition-all">B2B PARTNERSHIP</button>
+</header>
+<main class="pt-[120px] pb-xl px-gutter max-w-container-max mx-auto">
+<!-- Hero Section -->
+<section class="mb-xl text-center md:text-left">
+<p class="font-label-caps text-label-caps text-secondary mb-sm">CURATED SELECTION</p>
+<h1 class="font-display-lg text-display-lg text-primary mb-md">THE COLLECTIONS</h1>
+<div class="h-[1px] w-24 bg-secondary mb-md md:mx-0 mx-auto"></div>
+<p class="font-body-lg text-on-surface-variant max-w-2xl">Discover our meticulously sourced portfolio, ranging from heritage vineyards to avant-garde craft breweries. Each bottle tells a story of terroir, tradition, and innovation.</p>
+</section>
+<!-- Category Tabs -->
+<div class="flex flex-wrap gap-md mb-lg border-b border-outline-variant pb-base overflow-x-auto whitespace-nowrap">
+<button class="text-primary font-bold border-b-2 border-secondary px-sm py-xs font-label-caps text-label-caps">ALL CATEGORIES</button>
+<button class="text-on-surface-variant font-medium hover:text-secondary px-sm py-xs font-label-caps text-label-caps">精釀啤酒 CRAFT BEER</button>
+<button class="text-on-surface-variant font-medium hover:text-secondary px-sm py-xs font-label-caps text-label-caps">葡萄酒 WINE</button>
+<button class="text-on-surface-variant font-medium hover:text-secondary px-sm py-xs font-label-caps text-label-caps">烈酒 SPIRITS</button>
+<button class="text-on-surface-variant font-medium hover:text-secondary px-sm py-xs font-label-caps text-label-caps">無酒精 NON-ALCOHOLIC</button>
+</div>
+<!-- Product Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-lg">
+<!-- Product Card 1 -->
+<div class="product-card-hover border border-outline-variant flex flex-col group bg-surface-container-low">
+<div class="relative aspect-[4/5] overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A premium high-fidelity product photograph of a sophisticated red wine bottle with a minimalist label. The bottle is set against a neutral, warm cream studio background with elegant, soft directional lighting that highlights the glass texture. The overall aesthetic is minimalist and luxurious, following a modern heritage brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCaaXC4_nGZ4eb51G-adFLoV39vn_6UPlLBEnHhI1TMyEvF_sQXFVQcu_Zk1m8koc6e4wfdNKkrJLb2sFy9s0EgBpZh7aPK7EQlBrD7uld-8g8wK8DRlh62aWX9bqGfCEkNnLH9MRDmKtjHB96cbKHZP0uwKsQVdjzS9EkscmNQjSOxtgju1ZAn4OW_iUEwlY37XGozWc57tVsXqj1ITjQd-1r3_KQzSRMBz6bh-NZNNhbYns3sxBghgvLOz0oIo9Noqn0EHFD18fU"/>
+<div class="absolute top-sm right-sm flex flex-col gap-xs items-end">
+<span class="bg-primary text-on-primary px-sm py-[2px] font-label-caps text-label-caps text-[10px]">LIMITED EDITION</span>
+<span class="bg-secondary text-on-secondary px-sm py-[2px] font-label-caps text-label-caps text-[10px]">AWARD WINNER</span>
+</div>
+</div>
+<div class="p-md flex flex-col flex-grow">
+<p class="font-label-caps text-label-caps text-on-surface-variant text-[10px] mb-xs">WINE · 2018 RESERVE</p>
+<h3 class="font-headline-md text-headline-md text-primary mb-sm leading-tight">Château de Lumière Cabernet</h3>
+<p class="font-body-md text-on-surface-variant mb-md line-clamp-2">Dark cherries and tobacco with a hint of vanilla and a structured tannin finish.</p>
+<div class="mt-auto space-y-xs pt-md border-t border-outline-variant">
+<div class="flex justify-between font-label-caps text-label-caps text-on-surface-variant">
+<span>VOLUME / ABV</span>
+<span class="text-primary">750ML / 14.5%</span>
+</div>
+<div class="flex justify-between font-label-caps text-label-caps text-on-surface-variant">
+<span>PAIRING</span>
+<span class="text-primary">WAGYU STEAK, AGED CHEESE</span>
+</div>
+</div>
+<button class="mt-lg w-full border border-secondary text-secondary font-label-caps text-label-caps py-sm hover:bg-secondary hover:text-white transition-colors duration-300">
+                        WHOLESALE INQUIRY
+                    </button>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="product-card-hover border border-outline-variant flex flex-col group bg-surface-container-low">
+<div class="relative aspect-[4/5] overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A macro shot of a sleek craft beer can with a modern, artistic graphic design. The can is placed on a textured dark charcoal surface with subtle condensation droplets, lit by a cool, crisp light that emphasizes its tactile quality. The background is a blurred high-end taproom setting, reflecting a premium distribution aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB0453vEhldGhb-HsTL63DKtnTLfxJ-yVAoK36lkiDB2iXubFzveZ1uI75-T9G2Q3ThL7_F98xQv8VSlxHawwMlLFqbyMoi9opl9Q57JxZYmF1pQVIa_6RPmqdTl7JBJbMl6_7Mcm5HxioxbCQUcFq7B7fLizChMHiKxxNuIkwNk86OJ7V3TBSwf-Ca4zj-Pts73-z-NQv6qiqY9YmR-q23djN6tn9AeXN1i3pYG4HDL6ahcjC0Nmy-gJktseVkfRK92d9Fzv5awbg"/>
+<div class="absolute top-sm right-sm">
+<span class="bg-primary text-on-primary px-sm py-[2px] font-label-caps text-label-caps text-[10px]">NEW ARRIVAL</span>
+</div>
+</div>
+<div class="p-md flex flex-col flex-grow">
+<p class="font-label-caps text-label-caps text-on-surface-variant text-[10px] mb-xs">CRAFT BEER · HAZY IPA</p>
+<h3 class="font-headline-md text-headline-md text-primary mb-sm leading-tight">Nebula Hop Explorer</h3>
+<p class="font-body-md text-on-surface-variant mb-md line-clamp-2">Explosive tropical notes of passionfruit and mango with a silky, velvet mouthfeel.</p>
+<div class="mt-auto space-y-xs pt-md border-t border-outline-variant">
+<div class="flex justify-between font-label-caps text-label-caps text-on-surface-variant">
+<span>VOLUME / ABV</span>
+<span class="text-primary">473ML / 6.8%</span>
+</div>
+<div class="flex justify-between font-label-caps text-label-caps text-on-surface-variant">
+<span>PAIRING</span>
+<span class="text-primary">SPICY THAI, GRILLED SALMON</span>
+</div>
+</div>
+<button class="mt-lg w-full border border-secondary text-secondary font-label-caps text-label-caps py-sm hover:bg-secondary hover:text-white transition-colors duration-300">
+                        WHOLESALE INQUIRY
+                    </button>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="product-card-hover border border-outline-variant flex flex-col group bg-surface-container-low">
+<div class="relative aspect-[4/5] overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="An elegant whiskey decanter and a glass on a dark wood table. The scene is illuminated by the warm amber glow of the liquid and soft candlelight, creating a sophisticated and authoritative atmosphere of a private club. The focus is on the golden hues of the spirits and the intricate crystal textures." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbdnWXpEC8U0nm9wQvJ4ve721qrSObAS4xZ43Ou1h3afi8JEtPFqh6poyP_4Y7vlVSunehvAtTeWG8bskZ3YJce5Xs0KMVx2mD_-sy6mMKmLvTkW7jh42gClfrgm--zCR8_Lj6gxXRhqOeQ3Om5lrQtHrceMsSHIpEHhdJPmBAKFaxKLGGFJ-U5zSesF7JXR8APjYsGvzRxOvD0A9-AUYkhr8SuavIVRBEDyildlG0Hzca1E2x-MjIGkqHfR_qo-VcL4Up3UwUl6k"/>
+</div>
+<div class="p-md flex flex-col flex-grow">
+<p class="font-label-caps text-label-caps text-on-surface-variant text-[10px] mb-xs">SPIRITS · SINGLE MALT</p>
+<h3 class="font-headline-md text-headline-md text-primary mb-sm leading-tight">Iron Oak 12Y Islay</h3>
+<p class="font-body-md text-on-surface-variant mb-md line-clamp-2">Peat smoke balanced with sea salt, dried apricots, and a lingering spice finish.</p>
+<div class="mt-auto space-y-xs pt-md border-t border-outline-variant">
+<div class="flex justify-between font-label-caps text-label-caps text-on-surface-variant">
+<span>VOLUME / ABV</span>
+<span class="text-primary">700ML / 43%</span>
+</div>
+<div class="flex justify-between font-label-caps text-label-caps text-on-surface-variant">
+<span>PAIRING</span>
+<span class="text-primary">DARK CHOCOLATE, OYSTERS</span>
+</div>
+</div>
+<button class="mt-lg w-full border border-secondary text-secondary font-label-caps text-label-caps py-sm hover:bg-secondary hover:text-white transition-colors duration-300">
+                        WHOLESALE INQUIRY
+                    </button>
+</div>
+</div>
+<!-- Product Card 4 (Non-Alcoholic) -->
+<div class="product-card-hover border border-outline-variant flex flex-col group bg-surface-container-low">
+<div class="relative aspect-[4/5] overflow-hidden bg-surface-container-highest">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A minimalist presentation of a non-alcoholic botanical spirit bottle. The design is clean and contemporary, surrounded by fresh herbs like rosemary and juniper berries on a bright, stone surface. Natural sunlight creates sharp, artistic shadows, emphasizing the purity and sophistication of the product." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDpZQMUxmhx08p0X8OpWfcIxQlOw35NNnVj3ZfzumNWeuE5gExmAZ8WuQqFF7n8pmV1VIWYDge3SBOD1m6fS1UYiM_9m_RFCsrB3i6Q_Ew3UOmEoN9pXQPELsZUco-xyjIYyhZxiuozlwA09A0aLoYY2JPmIKu4g5-SWqhegz0mAhdY7M7ubEcsoN_Ni34GYDQz60XN9Wh6rPTZbVmoT2gQNs0lZsB3rb37oHC2Dz3N11WI7d2NsKV-0WSdk38D2esTBFslDToI2pY"/>
+<div class="absolute top-sm right-sm">
+<span class="bg-secondary text-on-secondary px-sm py-[2px] font-label-caps text-label-caps text-[10px]">AWARD WINNER</span>
+</div>
+</div>
+<div class="p-md flex flex-col flex-grow">
+<p class="font-label-caps text-label-caps text-on-surface-variant text-[10px] mb-xs">NON-ALCOHOLIC · BOTANICAL</p>
+<h3 class="font-headline-md text-headline-md text-primary mb-sm leading-tight">Eden Garden Distilled</h3>
+<p class="font-body-md text-on-surface-variant mb-md line-clamp-2">Complex layers of juniper, citrus peel, and hand-picked garden botanicals without the alcohol.</p>
+<div class="mt-auto space-y-xs pt-md border-t border-outline-variant">
+<div class="flex justify-between font-label-caps text-label-caps text-on-surface-variant">
+<span>VOLUME / ABV</span>
+<span class="text-primary">700ML / 0.0%</span>
+</div>
+<div class="flex justify-between font-label-caps text-label-caps text-on-surface-variant">
+<span>PAIRING</span>
+<span class="text-primary">PREMIUM TONIC, CITRUS</span>
+</div>
+</div>
+<button class="mt-lg w-full border border-secondary text-secondary font-label-caps text-label-caps py-sm hover:bg-secondary hover:text-white transition-colors duration-300">
+                        WHOLESALE INQUIRY
+                    </button>
+</div>
+</div>
+</div>
+<!-- B2B Call to Action Section -->
+<section class="mt-xl p-lg bg-inverse-surface text-on-primary text-center">
+<h2 class="font-headline-xl text-headline-md text-surface-bright mb-md">Elevate Your Establishment</h2>
+<p class="font-body-lg text-primary-fixed-dim max-w-xl mx-auto mb-lg">Access our exclusive wholesale pricing and personalized distribution services for bars, restaurants, and retail partners.</p>
+<div class="flex flex-col sm:flex-row justify-center gap-md">
+<button class="bg-secondary-fixed text-on-secondary-fixed px-lg py-sm font-label-caps text-label-caps font-bold hover:bg-secondary-fixed-dim transition-all">BECOME A PARTNER</button>
+<button class="border border-primary-fixed-dim text-primary-fixed-dim px-lg py-sm font-label-caps text-label-caps font-bold hover:bg-primary-fixed-dim hover:text-inverse-surface transition-all">DOWNLOAD PRICE LIST</button>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full px-gutter py-xl flex flex-col items-center gap-md max-w-container-max mx-auto bg-inverse-surface text-on-primary">
+<span class="font-headline-md text-headline-md text-surface-bright">VINTAGE &amp; VINE DISTRIBUTORS</span>
+<div class="flex flex-wrap justify-center gap-lg">
+<a class="text-surface-variant font-medium hover:text-secondary-fixed-dim transition-colors font-label-caps text-label-caps" href="#">PRIVACY POLICY</a>
+<a class="text-surface-variant font-medium hover:text-secondary-fixed-dim transition-colors font-label-caps text-label-caps" href="#">TERMS OF SERVICE</a>
+<a class="text-surface-variant font-medium hover:text-secondary-fixed-dim transition-colors font-label-caps text-label-caps" href="#">RESPONSIBLE DRINKING</a>
+<a class="text-surface-variant font-medium hover:text-secondary-fixed-dim transition-colors font-label-caps text-label-caps" href="#">B2B INQUIRY</a>
+</div>
+<p class="font-legal-sm text-legal-sm text-primary-fixed-dim text-center mt-md">
+            © 2024 VINTAGE &amp; VINE DISTRIBUTORS. EXCESSIVE DRINKING IS HAZARDOUS TO HEALTH.
+        </p>
+</footer>
+<!-- Legal Warning Banner (Persistent) -->
+<div class="fixed bottom-0 left-0 w-full bg-primary text-on-primary py-xs z-[100] text-center border-t border-secondary">
+<p class="font-label-caps text-label-caps tracking-[0.3em] font-bold">
+            禁止酒駕 · 飲酒過量 有礙健康 · 未滿十八歲禁止飲酒
+        </p>
+</div>
+</body></html>

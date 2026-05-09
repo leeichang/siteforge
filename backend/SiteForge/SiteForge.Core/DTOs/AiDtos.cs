@@ -48,6 +48,7 @@ public class AiGenerateSiteRequest
     public string SiteName { get; set; } = string.Empty;
     public string Prompt { get; set; } = string.Empty;
     public string? Description { get; set; }
+    public string? TemplateKey { get; set; }
     public string Style { get; set; } = "studio";
     public string ContentLength { get; set; } = "medium";
     public List<string>? PageTypes { get; set; }
@@ -61,8 +62,21 @@ public class AiGeneratePageRequest
     public string PageType { get; set; } = "custom";
     public string Prompt { get; set; } = string.Empty;
     public string? Slug { get; set; }
+    public string? TemplateKey { get; set; }
     public string Style { get; set; } = "studio";
     public string ContentLength { get; set; } = "medium";
+}
+
+public class AiTemplateDto
+{
+    public string Key { get; set; } = string.Empty;
+    public string Kind { get; set; } = "page";
+    public string Category { get; set; } = string.Empty;
+    public string Label { get; set; } = string.Empty;
+    public string Description { get; set; } = string.Empty;
+    public string ThumbnailUrl { get; set; } = string.Empty;
+    public int PageCount { get; set; }
+    public List<string> PageTypes { get; set; } = new();
 }
 
 public class AiGeneratedPageDto

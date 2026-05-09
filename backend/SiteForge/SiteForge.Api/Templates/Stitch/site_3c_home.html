@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+
+<html lang="zh-Hant"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-tint": "#004ced",
+                    "surface-variant": "#e0e3e5",
+                    "outline": "#737688",
+                    "on-surface-variant": "#434656",
+                    "inverse-on-surface": "#eff1f3",
+                    "secondary-fixed-dim": "#b9c7df",
+                    "on-tertiary-container": "#dde4ff",
+                    "on-secondary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "tertiary-container": "#5e667d",
+                    "background": "#f7f9fb",
+                    "primary-container": "#0052ff",
+                    "surface": "#f7f9fb",
+                    "surface-container-highest": "#e0e3e5",
+                    "on-secondary-container": "#57657a",
+                    "on-primary-fixed": "#001452",
+                    "tertiary": "#464e64",
+                    "secondary-container": "#d5e3fc",
+                    "secondary": "#515f74",
+                    "surface-bright": "#f7f9fb",
+                    "primary-fixed-dim": "#b7c4ff",
+                    "inverse-primary": "#b7c4ff",
+                    "on-secondary-fixed-variant": "#3a485b",
+                    "on-primary-fixed-variant": "#0038b6",
+                    "secondary-fixed": "#d5e3fc",
+                    "inverse-surface": "#2d3133",
+                    "on-tertiary-fixed-variant": "#3f465c",
+                    "tertiary-fixed": "#dae2fd",
+                    "surface-container-high": "#e6e8ea",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed": "#131b2e",
+                    "primary-fixed": "#dde1ff",
+                    "outline-variant": "#c3c5d9",
+                    "on-primary-container": "#dfe3ff",
+                    "on-surface": "#191c1e",
+                    "on-tertiary": "#ffffff",
+                    "on-background": "#191c1e",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#f2f4f6",
+                    "error": "#ba1a1a",
+                    "surface-container": "#eceef0",
+                    "primary": "#003ec7",
+                    "surface-dim": "#d8dadc",
+                    "tertiary-fixed-dim": "#bec6e0",
+                    "on-primary": "#ffffff",
+                    "on-secondary-fixed": "#0d1c2e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-edge": "32px",
+                    "stack-md": "16px",
+                    "gutter": "24px",
+                    "section-gap": "80px",
+                    "unit": "8px",
+                    "stack-sm": "8px",
+                    "container-max": "1280px",
+                    "stack-lg": "32px"
+            },
+            "fontFamily": {
+                    "body-md": ["Hanken Grotesk"],
+                    "data-tabular": ["Hanken Grotesk"],
+                    "display-lg": ["Hanken Grotesk"],
+                    "headline-md": ["Hanken Grotesk"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "label-sm": ["Hanken Grotesk"],
+                    "label-md": ["Hanken Grotesk"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "data-tabular": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(12, 1fr);
+            gap: 24px;
+        }
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md">
+<!-- TopAppBar -->
+<header class="bg-surface docked full-width top-0 sticky z-50 border-b border-outline-variant">
+<div class="flex justify-between items-center max-w-container-max mx-auto px-margin-edge h-20 w-full">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-headline-md" data-icon="devices">devices</span>
+<span class="text-headline-md font-headline-md font-bold tracking-tight text-primary">TECH-ELITE</span>
+</div>
+<nav class="hidden md:flex items-center gap-gutter">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-md" href="#">Products</a>
+<a class="text-secondary font-label-md hover:text-primary transition-colors" href="#">Solutions</a>
+<a class="text-secondary font-label-md hover:text-primary transition-colors" href="#">Support Center</a>
+<a class="text-secondary font-label-md hover:text-primary transition-colors" href="#">Warranty Policy</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="hidden lg:block text-primary font-label-md hover:bg-surface-container-low px-4 py-2 transition-all">Corporate Sales</button>
+<button class="bg-primary text-on-primary px-6 py-2 font-label-md rounded-lg shadow-sm hover:opacity-90 active:scale-95 transition-all">
+                    Login
+                </button>
+</div>
+</div>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative bg-surface overflow-hidden">
+<div class="max-w-container-max mx-auto px-margin-edge py-section-gap grid grid-cols-1 lg:grid-cols-2 gap-stack-lg items-center">
+<div class="z-10">
+<h1 class="font-display-lg text-display-lg text-on-surface mb-stack-md leading-tight">
+                        可靠科技，讓工作與生活更順手
+                    </h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-stack-lg max-w-xl">
+                        從消費電子產品到企業級解決方案，我們提供穩定規格、快速支援與可擴充的智慧科技服務。
+                    </p>
+<div class="flex flex-wrap gap-4">
+<button class="bg-primary text-on-primary px-8 py-4 font-label-md rounded-lg shadow-md hover:opacity-95 transition-all">
+                            查看產品
+                        </button>
+<button class="border border-outline text-primary px-8 py-4 font-label-md rounded-lg hover:bg-surface-container-low transition-all">
+                            企業採購洽詢
+                        </button>
+</div>
+</div>
+<div class="relative h-[500px] w-full rounded-xl overflow-hidden bg-surface-container shadow-xl">
+<img alt="Tech Elite Hardware" class="w-full h-full object-cover" data-alt="A professional close-up of a high-performance workstation and multiple sleek computer monitors in a bright, modern corporate office. The lighting is crisp and natural, highlighting the metallic textures of the electronic devices. The environment is minimalist and organized, reflecting a premium 3C brand identity with cool blue and slate gray tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBizoRt0iO5CLPC-hdzhXnIlm2cWgEWsGbgJF2IM9DYTB1bwVSH3dzGz2-bLsKqf0ln66Dq6zh7kzxZ0l8N4xYt3t1WwgI2oL_zEHoAtNdS4TnIkKHdeQJwgVIvj6L5vVpIPHfbcZ9njKV4wpdAMfH1hPLmuhBqn0OEc45op4qnLGtn7CbytM-8BmTMhzOG8vES56LZfcAc7eKxBwblTjBKBNAjTk3oCZuC8t-AOTtADu1YNIc9bpBczVksKa_Sgc7xDTPajmExPfk6"/>
+</div>
+</div>
+<!-- Decorative Background Element -->
+<div class="absolute top-0 right-0 -translate-y-1/2 translate-x-1/4 w-[800px] h-[800px] bg-primary/5 rounded-full blur-3xl -z-0"></div>
+</section>
+<!-- Popular Solutions - Bento Grid -->
+<section class="max-w-container-max mx-auto px-margin-edge py-section-gap">
+<div class="mb-stack-lg">
+<span class="text-primary font-label-sm uppercase tracking-widest">Featured</span>
+<h2 class="font-headline-lg text-headline-lg mt-2">熱門產品解決方案</h2>
+</div>
+<div class="bento-grid">
+<!-- Large Card -->
+<div class="col-span-12 lg:col-span-8 bg-white border border-outline-variant rounded-xl p-stack-lg flex flex-col md:flex-row gap-gutter hover:shadow-lg transition-shadow">
+<div class="flex-1 space-y-4">
+<span class="bg-secondary-container text-on-secondary-container px-3 py-1 text-label-sm rounded-full w-fit">Enterprise Grade</span>
+<h3 class="font-headline-md text-headline-md">EliteBook Pro X14</h3>
+<p class="text-on-surface-variant text-body-md line-clamp-2">搭載最新處理器，專為專業人士打造的高效能筆電，具備全天候續航力與極致便攜性。</p>
+<ul class="space-y-2 text-label-md text-secondary">
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm" data-icon="check_circle">check_circle</span>16GB RAM / 1TB SSD</li>
+<li class="flex items-center gap-2"><span class="material-symbols-outlined text-sm" data-icon="check_circle">check_circle</span>4K OLED 顯示器</li>
+</ul>
+<button class="text-primary font-bold flex items-center gap-1 group mt-4">
+                            了解更多 <span class="material-symbols-outlined transition-transform group-hover:translate-x-1" data-icon="arrow_forward">arrow_forward</span>
+</button>
+</div>
+<div class="flex-1 h-64 md:h-auto rounded-lg overflow-hidden bg-surface-container-low">
+<img alt="EliteBook Pro X14" class="w-full h-full object-cover" data-alt="A sleek, high-end laptop open on a minimalist wooden desk. The background is a blurred modern office space with soft lighting. The image emphasizes the thin profile and metallic finish of the device, conveying professional quality and high-tech elegance." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBC7wtWA5W4rjh6yyq_dKCN_x-OscipDCihxKqq6HxHA9U25Fo7d5XQMEzoaHXO3wYRk8rB07KT1j_H0X2TcM15nCm1ez5LLDBJV3HQGD9w6TCcabeCoUmZwY791ydITCwMItL8DmubOv74shWenOiG7Kxr3d-VCOb3V3PvTuF72bHTxd5EAEH53Oe8X8dos7n6SAokXQKjCv-KFbAxCKUKO5xBDOgFwZ7ZksW12SS6FOdfh8e9k6ZGmKW6JQpuLZR_p2HLs12-_oMQ"/>
+</div>
+</div>
+<!-- Small Card 1 -->
+<div class="col-span-12 md:col-span-6 lg:col-span-4 bg-white border border-outline-variant rounded-xl p-stack-lg hover:shadow-lg transition-shadow">
+<div class="h-48 mb-stack-md rounded-lg overflow-hidden bg-surface-container-low">
+<img alt="Smartphone Accessories" class="w-full h-full object-cover" data-alt="A collection of premium smartphone accessories, including a carbon-fiber phone case, a magnetic wireless charger, and high-fidelity earbuds. The items are arranged artistically on a clean slate-gray surface under professional studio lighting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDHrZpmpJkikou6oJNeSV4FSsGiTdYQxAC8Mvfwy9wCJHLh8Zu8F0wGU8zuqad0yjZ1Pae4N3rlG_di0NrAdSMLbH4JVmmHj43x2U1VibyepXH9z8NSAIbGRIIg5BJ1K7Zxvmewf3XrS1t0G88vfWlCW2I7Gm4x55SW-EuH7haorpl7hw2U_rCzjv_z4xQQjE1hMI1EvL6P_Ezj2-3Bv1Tcah2nAiVWVkQxBa_-W9a4v1llrlp0AOa2ie2mEMcfG11LtSHlL4bNXqgl"/>
+</div>
+<h3 class="font-headline-md text-headline-md mb-2">行動通訊配件</h3>
+<p class="text-on-surface-variant text-body-md mb-4">軍規級保護與極速充電技術，為您的核心裝置提供最佳支援。</p>
+<button class="text-primary font-bold inline-flex items-center gap-1 group">
+                        查看清單 <span class="material-symbols-outlined transition-transform group-hover:translate-x-1" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+<!-- Small Card 2 -->
+<div class="col-span-12 md:col-span-6 lg:col-span-4 bg-white border border-outline-variant rounded-xl p-stack-lg hover:shadow-lg transition-shadow">
+<div class="h-48 mb-stack-md rounded-lg overflow-hidden bg-surface-container-low">
+<img alt="Smart Home IoT" class="w-full h-full object-cover" data-alt="Modern smart home IoT devices like a sleek smart hub and ambient light strips in a high-tech living room setting. The lighting is warm yet tech-forward, showcasing seamless automation and integration of electronic systems in a luxury home." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBdlZaf7JowcjWUahtpq3dd728p7IcUsktli3-HriJhzL1hjIcHRm44mvr8YKBfca24h4BvpZCbRkSFBUF1asKok0gKnYEksCr-T_iM6ROcKFFW86sYdevqzRNrDZevM9OpEYFsX5CZ9gAIyks9tU57C2o53Xf0Iu7jlaxxLTMp0KewaH4n2i6nxomG_xXe7Q13_1FmAcOSZtZQ3TdO91vjifj6Nf6zt2dRdw_-USDPTFcgJFr0g9mGyEjcHgFetcn-_zqfu4Rr8wth"/>
+</div>
+<h3 class="font-headline-md text-headline-md mb-2">智慧家庭 IoT</h3>
+<p class="text-on-surface-variant text-body-md mb-4">自動化環境控制與全方位安全監控，打造更聰明的居家空間。</p>
+<button class="text-primary font-bold inline-flex items-center gap-1 group">
+                        智慧升級 <span class="material-symbols-outlined transition-transform group-hover:translate-x-1" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</section>
+<!-- Core Advantages -->
+<section class="bg-inverse-surface text-inverse-on-surface py-section-gap">
+<div class="max-w-container-max mx-auto px-margin-edge">
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-gutter">
+<div class="space-y-4">
+<span class="material-symbols-outlined text-primary-fixed-dim text-4xl" data-icon="precision_manufacturing">precision_manufacturing</span>
+<h3 class="font-headline-md text-headline-md">技術精準度</h3>
+<p class="text-surface-variant text-body-md opacity-80">採用微米級製造標準，確保每一件電子元件在極端環境下依然維持穩定運作，滿足工業與專業應用之需。</p>
+</div>
+<div class="space-y-4">
+<span class="material-symbols-outlined text-primary-fixed-dim text-4xl" data-icon="biotech">biotech</span>
+<h3 class="font-headline-md text-headline-md">先進研發能力</h3>
+<p class="text-surface-variant text-body-md opacity-80">每年投入 15% 營收於研發創新，我們不僅跟隨技術，更在 AI 與物聯網通訊領域引領規格標準。</p>
+</div>
+<div class="space-y-4">
+<span class="material-symbols-outlined text-primary-fixed-dim text-4xl" data-icon="verified">verified</span>
+<h3 class="font-headline-md text-headline-md">嚴苛品質控管</h3>
+<p class="text-surface-variant text-body-md opacity-80">通過國際多項品質認證，從出廠前的壓力測試到耐久度評估，為企業提供最值得信賴的硬體保障。</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Application Scenarios -->
+<section class="max-w-container-max mx-auto px-margin-edge py-section-gap">
+<div class="text-center mb-section-gap max-w-2xl mx-auto">
+<h2 class="font-headline-lg text-headline-lg mb-4">為多元生活場景量身打造</h2>
+<p class="text-on-surface-variant text-body-lg">無論是追求極致生產力的辦公空間，或是沉浸感十足的居家休閒，我們都有最適合的配備。</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter">
+<!-- Scenario 1 -->
+<div class="group relative h-[400px] rounded-xl overflow-hidden shadow-sm">
+<img alt="Home" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A clean, professional home office setup with a high-end laptop, external monitor, and ergonomic chair. The lighting is soft and bright, creating a productive and comfortable environment for remote work." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBYVQrCk1eCeYuOetzdAfvCU58W03F14r1WpYwbSu92RtMXPaysQos8fljyO2RwNMpOAGTZdmSH9LLPgjrs3XfL-3Lxzxp1d73WezBx80XHGZqxFAq4tlRGNMeYJ6imHdj0YnHdBH76NyLEm-unnNNpALlpLsWAbP8PPzjEM0U1bn__9GWyH9diloU9Eq8GDnegeB3CePGoOKzHWwPCH1VjzyaxUruIt0YszZPtNTiSy9Iz_m1vzImqUnSfLDrUyN24VhD60Lu8biNA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6">
+<h4 class="text-white font-headline-md">Home</h4>
+<p class="text-gray-300 text-label-md">極簡生活，智慧串聯</p>
+</div>
+</div>
+<!-- Scenario 2 -->
+<div class="group relative h-[400px] rounded-xl overflow-hidden shadow-sm">
+<img alt="Office" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A high-tech corporate office space with multiple workstations, server racks in the background, and glass partitions. The lighting is cool and professional, reflecting an enterprise-level productivity environment." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAJ5_T6YiWUzEwZXPhqG0Cvzg33LZRsYCUX2-haRCwSNJ_K7P7ioHO7WrbmN0O_JNWFkXCp7vvwrWGV5eVi-kngKgDxiDY3I94hJptWDvVqEylroAxWrj5q5pNCvrQVKVTFDF68zbM0mnqocMstgv9L1RaHm13wGtaBPHTZC2nJ2vRMpIxWoOX3QcvNBDXgm9XTrJiTY41x4P3oaVVjxEik-1FXtnfPrVWx3tOYshERSTgSJdSJX3HwaL0q8q8pBNQk6_tIG3fo63FR"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6">
+<h4 class="text-white font-headline-md">Office</h4>
+<p class="text-gray-300 text-label-md">極致產能，企業方案</p>
+</div>
+</div>
+<!-- Scenario 3 -->
+<div class="group relative h-[400px] rounded-xl overflow-hidden shadow-sm">
+<img alt="Gaming" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A dynamic gaming setup with RGB lighting, high-refresh-rate monitors, and specialized gaming hardware. The mood is dark and immersive, emphasizing performance and responsiveness." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBwbEwhvA99xdyo6zxic6NfcTi-I9Z1zSjYqmHH8JDuY72j77kYfCvrE91PNuptqY2bUweGQrkoQ-IjeHTRKiQjRlmJPvobYzMAZgXgRlvCintMobrlZQrPBByPBUmIsr3uAuSLtmG2SeC0p6l05k8GVC6-5FTgDPR3CDbHVHeBtpJDWkYQBH7IGZuve84bulHJguMCdHwfpZ3ryQ3gTWvJFz4U0g1JsttD1S6fFPU27fHuHRY_QnVDHhZKA093xFXC1ZnkOL0yu6j"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6">
+<h4 class="text-white font-headline-md">Gaming</h4>
+<p class="text-gray-300 text-label-md">電競巔峰，零遲延體驗</p>
+</div>
+</div>
+<!-- Scenario 4 -->
+<div class="group relative h-[400px] rounded-xl overflow-hidden shadow-sm">
+<img alt="Education" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A modern digital classroom or training center with tablets and interactive displays. The setting is bright and encouraging, focused on educational technology and digital literacy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9GrawqizxQYpm5CcpZEkivvt0B4vLocbbzw1mZdYbL8XNCjNczE2_e6sljVyswZdkdaFxAeOPm5KoVFOu9iQLH_CMlUGulQrgdHcX3n-6TKmQ9N7_PdlwYbxiOVyWbHtkPoP1AMnuwX1bd-28zq1w8XyqC491VHpphc3JWLqs8duJhWns67dA3K4XcRdEXxyF116Uvb88utcK079zm_ipItSHf64ulGUbH9Mzx7p6v0g-Hh26_c5IGgeRbcXp-hzgeau-HM6MYqj7"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6">
+<h4 class="text-white font-headline-md">Education</h4>
+<p class="text-gray-300 text-label-md">啟發未來，數位教學</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Support Portal -->
+<section class="bg-surface-container-low py-section-gap">
+<div class="max-w-container-max mx-auto px-margin-edge">
+<div class="bg-white rounded-2xl shadow-sm border border-outline-variant p-stack-lg md:p-12">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-stack-lg items-center">
+<div>
+<h2 class="font-headline-lg text-headline-lg mb-4">全方位的技術支援</h2>
+<p class="text-on-surface-variant text-body-md mb-stack-lg">
+                                遇到產品問題？我們隨時為您提供協助。透過快速連結找到您需要的售後服務。
+                            </p>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+<a class="flex flex-col items-center gap-3 p-6 rounded-lg bg-surface hover:bg-secondary-container/20 transition-all border border-outline-variant/30" href="#">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="inventory_2">inventory_2</span>
+<span class="text-label-md">保固查詢</span>
+</a>
+<a class="flex flex-col items-center gap-3 p-6 rounded-lg bg-surface hover:bg-secondary-container/20 transition-all border border-outline-variant/30" href="#">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="build">build</span>
+<span class="text-label-md">報修服務</span>
+</a>
+<a class="flex flex-col items-center gap-3 p-6 rounded-lg bg-surface hover:bg-secondary-container/20 transition-all border border-outline-variant/30" href="#">
+<span class="material-symbols-outlined text-primary text-3xl" data-icon="system_update">system_update</span>
+<span class="text-label-md">韌體更新</span>
+</a>
+</div>
+</div>
+<div class="hidden lg:block relative">
+<div class="bg-primary p-8 rounded-xl text-on-primary">
+<h4 class="font-headline-md mb-2">24/7 企業客戶專線</h4>
+<p class="text-on-primary-container text-body-md opacity-90 mb-6">我們的工程團隊全天候待命，確保您的業務不中斷。</p>
+<div class="text-display-lg font-bold">0800-888-000</div>
+<button class="mt-8 bg-white text-primary px-6 py-3 rounded-lg font-bold hover:bg-opacity-90 transition-all">立即聯繫工程師</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Client Logos -->
+<section class="max-w-container-max mx-auto px-margin-edge py-stack-lg">
+<div class="flex flex-wrap justify-center items-center gap-12 opacity-40 grayscale hover:grayscale-0 transition-all duration-700">
+<div class="text-label-sm font-bold tracking-tighter">GLOBAL BANK</div>
+<div class="text-label-sm font-bold tracking-tighter italic">TECH CORP</div>
+<div class="text-label-sm font-bold tracking-tighter underline">INNO-SOFT</div>
+<div class="text-label-sm font-bold tracking-tighter border-2 border-on-surface px-1">DATA FLOW</div>
+<div class="text-label-sm font-bold tracking-tighter">PRIME SYSTEMS</div>
+<div class="text-label-sm font-bold tracking-tighter">FUTURE NET</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-high border-t border-outline-variant">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter max-w-container-max mx-auto px-margin-edge py-stack-lg w-full">
+<div class="space-y-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-headline-md" data-icon="devices">devices</span>
+<span class="font-headline-md text-on-surface font-bold tracking-tight">TECH-ELITE</span>
+</div>
+<p class="text-on-surface-variant text-label-sm">專業級 3C 電子硬體設備供應商，提供從個人、家庭到大型企業的整合解決方案。</p>
+</div>
+<div class="flex flex-col gap-3">
+<h5 class="text-on-surface font-bold text-label-md">產品與方案</h5>
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">EliteBook 筆電</a>
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">企業伺服器</a>
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">IoT 智慧裝置</a>
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">通訊配件</a>
+</div>
+<div class="flex flex-col gap-3">
+<h5 class="text-on-surface font-bold text-label-md">支援服務</h5>
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">Support Center</a>
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">Warranty Policy</a>
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">軟體下載區</a>
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">維修進度查詢</a>
+</div>
+<div class="flex flex-col gap-3">
+<h5 class="text-on-surface font-bold text-label-md">關於我們</h5>
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">Corporate Sales</a>
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">Contact Us</a>
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">公司簡介</a>
+<a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">人才招募</a>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-margin-edge py-stack-md border-t border-outline-variant/30 text-center">
+<p class="text-on-surface-variant font-label-sm">© 2024 Tech-Elite Electronics Professional Grade Hardware. All rights reserved.</p>
+</div>
+</footer>
+</body></html>

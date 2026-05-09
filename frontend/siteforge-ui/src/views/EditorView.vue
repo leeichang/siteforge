@@ -3,110 +3,153 @@
     <header class="studio-topbar">
       <div class="topbar-left">
         <button @click="backToWorkspace" class="chrome-button back-button" type="button">←</button>
-        <button @click="showCode = true" class="chrome-button code-button" type="button">Code</button>
+        <button @click="showCode = true" class="chrome-button code-button" type="button">{{ t('editor.code') }}</button>
       </div>
 
       <div class="topbar-center">
         <div class="device-menu">
-          <button :class="{ active: device === 'Desktop' }" @click="setDevice('Desktop')" type="button">Desktop</button>
-          <button :class="{ active: device === 'Tablet' }" @click="setDevice('Tablet')" type="button">Tablet</button>
-          <button :class="{ active: device === 'Mobile portrait' }" @click="setDevice('Mobile portrait')" type="button">Mobile</button>
+          <button :class="{ active: device === 'Desktop' }" @click="setDevice('Desktop')" type="button">{{ t('editor.desktop') }}</button>
+          <button :class="{ active: device === 'Tablet' }" @click="setDevice('Tablet')" type="button">{{ t('editor.tablet') }}</button>
+          <button :class="{ active: device === 'Mobile portrait' }" @click="setDevice('Mobile portrait')" type="button">{{ t('editor.mobile') }}</button>
         </div>
-        <button class="tool-button" @click="togglePreview" type="button">{{ previewMode ? 'Edit' : 'Preview' }}</button>
+        <button class="tool-button" @click="togglePreview" type="button">{{ previewMode ? t('common.edit') : t('editor.preview') }}</button>
         <button class="tool-button icon-only undo" @click="undo" type="button" aria-label="Undo"></button>
         <button class="tool-button icon-only redo" @click="redo" type="button" aria-label="Redo"></button>
       </div>
 
       <div class="topbar-right">
-        <button class="theme-toggle" @click="themeStore.toggle()" type="button" :title="theme === 'dark' ? 'Switch to Light' : 'Switch to Dark'">
+        <button class="theme-toggle language-toggle" @click="localeStore.toggleLocale()" type="button" :title="t('common.language')">
+          {{ locale === 'en' ? '繁' : 'EN' }}
+        </button>
+        <button class="theme-toggle" @click="themeStore.toggle()" type="button" :title="theme === 'dark' ? t('common.switchToLight') : t('common.switchToDark')">
           {{ theme === 'dark' ? '☀️' : '🌙' }}
         </button>
         <button class="tool-button save-button" @click="savePage" :disabled="saving || !editorReady" type="button">
-          {{ saving ? 'Saving' : hasUnsavedChanges ? 'Save' : 'Saved' }}
+          {{ saving ? t('editor.saving') : hasUnsavedChanges ? t('editor.save') : t('editor.saved') }}
         </button>
         <button class="publish-button" @click="publishSite" :disabled="publishing" type="button">
-          {{ publishing ? 'Publishing' : 'Publish' }}
+          {{ publishing ? t('editor.publishing') : t('editor.publish') }}
         </button>
-        <button class="upgrade-button" type="button">Upgrade</button>
+        <button class="upgrade-button" type="button">{{ t('editor.upgrade') }}</button>
       </div>
     </header>
 
-    <main class="studio-workbench">
+    <main
+      ref="workbenchEl"
+      class="studio-workbench"
+      :class="{ resizing: resizingPane }"
+      :style="workbenchGridStyle"
+    >
       <aside class="editor-rail">
-        <button :class="{ active: activePanel === 'blocks' }" @click="activePanel = 'blocks'" type="button" aria-label="Blocks">
+        <button :class="{ active: isLeftPanelOpen && activePanel === 'blocks' }" @click="toggleLeftPanel('blocks')" type="button" :aria-label="t('editor.blocks')">
           <span class="rail-icon plus"></span>
         </button>
-        <button :class="{ active: activePanel === 'project' }" @click="activePanel = 'project'" type="button" aria-label="Pages">
+        <button :class="{ active: isLeftPanelOpen && activePanel === 'project' }" @click="toggleLeftPanel('project')" type="button" :aria-label="t('editor.pages')">
           <span class="rail-icon layers"></span>
         </button>
-        <button :class="{ active: activePanel === 'global' }" @click="activePanel = 'global'" type="button" aria-label="Global styles">
+        <button :class="{ active: isLeftPanelOpen && activePanel === 'global' }" @click="toggleLeftPanel('global')" type="button" :aria-label="t('editor.globalStyles')">
           <span class="rail-icon palette"></span>
         </button>
-        <button :class="{ active: activePanel === 'assets' }" @click="activePanel = 'assets'" type="button" aria-label="Assets">
+        <button :class="{ active: isLeftPanelOpen && activePanel === 'assets' }" @click="toggleLeftPanel('assets')" type="button" :aria-label="t('editor.assets')">
           <span class="rail-icon image"></span>
         </button>
-        <button :class="{ active: activePanel === 'data' }" @click="activePanel = 'data'" type="button" aria-label="Data sources">
+        <button :class="{ active: isLeftPanelOpen && activePanel === 'data' }" @click="toggleLeftPanel('data')" type="button" :aria-label="t('editor.dataSources')">
           <span class="rail-icon database"></span>
         </button>
-        <button :class="{ active: activePanel === 'ai' }" @click="activePanel = 'ai'" type="button" aria-label="AI assistant">
+        <button :class="{ active: isLeftPanelOpen && activePanel === 'ai' }" @click="toggleLeftPanel('ai')" type="button" :aria-label="t('editor.aiAssistant')">
           <span class="rail-icon spark"></span>
         </button>
-        <button class="rail-bottom" @click="backToWorkspace" type="button" aria-label="Workspace">
+        <button class="rail-bottom" @click="backToWorkspace" type="button" :aria-label="t('editor.workspace')">
           <span class="rail-icon home"></span>
         </button>
       </aside>
 
-      <aside class="studio-left-panel">
-        <section v-show="activePanel === 'project'" class="studio-panel">
-          <header class="panel-title-row">
-            <h2>Pages</h2>
-            <button @click="createPage" class="panel-icon-button" type="button" aria-label="Create page">+</button>
-          </header>
-          <div class="page-list studio-list">
-            <button
-              v-for="item in pages"
-              :key="item.id"
-              :class="{ active: item.id === pageId }"
-              @click="openPage(item.id)"
-              type="button"
-            >
-              <span>{{ item.title }}</span>
-              <small>/{{ item.slug }}</small>
-            </button>
+      <aside ref="leftPanelEl" class="studio-left-panel" :class="{ collapsed: !isLeftPanelOpen }" :aria-hidden="!isLeftPanelOpen">
+        <section v-show="activePanel === 'project'" class="studio-panel project-panel" :style="projectSplitStyle">
+          <div class="project-pane">
+            <header class="panel-title-row">
+              <h2>{{ t('editor.projectTree') }}</h2>
+              <button @click="createPage" class="panel-icon-button" type="button" :aria-label="t('workspace.createPage')">+</button>
+            </header>
+            <div class="project-tree">
+              <div class="tree-root">
+                <span class="tree-caret">▾</span>
+                <span class="tree-site-icon"></span>
+                <span>{{ site?.name || t('editor.website') }}</span>
+              </div>
+              <button
+                v-for="item in treePages"
+                :key="item.id"
+                class="tree-node"
+                :class="{ active: item.id === pageId }"
+                @click="openPage(item.id)"
+                type="button"
+              >
+                <span class="tree-line"></span>
+                <span class="tree-file-icon" :class="{ home: item.isHome }"></span>
+                <span class="tree-label">
+                  <strong>{{ item.title }}</strong>
+                  <small>/{{ item.slug }}</small>
+                </span>
+                <em v-if="item.isHome">{{ t('common.home') }}</em>
+              </button>
+            </div>
           </div>
 
-          <div class="panel-divider"></div>
-          <header class="panel-title-row">
-            <h2>Layers</h2>
-          </header>
-          <div id="layers-panel" class="gjs-panel-host layers-host"></div>
+          <button
+            class="stack-resizer project-layer-resizer"
+            :class="{ active: resizingPane === 'project-layers' }"
+            type="button"
+            role="separator"
+            aria-orientation="horizontal"
+            :aria-valuemin="MIN_PROJECT_TREE"
+            :aria-valuemax="Math.round(projectTreeMax)"
+            :aria-valuenow="Math.round(projectSplit.projectTree)"
+            :aria-label="t('editor.adjustProjectLayers')"
+            :title="t('editor.adjustProjectLayers')"
+            @pointerdown="startProjectSplitResize"
+            @keydown="resizeProjectSplitByKeyboard"
+          >
+            <span class="stack-resizer-track" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+          </button>
+
+          <div class="layers-pane">
+            <header class="panel-title-row">
+              <h2>{{ t('editor.layers') }}</h2>
+            </header>
+            <div id="layers-panel" class="gjs-panel-host layers-host"></div>
+          </div>
         </section>
 
         <section v-show="activePanel === 'blocks'" class="studio-panel">
           <header class="panel-title-row">
-            <h2>Blocks</h2>
-            <button class="panel-icon-button" type="button" @click="activePanel = 'project'" aria-label="Close panel">×</button>
+            <h2>{{ t('editor.blocks') }}</h2>
+            <button class="panel-icon-button" type="button" @click="closeLeftPanel" :aria-label="t('editor.closePanel')">×</button>
           </header>
           <div class="segmented">
-            <button class="active" type="button">Regular</button>
-            <button type="button">Symbols</button>
+            <button class="active" type="button">{{ t('editor.regular') }}</button>
+            <button type="button">{{ t('editor.symbols') }}</button>
           </div>
-          <input v-model="blockSearch" class="panel-search" type="search" placeholder="Search..." />
-          <div class="block-section-title">Basic</div>
+          <input v-model="blockSearch" class="panel-search" type="search" :placeholder="t('editor.search')" />
+          <div class="block-section-title">{{ t('editor.basic') }}</div>
           <div id="blocks-panel" class="gjs-panel-host blocks-host"></div>
-          <button class="add-blocks-button" type="button">Add more blocks</button>
+          <button class="add-blocks-button" type="button">{{ t('editor.addMoreBlocks') }}</button>
         </section>
 
         <section v-show="activePanel === 'assets'" class="studio-panel">
           <header class="panel-title-row">
-            <h2>Assets</h2>
-            <button class="panel-icon-button" type="button" @click="activePanel = 'project'" aria-label="Close panel">×</button>
+            <h2>{{ t('editor.assets') }}</h2>
+            <button class="panel-icon-button" type="button" @click="closeLeftPanel" :aria-label="t('editor.closePanel')">×</button>
           </header>
           <div class="asset-controls">
-            <input v-model="assetSearch" class="panel-search" type="search" placeholder="Search..." />
-            <button class="filter-chip" type="button">Project assets</button>
+            <input v-model="assetSearch" class="panel-search" type="search" :placeholder="t('editor.search')" />
+            <button class="filter-chip" type="button">{{ t('editor.projectAssets') }}</button>
           </div>
-          <button class="upload-button" @click="registerAssetUrl" type="button">Register URL</button>
+          <button class="upload-button" @click="registerAssetUrl" type="button">{{ t('editor.registerUrl') }}</button>
           <input v-model="assetUrl" class="panel-search asset-url-input" type="url" placeholder="https://example.com/image.jpg" />
           <div class="asset-grid">
             <button
@@ -116,20 +159,20 @@
               type="button"
               @click="selectAsset(asset.publicUrl || asset)"
             >
-              <img :src="asset.publicUrl || asset" :alt="asset.altText || asset.fileName || 'Asset preview'" />
+              <img :src="asset.publicUrl || asset" :alt="asset.altText || asset.fileName || t('editor.assetPreview')" />
               <span>{{ asset.fileName || filenameFromUrl(asset.publicUrl || asset) }}</span>
             </button>
           </div>
-          <button class="panel-action" @click="openAssetManager" type="button">Open asset manager</button>
+          <button class="panel-action" @click="openAssetManager" type="button">{{ t('editor.openAssetManager') }}</button>
         </section>
 
         <section v-show="activePanel === 'global'" class="studio-panel">
           <header class="panel-title-row">
-            <h2>Global Styles</h2>
-            <button class="panel-icon-button" type="button" @click="activePanel = 'project'" aria-label="Close panel">×</button>
+            <h2>{{ t('editor.globalStyles') }}</h2>
+            <button class="panel-icon-button" type="button" @click="closeLeftPanel" :aria-label="t('editor.closePanel')">×</button>
           </header>
           <div class="style-group open">
-            <button type="button">Colors <span>⌃</span></button>
+            <button type="button">{{ t('editor.colors') }} <span>⌃</span></button>
             <label v-for="token in colorTokens" :key="token.name" class="token-row">
               <span>{{ token.name }}</span>
               <input v-model="token.value" type="color" @input="applyGlobalTokens" />
@@ -137,9 +180,9 @@
             </label>
           </div>
           <div class="style-group open">
-            <button type="button">Body <span>⌃</span></button>
+            <button type="button">{{ t('editor.body') }} <span>⌃</span></button>
             <label class="field-row">
-              <span>Font Family</span>
+              <span>{{ t('editor.fontFamily') }}</span>
               <select v-model="fontFamily" @change="applyGlobalTokens">
                 <option>Inter</option>
                 <option>Arial</option>
@@ -148,7 +191,7 @@
               </select>
             </label>
             <label class="field-row">
-              <span>Line Height</span>
+              <span>{{ t('editor.lineHeight') }}</span>
               <input v-model="lineHeight" type="number" step="0.05" min="1" @input="applyGlobalTokens" />
             </label>
           </div>
@@ -156,13 +199,13 @@
 
         <section v-show="activePanel === 'data'" class="studio-panel">
           <header class="panel-title-row">
-            <h2>Data Sources</h2>
+            <h2>{{ t('editor.dataSources') }}</h2>
             <button class="panel-icon-button" type="button">+</button>
           </header>
           <div class="data-empty">
             <span class="data-icon"></span>
-            <h3>Create a table to get started</h3>
-            <button @click="createSampleTable" class="panel-action" type="button">Create sample table</button>
+            <h3>{{ t('editor.createTable') }}</h3>
+            <button @click="createSampleTable" class="panel-action" type="button">{{ t('editor.createSampleTable') }}</button>
           </div>
           <div v-if="sampleTable.length" class="data-table">
             <div v-for="row in sampleTable" :key="row.key">
@@ -174,8 +217,8 @@
 
         <section v-show="activePanel === 'ai'" class="studio-panel ai-panel">
           <header class="panel-title-row">
-            <h2>AI Assistant</h2>
-            <button class="panel-icon-button" type="button" @click="activePanel = 'project'" aria-label="Close panel">×</button>
+            <h2>{{ t('editor.aiAssistant') }}</h2>
+            <button class="panel-icon-button" type="button" @click="closeLeftPanel" :aria-label="t('editor.closePanel')">×</button>
           </header>
           <div class="ai-suggestions">
             <button v-for="suggestion in aiSuggestions" :key="suggestion" type="button" @click="aiPrompt = suggestion">
@@ -184,19 +227,34 @@
           </div>
           <div class="ai-generate-controls">
             <label>
-              Page type
-              <select v-model="aiPageType">
-                <option value="home">Home</option>
-                <option value="about">About</option>
-                <option value="services">Services</option>
-                <option value="product">Products</option>
-                <option value="portfolio">Portfolio</option>
-                <option value="blog">Blog</option>
-                <option value="contact">Contact</option>
+              {{ t('editor.template') }}
+              <select v-model="aiTemplateKey" @change="applyEditorTemplate">
+                <option value="">{{ t('editor.aiPromptOnly') }}</option>
+                <option v-for="template in pageTemplates" :key="template.key" :value="template.key">
+                  {{ template.label }}
+                </option>
               </select>
             </label>
             <label>
-              Style
+              {{ t('editor.pageType') }}
+              <select v-model="aiPageType">
+                <option value="home">{{ t('pageType.home') }}</option>
+                <option value="about">{{ t('pageType.about') }}</option>
+                <option value="services">{{ t('pageType.services') }}</option>
+                <option value="product">{{ t('pageType.product') }}</option>
+                <option value="portfolio">{{ t('pageType.portfolio') }}</option>
+                <option value="blog">{{ t('pageType.blog') }}</option>
+                <option value="contact">{{ t('pageType.contact') }}</option>
+                <option value="anti-counterfeit">{{ t('pageType.antiCounterfeit') }}</option>
+                <option value="scan-result">{{ t('pageType.scanResult') }}</option>
+                <option value="lottery">{{ t('pageType.lottery') }}</option>
+                <option value="points-redemption">{{ t('pageType.pointsRedemption') }}</option>
+                <option value="traceability">{{ t('pageType.traceability') }}</option>
+                <option value="dpp">{{ t('pageType.dpp') }}</option>
+              </select>
+            </label>
+            <label>
+              {{ t('editor.style') }}
               <select v-model="aiStyle">
                 <option value="studio">Studio</option>
                 <option value="tech">Tech</option>
@@ -208,40 +266,84 @@
           </div>
           <div class="ai-input-row">
             <button type="button">+</button>
-            <textarea v-model="aiPrompt" placeholder="Ask anything..."></textarea>
+            <textarea v-model="aiPrompt" :placeholder="t('editor.askAnything')"></textarea>
             <button type="button" @click="generateCurrentPage" :disabled="generatingCurrentPage || !editorReady">↑</button>
           </div>
           <button class="panel-action ai-apply-button" type="button" @click="generateCurrentPage" :disabled="generatingCurrentPage || !editorReady">
-            {{ generatingCurrentPage ? 'Generating current page...' : 'Generate current page' }}
+            {{ generatingCurrentPage ? t('editor.generatingCurrentPage') : t('editor.generateCurrentPage') }}
           </button>
         </section>
       </aside>
 
+      <button
+        class="pane-resizer left-resizer"
+        :class="{ active: resizingPane === 'left' }"
+        type="button"
+        role="separator"
+        aria-orientation="vertical"
+        :aria-hidden="!isLeftPanelOpen"
+        :tabindex="isLeftPanelOpen ? 0 : -1"
+        :aria-valuemin="MIN_LEFT_PANEL"
+        :aria-valuemax="Math.round(leftPaneMax)"
+        :aria-valuenow="Math.round(paneLayout.left)"
+        :aria-label="t('editor.adjustLeftCanvas')"
+        :title="t('editor.adjustLeftCanvas')"
+        @pointerdown="startPaneResize('left', $event)"
+        @keydown="resizePaneByKeyboard('left', $event)"
+      >
+        <span class="pane-resizer-track" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
+
       <section class="canvas-stage">
         <div class="canvas-meta">
           <span>{{ site?.name || 'SiteForge' }}</span>
-          <strong>{{ page?.title || 'Page editor' }}</strong>
-          <em v-if="hasUnsavedChanges">Unsaved changes</em>
+          <strong>{{ page?.title || t('editor.pageEditor') }}</strong>
+          <em v-if="hasUnsavedChanges">{{ t('editor.unsavedChanges') }}</em>
         </div>
         <div v-if="loading || editorError" class="editor-state">
-          <strong>{{ editorError || '載入編輯器中...' }}</strong>
+          <strong>{{ editorError || t('editor.loadingEditor') }}</strong>
         </div>
         <div id="gjs" class="editor-canvas"></div>
       </section>
 
+      <button
+        class="pane-resizer right-resizer"
+        :class="{ active: resizingPane === 'right' }"
+        type="button"
+        role="separator"
+        aria-orientation="vertical"
+        :aria-valuemin="MIN_RIGHT_PANEL"
+        :aria-valuemax="Math.round(rightPaneMax)"
+        :aria-valuenow="Math.round(paneLayout.right)"
+        :aria-label="t('editor.adjustCanvasRight')"
+        :title="t('editor.adjustCanvasRight')"
+        @pointerdown="startPaneResize('right', $event)"
+        @keydown="resizePaneByKeyboard('right', $event)"
+      >
+        <span class="pane-resizer-track" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
+
       <aside class="studio-right-panel">
         <div class="right-tabs">
-          <button :class="{ active: rightTab === 'styles' }" @click="rightTab = 'styles'" type="button">Styles</button>
-          <button :class="{ active: rightTab === 'properties' }" @click="rightTab = 'properties'" type="button">Properties</button>
+          <button :class="{ active: rightTab === 'styles' }" @click="rightTab = 'styles'" type="button">{{ t('editor.styles') }}</button>
+          <button :class="{ active: rightTab === 'properties' }" @click="rightTab = 'properties'" type="button">{{ t('editor.properties') }}</button>
         </div>
 
         <section v-show="rightTab === 'styles'" class="right-content">
           <div class="selection-card">
             <header>
-              <span>Selection</span>
-              <strong>{{ selectedComponentName || 'None' }}</strong>
+              <span>{{ t('editor.selection') }}</span>
+              <strong>{{ selectedComponentName || t('editor.none') }}</strong>
             </header>
-            <p v-if="!selectedComponentName">Select an element from the canvas or pick a style from the Style Catalog.</p>
+            <p v-if="!selectedComponentName">{{ t('editor.selectionHelp') }}</p>
           </div>
           <div id="selectors-panel" class="gjs-panel-host compact"></div>
           <div id="styles-panel" class="gjs-panel-host"></div>
@@ -250,19 +352,19 @@
         <section v-show="rightTab === 'properties'" class="right-content">
           <div class="selection-card">
             <header>
-              <span>Page</span>
-              <strong>{{ page?.slug ? `/${page.slug}` : 'Draft' }}</strong>
+              <span>{{ t('editor.page') }}</span>
+              <strong>{{ page?.slug ? `/${page.slug}` : t('common.draft') }}</strong>
             </header>
-            <p>{{ page?.metaDescription || '管理選取元件的屬性、連結、替代文字與表單欄位。' }}</p>
+            <p>{{ page?.metaDescription || t('editor.propertiesHelp') }}</p>
           </div>
           <div id="traits-panel" class="gjs-panel-host"></div>
           <div class="property-summary">
             <label>
-              Page title
+              {{ t('editor.pageTitle') }}
               <input :value="page?.title || ''" readonly />
             </label>
             <label>
-              Slug
+              {{ t('editor.slug') }}
               <input :value="page?.slug || ''" readonly />
             </label>
           </div>
@@ -274,8 +376,8 @@
       <section class="code-dialog">
         <header>
           <div>
-            <p class="sf-kicker">Export</p>
-            <h2>Current page code</h2>
+            <p class="sf-kicker">{{ t('editor.export') }}</p>
+            <h2>{{ t('editor.currentPageCode') }}</h2>
           </div>
           <button @click="showCode = false" type="button">×</button>
         </header>
@@ -298,14 +400,33 @@
 import { computed, nextTick, onMounted, onUnmounted, reactive, ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useThemeStore } from '../stores/theme'
+import { useLocaleStore } from '../stores/locale'
 import api, { errorMessage, unwrap } from '../api/client'
 
 const route = useRoute()
 const router = useRouter()
 const themeStore = useThemeStore()
+const localeStore = useLocaleStore()
 const theme = computed(() => themeStore.theme)
+const locale = computed(() => localeStore.locale)
+const t = localeStore.t
 const siteId = route.params.siteId
 const pageId = ref(route.params.pageId || '')
+const PANE_STORAGE_KEY = 'siteforge.editor.panes.v5'
+const RAIL_WIDTH = 44
+const RESIZER_WIDTH = 8
+const MIN_LEFT_PANEL = 150
+const MIN_CANVAS = 720
+const MIN_RIGHT_PANEL = 300
+const DEFAULT_CANVAS_SHARE = 0.62
+const DEFAULT_LEFT_SIDE_SHARE = 0.54
+const DEFAULT_LEFT_PANEL = 400
+const DEFAULT_RIGHT_PANEL = 340
+const PROJECT_SPLIT_STORAGE_KEY = 'siteforge.editor.projectSplit.v1'
+const MIN_PROJECT_TREE = 120
+const MIN_LAYERS = 140
+const PROJECT_RESIZER_HEIGHT = 14
+const DEFAULT_PROJECT_TREE = 360
 
 const site = ref(null)
 const page = ref(null)
@@ -319,6 +440,7 @@ const editorReady = ref(false)
 const editorError = ref('')
 const hasUnsavedChanges = ref(false)
 const activePanel = ref('project')
+const isLeftPanelOpen = ref(true)
 const rightTab = ref('styles')
 const device = ref('Desktop')
 const previewMode = ref(false)
@@ -326,6 +448,8 @@ const showCode = ref(false)
 const aiPrompt = ref('')
 const aiPageType = ref('home')
 const aiStyle = ref('studio')
+const aiTemplates = ref([])
+const aiTemplateKey = ref('')
 const generatingCurrentPage = ref(false)
 const blockSearch = ref('')
 const assetSearch = ref('')
@@ -334,6 +458,16 @@ const selectedComponentName = ref('')
 const fontFamily = ref('Inter')
 const lineHeight = ref(1.55)
 const sampleTable = ref([])
+const workbenchEl = ref(null)
+const leftPanelEl = ref(null)
+const resizingPane = ref('')
+const paneLayout = reactive({
+  left: DEFAULT_LEFT_PANEL,
+  right: DEFAULT_RIGHT_PANEL
+})
+const projectSplit = reactive({
+  projectTree: DEFAULT_PROJECT_TREE
+})
 const colorTokens = reactive([
   { name: 'Primary', value: '#8358ed' },
   { name: 'Secondary', value: '#fc549e' },
@@ -348,15 +482,34 @@ const defaultAssetUrls = [
   'https://images.unsplash.com/photo-1557683316-973673baf926?w=1200',
   'https://images.unsplash.com/photo-1557804506-669a67965ba0?w=1200'
 ]
-const aiSuggestions = [
-  'Create a hero section with a headline and call-to-action',
-  'Add a features grid with icons',
-  'Create a contact form',
-  'Add testimonials section'
-]
+const aiSuggestions = computed(() => [
+  t('editor.aiSuggestionHero'),
+  t('editor.aiSuggestionFeatures'),
+  t('editor.aiSuggestionContact'),
+  t('editor.aiSuggestionTestimonials')
+])
 
 const currentHtml = computed(() => editor ? editor.getHtml() : '')
 const currentCss = computed(() => editor ? editor.getCss() : '')
+const leftPaneMax = computed(() => maxLeftWidth())
+const rightPaneMax = computed(() => maxRightWidth())
+const workbenchGridStyle = computed(() => ({
+  '--sf-left-panel-width': isLeftPanelOpen.value ? `${Math.round(paneLayout.left)}px` : '0px',
+  '--sf-left-resizer-width': isLeftPanelOpen.value ? `${RESIZER_WIDTH}px` : '0px',
+  '--sf-right-panel-width': `${Math.round(paneLayout.right)}px`
+}))
+const projectTreeMax = computed(() => maxProjectTreeHeight())
+const projectSplitStyle = computed(() => ({
+  '--sf-project-tree-height': `${Math.round(projectSplit.projectTree)}px`
+}))
+const pageTemplates = computed(() => aiTemplates.value.filter((template) => template.kind === 'page'))
+const treePages = computed(() => {
+  return [...pages.value].sort((a, b) => {
+    if (a.isHome && !b.isHome) return -1
+    if (!a.isHome && b.isHome) return 1
+    return (a.displayOrder || 0) - (b.displayOrder || 0)
+  })
+})
 const filteredAssets = computed(() => {
   const allAssets = [
     ...assets.value,
@@ -370,34 +523,308 @@ const filteredAssets = computed(() => {
   })
 })
 let editor = null
+let resizeState = null
+let projectSplitResizeState = null
 
 onMounted(async () => {
+  restorePaneLayout()
+  restoreProjectSplit()
+  window.addEventListener('resize', fitPaneLayout)
+  window.addEventListener('resize', fitProjectSplit)
   await loadEditorData()
   await nextTick()
+  fitPaneLayout()
+  fitProjectSplit()
   initGrapesJS()
 })
 
 onUnmounted(() => {
+  window.removeEventListener('resize', fitPaneLayout)
+  window.removeEventListener('resize', fitProjectSplit)
+  stopPaneResize()
+  stopProjectSplitResize()
   if (editor) {
     editor.destroy()
     editor = null
   }
 })
 
+function restorePaneLayout() {
+  if (typeof window === 'undefined') return
+  const defaults = defaultPaneLayout()
+  try {
+    const saved = JSON.parse(window.localStorage.getItem(PANE_STORAGE_KEY) || '{}')
+    paneLayout.left = Number.isFinite(saved.left) ? clamp(saved.left, MIN_LEFT_PANEL, 680) : defaults.left
+    paneLayout.right = Number.isFinite(saved.right) ? clamp(saved.right, MIN_RIGHT_PANEL, 560) : defaults.right
+  } catch {
+    paneLayout.left = defaults.left
+    paneLayout.right = defaults.right
+  }
+  fitPaneLayout()
+}
+
+function persistPaneLayout() {
+  if (typeof window === 'undefined') return
+  window.localStorage.setItem(PANE_STORAGE_KEY, JSON.stringify({
+    left: Math.round(paneLayout.left),
+    right: Math.round(paneLayout.right)
+  }))
+}
+
+function toggleLeftPanel(panel) {
+  if (activePanel.value === panel && isLeftPanelOpen.value) {
+    closeLeftPanel()
+    return
+  }
+  activePanel.value = panel
+  isLeftPanelOpen.value = true
+  nextTick(() => {
+    fitPaneLayout()
+    fitProjectSplit()
+    editor?.refresh?.()
+  })
+}
+
+function closeLeftPanel() {
+  isLeftPanelOpen.value = false
+  stopPaneResize()
+  stopProjectSplitResize()
+  nextTick(() => editor?.refresh?.())
+}
+
+function restoreProjectSplit() {
+  if (typeof window === 'undefined') return
+  try {
+    const saved = JSON.parse(window.localStorage.getItem(PROJECT_SPLIT_STORAGE_KEY) || '{}')
+    if (Number.isFinite(saved.projectTree)) {
+      projectSplit.projectTree = clamp(saved.projectTree, MIN_PROJECT_TREE, maxProjectTreeHeight())
+    }
+  } catch {
+    projectSplit.projectTree = DEFAULT_PROJECT_TREE
+  }
+  fitProjectSplit()
+}
+
+function persistProjectSplit() {
+  if (typeof window === 'undefined') return
+  window.localStorage.setItem(PROJECT_SPLIT_STORAGE_KEY, JSON.stringify({
+    projectTree: Math.round(projectSplit.projectTree)
+  }))
+}
+
+function startPaneResize(target, event) {
+  const bounds = workbenchEl.value?.getBoundingClientRect()
+  if (!bounds) return
+  event.preventDefault()
+  event.currentTarget?.setPointerCapture?.(event.pointerId)
+  resizeState = {
+    target,
+    startX: event.clientX,
+    startLeft: paneLayout.left,
+    startRight: paneLayout.right
+  }
+  resizingPane.value = target
+  window.addEventListener('pointermove', handlePaneResize)
+  window.addEventListener('pointerup', stopPaneResize)
+  window.addEventListener('pointercancel', stopPaneResize)
+}
+
+function handlePaneResize(event) {
+  if (!resizeState) return
+  const delta = event.clientX - resizeState.startX
+  if (resizeState.target === 'left') {
+    paneLayout.left = clamp(resizeState.startLeft + delta, MIN_LEFT_PANEL, maxLeftWidth())
+  } else {
+    paneLayout.right = clamp(resizeState.startRight - delta, MIN_RIGHT_PANEL, maxRightWidth())
+  }
+  fitPaneLayout()
+}
+
+function startProjectSplitResize(event) {
+  const bounds = leftPanelEl.value?.getBoundingClientRect()
+  if (!bounds) return
+  event.preventDefault()
+  event.currentTarget?.setPointerCapture?.(event.pointerId)
+  projectSplitResizeState = {
+    startY: event.clientY,
+    startProjectTree: projectSplit.projectTree
+  }
+  resizingPane.value = 'project-layers'
+  window.addEventListener('pointermove', handleProjectSplitResize)
+  window.addEventListener('pointerup', stopProjectSplitResize)
+  window.addEventListener('pointercancel', stopProjectSplitResize)
+}
+
+function handleProjectSplitResize(event) {
+  if (!projectSplitResizeState) return
+  const delta = event.clientY - projectSplitResizeState.startY
+  projectSplit.projectTree = clamp(
+    projectSplitResizeState.startProjectTree + delta,
+    MIN_PROJECT_TREE,
+    maxProjectTreeHeight()
+  )
+  fitProjectSplit()
+}
+
+function resizePaneByKeyboard(target, event) {
+  const smallStep = event.shiftKey ? 48 : 16
+  const largeStep = 96
+  let handled = true
+
+  if (target === 'left') {
+    if (event.key === 'ArrowLeft') {
+      paneLayout.left = clamp(paneLayout.left - smallStep, MIN_LEFT_PANEL, maxLeftWidth())
+    } else if (event.key === 'ArrowRight') {
+      paneLayout.left = clamp(paneLayout.left + smallStep, MIN_LEFT_PANEL, maxLeftWidth())
+    } else if (event.key === 'PageUp') {
+      paneLayout.left = clamp(paneLayout.left + largeStep, MIN_LEFT_PANEL, maxLeftWidth())
+    } else if (event.key === 'PageDown') {
+      paneLayout.left = clamp(paneLayout.left - largeStep, MIN_LEFT_PANEL, maxLeftWidth())
+    } else if (event.key === 'Home') {
+      paneLayout.left = MIN_LEFT_PANEL
+    } else if (event.key === 'End') {
+      paneLayout.left = maxLeftWidth()
+    } else {
+      handled = false
+    }
+  } else if (target === 'right') {
+    if (event.key === 'ArrowLeft') {
+      paneLayout.right = clamp(paneLayout.right + smallStep, MIN_RIGHT_PANEL, maxRightWidth())
+    } else if (event.key === 'ArrowRight') {
+      paneLayout.right = clamp(paneLayout.right - smallStep, MIN_RIGHT_PANEL, maxRightWidth())
+    } else if (event.key === 'PageUp') {
+      paneLayout.right = clamp(paneLayout.right + largeStep, MIN_RIGHT_PANEL, maxRightWidth())
+    } else if (event.key === 'PageDown') {
+      paneLayout.right = clamp(paneLayout.right - largeStep, MIN_RIGHT_PANEL, maxRightWidth())
+    } else if (event.key === 'Home') {
+      paneLayout.right = MIN_RIGHT_PANEL
+    } else if (event.key === 'End') {
+      paneLayout.right = maxRightWidth()
+    } else {
+      handled = false
+    }
+  }
+
+  if (!handled) return
+  event.preventDefault()
+  fitPaneLayout()
+  persistPaneLayout()
+  editor?.refresh?.()
+}
+
+function resizeProjectSplitByKeyboard(event) {
+  const smallStep = event.shiftKey ? 48 : 16
+  const largeStep = 96
+  let handled = true
+
+  if (event.key === 'ArrowUp') {
+    projectSplit.projectTree = clamp(projectSplit.projectTree - smallStep, MIN_PROJECT_TREE, maxProjectTreeHeight())
+  } else if (event.key === 'ArrowDown') {
+    projectSplit.projectTree = clamp(projectSplit.projectTree + smallStep, MIN_PROJECT_TREE, maxProjectTreeHeight())
+  } else if (event.key === 'PageUp') {
+    projectSplit.projectTree = clamp(projectSplit.projectTree - largeStep, MIN_PROJECT_TREE, maxProjectTreeHeight())
+  } else if (event.key === 'PageDown') {
+    projectSplit.projectTree = clamp(projectSplit.projectTree + largeStep, MIN_PROJECT_TREE, maxProjectTreeHeight())
+  } else if (event.key === 'Home') {
+    projectSplit.projectTree = MIN_PROJECT_TREE
+  } else if (event.key === 'End') {
+    projectSplit.projectTree = maxProjectTreeHeight()
+  } else {
+    handled = false
+  }
+
+  if (!handled) return
+  event.preventDefault()
+  fitProjectSplit()
+  persistProjectSplit()
+}
+
+function stopPaneResize() {
+  if (!resizeState) return
+  resizeState = null
+  resizingPane.value = ''
+  window.removeEventListener('pointermove', handlePaneResize)
+  window.removeEventListener('pointerup', stopPaneResize)
+  window.removeEventListener('pointercancel', stopPaneResize)
+  persistPaneLayout()
+  editor?.refresh?.()
+}
+
+function stopProjectSplitResize() {
+  if (!projectSplitResizeState) return
+  projectSplitResizeState = null
+  resizingPane.value = ''
+  window.removeEventListener('pointermove', handleProjectSplitResize)
+  window.removeEventListener('pointerup', stopProjectSplitResize)
+  window.removeEventListener('pointercancel', stopProjectSplitResize)
+  persistProjectSplit()
+}
+
+function fitPaneLayout() {
+  if (typeof window === 'undefined') return
+  const available = (workbenchEl.value?.getBoundingClientRect().width || window.innerWidth) - RAIL_WIDTH - activeResizerWidth()
+  const maxSideTotal = Math.max(MIN_LEFT_PANEL + MIN_RIGHT_PANEL, available - MIN_CANVAS)
+  const currentSideTotal = paneLayout.left + paneLayout.right
+  if (currentSideTotal <= maxSideTotal) return
+
+  const overflow = currentSideTotal - maxSideTotal
+  const leftShare = paneLayout.left / currentSideTotal
+  paneLayout.left = Math.max(MIN_LEFT_PANEL, paneLayout.left - (overflow * leftShare))
+  paneLayout.right = Math.max(MIN_RIGHT_PANEL, paneLayout.right - (overflow * (1 - leftShare)))
+}
+
+function fitProjectSplit() {
+  projectSplit.projectTree = clamp(projectSplit.projectTree, MIN_PROJECT_TREE, maxProjectTreeHeight())
+}
+
+function defaultPaneLayout() {
+  const available = (workbenchEl.value?.getBoundingClientRect().width || window.innerWidth) - RAIL_WIDTH - (RESIZER_WIDTH * 2)
+  const sideTotal = Math.max(MIN_LEFT_PANEL + MIN_RIGHT_PANEL, available * (1 - DEFAULT_CANVAS_SHARE))
+  const left = clamp(sideTotal * DEFAULT_LEFT_SIDE_SHARE, MIN_LEFT_PANEL, 680)
+  const right = clamp(sideTotal - left, MIN_RIGHT_PANEL, 560)
+  return { left, right }
+}
+
+function maxLeftWidth() {
+  const available = (workbenchEl.value?.getBoundingClientRect().width || window.innerWidth) - RAIL_WIDTH - activeResizerWidth()
+  return Math.max(MIN_LEFT_PANEL, available - paneLayout.right - MIN_CANVAS)
+}
+
+function maxRightWidth() {
+  const available = (workbenchEl.value?.getBoundingClientRect().width || window.innerWidth) - RAIL_WIDTH - activeResizerWidth()
+  const leftWidth = isLeftPanelOpen.value ? paneLayout.left : 0
+  return Math.max(MIN_RIGHT_PANEL, available - leftWidth - MIN_CANVAS)
+}
+
+function activeResizerWidth() {
+  return isLeftPanelOpen.value ? RESIZER_WIDTH * 2 : RESIZER_WIDTH
+}
+
+function maxProjectTreeHeight() {
+  const panelHeight = leftPanelEl.value?.getBoundingClientRect().height || window.innerHeight - 52
+  return Math.max(MIN_PROJECT_TREE, panelHeight - MIN_LAYERS - PROJECT_RESIZER_HEIGHT)
+}
+
+function clamp(value, min, max) {
+  return Math.min(max, Math.max(min, value))
+}
+
 async function loadEditorData() {
   loading.value = true
   editorError.value = ''
   try {
-    const [siteResponse, pagesResponse, templatesResponse, assetsResponse] = await Promise.all([
+    const [siteResponse, pagesResponse, templatesResponse, assetsResponse, aiTemplatesResponse] = await Promise.all([
       api.get(`/Sites/${siteId}`),
       api.get(`/Pages/site/${siteId}`),
       api.get('/WidgetTemplates'),
-      api.get(`/Assets/site/${siteId}`).catch(() => ({ data: { data: [] } }))
+      api.get(`/Assets/site/${siteId}`).catch(() => ({ data: { data: [] } })),
+      api.get('/AiConversations/templates?kind=page')
     ])
     site.value = unwrap(siteResponse)
     pages.value = (unwrap(pagesResponse) || []).sort((a, b) => a.displayOrder - b.displayOrder)
     templates.value = unwrap(templatesResponse) || []
     assets.value = unwrap(assetsResponse) || []
+    aiTemplates.value = unwrap(aiTemplatesResponse) || []
 
     if (!pageId.value) {
       const home = pages.value.find((item) => item.isHome) || pages.value[0]
@@ -412,7 +839,7 @@ async function loadEditorData() {
       page.value = unwrap(pageResponse)
     }
   } catch (e) {
-    editorError.value = errorMessage(e, '載入編輯器失敗')
+    editorError.value = errorMessage(e, t('common.operationFailed'))
   } finally {
     loading.value = false
   }
@@ -421,7 +848,7 @@ async function loadEditorData() {
 function initGrapesJS() {
   if (editorError.value) return
   if (typeof window === 'undefined' || !window.grapesjs) {
-    editorError.value = 'GrapesJS 尚未載入，請確認 CDN 可連線。'
+    editorError.value = t('editor.grapesMissing')
     return
   }
 
@@ -480,6 +907,7 @@ function registerBlocks() {
       editor.BlockManager.add(`template-${template.id}`, {
         label: template.name,
         category: template.category || 'Content',
+        media: blockIcon(template.category || template.name),
         content: template.defaultContent,
         attributes: { title: template.description || template.name }
       })
@@ -488,31 +916,49 @@ function registerBlocks() {
   const basicBlocks = [
     {
       id: 'basic-section',
-      label: 'Section',
-      content: '<section class="py-16 px-6"><div class="max-w-6xl mx-auto"><h2 class="text-3xl font-bold text-gray-900">New section</h2><p class="mt-3 text-gray-600">Write section content here.</p></div></section>'
+      label: t('editor.blockSection'),
+      media: blockIcon('section'),
+      content: `<section class="py-16 px-6"><div class="max-w-6xl mx-auto"><h2 class="text-3xl font-bold text-gray-900">${t('editor.basicSectionTitle')}</h2><p class="mt-3 text-gray-600">${t('editor.basicSectionBody')}</p></div></section>`
     },
     {
       id: 'basic-text',
-      label: 'Text',
-      content: '<p class="text-lg leading-7 text-gray-700">輸入段落內容...</p>'
+      label: t('editor.blockText'),
+      media: blockIcon('text'),
+      content: `<p class="text-lg leading-7 text-gray-700">${t('editor.basicTextContent')}</p>`
     },
     {
       id: 'basic-button',
-      label: 'Button',
-      content: '<a href="#" class="inline-block px-5 py-3 bg-blue-600 text-white font-semibold rounded-md">行動按鈕</a>'
+      label: t('editor.blockButton'),
+      media: blockIcon('button'),
+      content: `<a href="#" class="inline-block px-5 py-3 bg-blue-600 text-white font-semibold rounded-md">${t('editor.basicButtonText')}</a>`
     },
     {
       id: 'basic-image',
-      label: 'Image',
-      content: '<img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200" alt="Team" class="w-full rounded-lg" />'
+      label: t('editor.blockImage'),
+      media: blockIcon('image'),
+      content: `<img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200" alt="${t('editor.blockTeamAlt')}" class="w-full rounded-lg" />`
     },
     {
       id: 'basic-form',
-      label: 'Form',
-      content: '<form class="grid gap-3 max-w-md"><input class="border rounded-md px-4 py-3" placeholder="Name" /><input class="border rounded-md px-4 py-3" placeholder="Email" /><button class="bg-gray-900 text-white rounded-md px-4 py-3">Submit</button></form>'
+      label: t('editor.blockForm'),
+      media: blockIcon('form'),
+      content: `<form class="grid gap-3 max-w-md"><input class="border rounded-md px-4 py-3" placeholder="${t('editor.formName')}" /><input class="border rounded-md px-4 py-3" placeholder="Email" /><button class="bg-gray-900 text-white rounded-md px-4 py-3">${t('editor.formSubmit')}</button></form>`
     }
   ]
-  basicBlocks.forEach((block) => editor.BlockManager.add(block.id, { ...block, category: 'Basic' }))
+  basicBlocks.forEach((block) => editor.BlockManager.add(block.id, { ...block, category: t('editor.basic') }))
+}
+
+function blockIcon(value = '') {
+  const key = value.toLowerCase()
+  if (key.includes('hero')) return '<span class="sf-block-icon hero"></span>'
+  if (key.includes('footer')) return '<span class="sf-block-icon footer"></span>'
+  if (key.includes('feature') || key.includes('content')) return '<span class="sf-block-icon features"></span>'
+  if (key.includes('about') || key.includes('team')) return '<span class="sf-block-icon text"></span>'
+  if (key.includes('contact') || key.includes('form')) return '<span class="sf-block-icon form"></span>'
+  if (key.includes('button')) return '<span class="sf-block-icon button"></span>'
+  if (key.includes('image')) return '<span class="sf-block-icon image"></span>'
+  if (key.includes('text')) return '<span class="sf-block-icon text"></span>'
+  return '<span class="sf-block-icon section"></span>'
 }
 
 function loadPageIntoEditor() {
@@ -546,6 +992,7 @@ function loadPageIntoEditor() {
     editor.setStyle(currentPage.cssContent)
   }
 
+  applyTemplateHeadAssets(currentPage.jsContent || '')
   hasUnsavedChanges.value = false
 }
 
@@ -556,14 +1003,14 @@ async function savePage() {
     const response = await api.put(`/Pages/${pageId.value}`, {
       htmlContent: editor.getHtml(),
       cssContent: editor.getCss(),
-      jsContent: editor.getJs?.() || '',
+      jsContent: preserveTemplateHead(page.value?.jsContent || '', editor.getJs?.() || ''),
       components: JSON.stringify(editor.getComponents().toJSON()),
       styles: JSON.stringify(editor.getStyle())
     })
     page.value = { ...page.value, ...unwrap(response) }
     hasUnsavedChanges.value = false
   } catch (e) {
-    alert(errorMessage(e, '儲存失敗'))
+    alert(errorMessage(e, t('common.operationFailed')))
   } finally {
     saving.value = false
   }
@@ -574,16 +1021,16 @@ async function publishSite() {
   try {
     if (hasUnsavedChanges.value) await savePage()
     await api.post(`/Sites/${siteId}/publish`, { taskType: 'full_publish', targetUrl: '' })
-    alert('發佈完成。')
+    alert(t('editor.publishSuccess'))
   } catch (e) {
-    alert(errorMessage(e, '發佈失敗'))
+    alert(errorMessage(e, t('common.operationFailed')))
   } finally {
     publishing.value = false
   }
 }
 
 async function createPage() {
-  const title = prompt('新頁面名稱', 'New Page')
+  const title = prompt(t('editor.newPagePrompt'), t('editor.newPageDefault'))
   if (!title) return
   try {
     const response = await api.post(`/Pages/site/${siteId}`, {
@@ -596,13 +1043,13 @@ async function createPage() {
     await loadEditorData()
     if (created?.id) await openPage(created.id)
   } catch (e) {
-    alert(errorMessage(e, '建立頁面失敗'))
+    alert(errorMessage(e, t('common.operationFailed')))
   }
 }
 
 async function openPage(targetPageId) {
   if (targetPageId === pageId.value) return
-  if (hasUnsavedChanges.value && !confirm('目前頁面尚未儲存，要離開嗎？')) return
+  if (hasUnsavedChanges.value && !confirm(t('editor.unsavedLeavePage'))) return
   router.push(`/editor/${siteId}/${targetPageId}`)
   pageId.value = targetPageId
   const response = await api.get(`/Pages/${targetPageId}`)
@@ -631,7 +1078,7 @@ async function registerAssetUrl() {
     editor?.AssetManager.add(url)
     assetUrl.value = ''
   } catch (e) {
-    alert(errorMessage(e, '資源登錄失敗'))
+    alert(errorMessage(e, t('common.operationFailed')))
   }
 }
 
@@ -644,6 +1091,7 @@ async function generateCurrentPage() {
       pageId: pageId.value,
       pageName: page.value?.title || 'Generated Page',
       pageType: aiPageType.value,
+      templateKey: aiTemplateKey.value,
       prompt: aiPrompt.value || `Generate a polished ${aiPageType.value} page for ${site.value?.name || 'this website'}.`,
       style: aiStyle.value,
       contentLength: 'medium'
@@ -662,14 +1110,64 @@ async function generateCurrentPage() {
     }
     editor.setComponents(generated.htmlContent || defaultBlankPage())
     editor.setStyle(generated.cssContent || '')
+    applyTemplateHeadAssets(generated.jsContent || '')
     hasUnsavedChanges.value = false
     selectedComponentName.value = ''
-    alert('AI 已產生並套用到目前頁面。')
+    alert(t('editor.generatedApplied'))
   } catch (e) {
-    alert(errorMessage(e, 'AI 生成目前頁面失敗'))
+    alert(errorMessage(e, t('common.operationFailed')))
   } finally {
     generatingCurrentPage.value = false
   }
+}
+
+function applyEditorTemplate() {
+  const template = pageTemplates.value.find((item) => item.key === aiTemplateKey.value)
+  if (!template) return
+
+  aiPageType.value = template.pageTypes?.[0] || aiPageType.value
+  if (!aiPrompt.value) aiPrompt.value = template.description
+}
+
+function extractTemplateHead(js) {
+  const start = '/*SITEFORGE_TEMPLATE_HEAD_START'
+  const end = 'SITEFORGE_TEMPLATE_HEAD_END*/'
+  const startIndex = js.indexOf(start)
+  if (startIndex < 0) return ''
+  const contentStart = startIndex + start.length
+  const endIndex = js.indexOf(end, contentStart)
+  if (endIndex < 0) return ''
+  return js.slice(contentStart, endIndex).trim()
+}
+
+function preserveTemplateHead(originalJs, nextJs) {
+  const head = extractTemplateHead(originalJs)
+  return head ? `/*SITEFORGE_TEMPLATE_HEAD_START\n${head}\nSITEFORGE_TEMPLATE_HEAD_END*/\n${nextJs || ''}` : nextJs
+}
+
+function applyTemplateHeadAssets(js) {
+  const headHtml = extractTemplateHead(js)
+  const canvasDoc = editor?.Canvas?.getDocument?.()
+  if (!headHtml || !canvasDoc?.head) return
+
+  canvasDoc.head.querySelectorAll('[data-siteforge-template-head]').forEach((node) => node.remove())
+
+  const template = document.createElement('template')
+  template.innerHTML = headHtml
+  Array.from(template.content.childNodes).forEach((node) => {
+    if (node.nodeType !== Node.ELEMENT_NODE) return
+    const element = node
+    let copy
+    if (element.tagName?.toLowerCase() === 'script') {
+      copy = canvasDoc.createElement('script')
+      Array.from(element.attributes).forEach((attr) => copy.setAttribute(attr.name, attr.value))
+      copy.textContent = element.textContent || ''
+    } else {
+      copy = element.cloneNode(true)
+    }
+    copy.setAttribute('data-siteforge-template-head', 'true')
+    canvasDoc.head.appendChild(copy)
+  })
 }
 
 function selectAsset(url) {
@@ -720,14 +1218,14 @@ function applyGlobalTokens() {
 
 function createSampleTable() {
   sampleTable.value = [
-    { key: 'title', value: page.value?.title || 'Home' },
+    { key: 'title', value: page.value?.title || t('common.home') },
     { key: 'slug', value: page.value?.slug || 'home' },
-    { key: 'status', value: page.value?.isPublished ? 'published' : 'draft' }
+    { key: 'status', value: page.value?.isPublished ? t('common.published') : t('common.draft') }
   ]
 }
 
 function backToWorkspace() {
-  if (hasUnsavedChanges.value && !confirm('目前頁面尚未儲存，要返回工作區嗎？')) return
+  if (hasUnsavedChanges.value && !confirm(t('editor.unsavedBackWorkspace'))) return
   router.push(`/sites/${siteId}`)
 }
 
@@ -753,9 +1251,9 @@ function defaultBlankPage() {
     <main>
       <section class="py-20 px-6 bg-white">
         <div class="max-w-5xl mx-auto">
-          <p class="text-sm font-semibold text-blue-600 mb-3">SiteForge Template First</p>
-          <h1 class="text-5xl font-bold text-gray-900 mb-6">拖曳左側模板開始編輯</h1>
-          <p class="text-xl text-gray-600 max-w-2xl">從 Hero、Features、Contact 等區塊開始，建立後可完整儲存為 GrapesJS project data。</p>
+          <p class="text-sm font-semibold text-blue-600 mb-3">${t('editor.defaultBlankKicker')}</p>
+          <h1 class="text-5xl font-bold text-gray-900 mb-6">${t('editor.defaultBlankTitle')}</h1>
+          <p class="text-xl text-gray-600 max-w-2xl">${t('editor.defaultBlankBody')}</p>
         </div>
       </section>
     </main>
@@ -765,37 +1263,37 @@ function defaultBlankPage() {
 function defaultStyleSectors() {
   return [
     {
-      name: 'Layout',
+      name: t('editor.sectorLayout'),
       open: true,
       buildProps: ['display', 'position', 'width', 'min-height', 'margin', 'padding']
     },
     {
-      name: 'Size',
+      name: t('editor.sectorSize'),
       open: true,
       buildProps: ['width', 'height', 'min-width', 'min-height', 'max-width', 'max-height']
     },
     {
-      name: 'Typography',
+      name: t('editor.sectorTypography'),
       open: false,
       buildProps: ['font-family', 'font-size', 'font-weight', 'line-height', 'color', 'text-align', 'text-decoration']
     },
     {
-      name: 'Background',
+      name: t('editor.sectorBackground'),
       open: false,
       buildProps: ['background-color', 'background-image', 'background-size', 'background-position']
     },
     {
-      name: 'Borders',
+      name: t('editor.sectorBorders'),
       open: false,
       buildProps: ['border-radius', 'border-width', 'border-style', 'border-color']
     },
     {
-      name: 'Effects',
+      name: t('editor.sectorEffects'),
       open: false,
       buildProps: ['opacity', 'box-shadow', 'transform']
     },
     {
-      name: 'Flex',
+      name: t('editor.sectorFlex'),
       open: false,
       buildProps: ['flex-direction', 'justify-content', 'align-items', 'gap']
     }
@@ -805,9 +1303,12 @@ function defaultStyleSectors() {
 
 <style scoped>
 .studio-editor {
+  width: 100vw;
+  min-width: 100%;
   height: 100vh;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
   background: var(--sf-page);
   color: var(--sf-ink);
   transition: background 280ms ease, color 280ms ease;
@@ -921,25 +1422,40 @@ button:disabled {
 }
 
 .studio-workbench {
+  width: 100%;
   flex: 1;
   display: grid;
-  grid-template-columns: 64px 390px minmax(0, 1fr) 350px;
+  grid-template-columns:
+    44px
+    var(--sf-left-panel-width, 400px)
+    var(--sf-left-resizer-width, 8px)
+    minmax(720px, 1fr)
+    8px
+    var(--sf-right-panel-width, 340px);
   min-height: 0;
+}
+
+.studio-workbench.resizing {
+  cursor: col-resize;
+}
+
+.studio-workbench.resizing * {
+  user-select: none;
 }
 
 .editor-rail {
   display: flex;
   flex-direction: column;
-  gap: 9px;
+  gap: 6px;
   border-right: 1px solid var(--sf-line);
   background: var(--sf-sidebar-bg);
-  padding: 9px 7px;
+  padding: 6px;
   transition: border-color 280ms ease, background 280ms ease;
 }
 
 .editor-rail button {
-  width: 48px;
-  height: 48px;
+  width: 32px;
+  height: 32px;
   display: grid;
   place-items: center;
   border: 0;
@@ -969,6 +1485,8 @@ button:disabled {
   width: 24px;
   height: 24px;
   display: block;
+  transform: scale(0.67);
+  transform-origin: center;
 }
 
 .rail-icon.plus::before,
@@ -1094,14 +1612,202 @@ button:disabled {
   transition: border-color 280ms ease;
 }
 
+.studio-left-panel.collapsed {
+  overflow: hidden;
+  border-right: 0;
+  pointer-events: none;
+}
+
 .studio-right-panel {
   border-left: 1px solid var(--sf-line);
   transition: border-color 280ms ease;
 }
 
+.pane-resizer {
+  position: relative;
+  z-index: 8;
+  width: 8px;
+  min-width: 8px;
+  border: 0;
+  border-left: 1px solid transparent;
+  border-right: 1px solid transparent;
+  padding: 0;
+  background: var(--sf-stage-bg);
+  cursor: col-resize;
+  outline: none;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+
+.pane-resizer::before {
+  content: "";
+  position: absolute;
+  inset: 0 -6px;
+}
+
+.pane-resizer-track {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 16px;
+  height: 74px;
+  display: grid;
+  place-items: center;
+  gap: 5px;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  background: #292b33;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+  opacity: 0.86;
+  transition: background 160ms ease, border-color 160ms ease, opacity 160ms ease, transform 160ms ease;
+}
+
+.pane-resizer-track span {
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: #9da0aa;
+  transition: background 160ms ease, transform 160ms ease;
+}
+
+.pane-resizer:hover,
+.pane-resizer:focus-visible,
+.pane-resizer.active {
+  border-color: rgba(168, 136, 255, 0.4);
+  background: rgba(131, 88, 237, 0.16);
+}
+
+.pane-resizer:hover .pane-resizer-track,
+.pane-resizer:focus-visible .pane-resizer-track,
+.pane-resizer.active .pane-resizer-track {
+  background: var(--sf-primary);
+  border-color: rgba(255, 255, 255, 0.18);
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.04);
+}
+
+.pane-resizer:hover .pane-resizer-track span,
+.pane-resizer:focus-visible .pane-resizer-track span,
+.pane-resizer.active .pane-resizer-track span {
+  background: #fff;
+  transform: scale(1.08);
+}
+
+.left-resizer[aria-hidden="true"] {
+  overflow: hidden;
+  pointer-events: none;
+  opacity: 0;
+}
+
 .studio-panel,
 .right-content {
   padding: 14px;
+}
+
+.project-panel {
+  height: 100%;
+  display: grid;
+  grid-template-rows:
+    minmax(120px, var(--sf-project-tree-height, 360px))
+    14px
+    minmax(0, 1fr);
+  overflow: hidden;
+  padding: 0;
+}
+
+.project-pane,
+.layers-pane {
+  min-height: 0;
+  overflow: auto;
+  padding: 14px;
+}
+
+.project-pane {
+  padding-bottom: 8px;
+}
+
+.layers-pane {
+  padding-top: 8px;
+}
+
+.stack-resizer {
+  position: relative;
+  z-index: 7;
+  width: 100%;
+  height: 14px;
+  border: 0;
+  border-top: 1px solid transparent;
+  border-bottom: 1px solid transparent;
+  padding: 0;
+  background: var(--sf-surface);
+  cursor: row-resize;
+  outline: none;
+  transition: background 160ms ease, border-color 160ms ease;
+}
+
+.stack-resizer::before {
+  content: "";
+  position: absolute;
+  inset: -7px 0;
+}
+
+.stack-resizer-track {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 96px;
+  height: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transform: translate(-50%, -50%);
+  border-radius: 999px;
+  background: #292b33;
+  opacity: 0.88;
+  transition: background 160ms ease, opacity 160ms ease, transform 160ms ease;
+}
+
+.stack-resizer-track::before {
+  content: "";
+  position: absolute;
+  left: -62px;
+  right: -62px;
+  top: 50%;
+  height: 1px;
+  transform: translateY(-50%);
+  background: #30313a;
+}
+
+.stack-resizer-track span {
+  position: relative;
+  z-index: 1;
+  width: 4px;
+  height: 4px;
+  border-radius: 999px;
+  background: #9da0aa;
+}
+
+.stack-resizer:hover,
+.stack-resizer:focus-visible,
+.stack-resizer.active {
+  border-color: rgba(168, 136, 255, 0.36);
+  background: rgba(131, 88, 237, 0.12);
+}
+
+.stack-resizer:hover .stack-resizer-track,
+.stack-resizer:focus-visible .stack-resizer-track,
+.stack-resizer.active .stack-resizer-track {
+  background: var(--sf-primary);
+  opacity: 1;
+  transform: translate(-50%, -50%) scale(1.03);
+}
+
+.stack-resizer:hover .stack-resizer-track span,
+.stack-resizer:focus-visible .stack-resizer-track span,
+.stack-resizer.active .stack-resizer-track span {
+  background: #fff;
 }
 
 .panel-title-row {
@@ -1166,6 +1872,141 @@ button:disabled {
 
 .panel-search::placeholder {
   color: #777a84;
+}
+
+.project-tree {
+  display: grid;
+  gap: 4px;
+  padding: 5px 0 2px;
+}
+
+.tree-root,
+.tree-node {
+  display: grid;
+  align-items: center;
+  border-radius: 7px;
+  color: #c7cad4;
+}
+
+.tree-root {
+  grid-template-columns: 18px 22px minmax(0, 1fr);
+  min-height: 32px;
+  padding: 0 9px;
+  background: #1a1b21;
+  font-weight: 850;
+}
+
+.tree-caret {
+  color: #9b9faa;
+  font-size: 14px;
+}
+
+.tree-site-icon,
+.tree-file-icon {
+  position: relative;
+  width: 16px;
+  height: 18px;
+  display: block;
+  color: currentColor;
+}
+
+.tree-site-icon::before,
+.tree-file-icon::before {
+  content: "";
+  position: absolute;
+  inset: 2px 1px 1px;
+  border: 2px solid currentColor;
+  border-radius: 3px;
+}
+
+.tree-site-icon::after {
+  content: "";
+  position: absolute;
+  left: 4px;
+  right: 4px;
+  top: 7px;
+  height: 2px;
+  background: currentColor;
+  box-shadow: 0 4px 0 currentColor;
+}
+
+.tree-file-icon::after {
+  content: "";
+  position: absolute;
+  right: 1px;
+  top: 2px;
+  width: 6px;
+  height: 6px;
+  border-left: 2px solid currentColor;
+  border-bottom: 2px solid currentColor;
+  background: #15161b;
+}
+
+.tree-file-icon.home::before {
+  border-color: #b998ff;
+}
+
+.tree-node {
+  width: 100%;
+  grid-template-columns: 16px 22px minmax(0, 1fr) auto;
+  gap: 5px;
+  min-height: 38px;
+  border: 1px solid #2f3038;
+  background: #15161b;
+  padding: 5px 8px;
+  cursor: pointer;
+  text-align: left;
+}
+
+.tree-node:hover,
+.tree-node.active {
+  border-color: #8b62f6;
+  background: #24242d;
+}
+
+.tree-line {
+  width: 10px;
+  height: 18px;
+  border-left: 1px solid #4b4d57;
+  border-bottom: 1px solid #4b4d57;
+  align-self: center;
+  margin-left: 5px;
+}
+
+.tree-label {
+  min-width: 0;
+  display: flex;
+  align-items: baseline;
+  gap: 7px;
+}
+
+.tree-label strong,
+.tree-label small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tree-label strong {
+  color: #dfe1e8;
+  flex: 0 1 auto;
+  font-weight: 860;
+}
+
+.tree-label small {
+  color: #969aa5;
+  flex: 1 1 auto;
+  font-size: 12px;
+}
+
+.tree-node em {
+  border: 1px solid #4d3b78;
+  border-radius: 999px;
+  padding: 1px 6px;
+  color: #d9c8ff;
+  font-size: 10px;
+  font-style: normal;
+  font-weight: 850;
 }
 
 .block-section-title {
@@ -1669,9 +2510,10 @@ button:disabled {
 
 @media (max-width: 1180px) {
   .studio-workbench {
-    grid-template-columns: 64px 330px minmax(0, 1fr);
+    grid-template-columns: 44px var(--sf-left-panel-width, 360px) minmax(0, 1fr);
   }
 
+  .pane-resizer,
   .studio-right-panel {
     display: none;
   }
@@ -1690,7 +2532,7 @@ button:disabled {
   }
 
   .studio-workbench {
-    grid-template-columns: 58px minmax(0, 1fr);
+    grid-template-columns: 44px minmax(0, 1fr);
   }
 
   .studio-left-panel {
@@ -1733,6 +2575,115 @@ button:disabled {
 
 .gjs-block:hover {
   border-color: #8358ed;
+}
+
+.gjs-block__media {
+  min-height: 38px;
+  display: grid;
+  place-items: center;
+  margin-bottom: 8px;
+  color: #b998ff;
+}
+
+.sf-block-icon {
+  position: relative;
+  width: 34px;
+  height: 26px;
+  display: block;
+  color: currentColor;
+}
+
+.sf-block-icon::before,
+.sf-block-icon::after {
+  content: "";
+  position: absolute;
+  box-sizing: border-box;
+}
+
+.sf-block-icon.section::before,
+.sf-block-icon.hero::before,
+.sf-block-icon.footer::before,
+.sf-block-icon.text::before,
+.sf-block-icon.form::before {
+  inset: 2px;
+  border: 2px solid currentColor;
+  border-radius: 4px;
+}
+
+.sf-block-icon.section::after {
+  left: 8px;
+  right: 8px;
+  top: 8px;
+  height: 2px;
+  background: currentColor;
+  box-shadow: 0 6px 0 currentColor;
+}
+
+.sf-block-icon.hero::after {
+  left: 7px;
+  right: 7px;
+  bottom: 7px;
+  height: 8px;
+  border-radius: 999px;
+  background: currentColor;
+}
+
+.sf-block-icon.footer::after {
+  left: 6px;
+  right: 6px;
+  bottom: 6px;
+  height: 3px;
+  background: currentColor;
+  box-shadow: 0 -6px 0 -1px currentColor;
+}
+
+.sf-block-icon.features {
+  background:
+    linear-gradient(currentColor 0 0) 3px 3px / 10px 8px no-repeat,
+    linear-gradient(currentColor 0 0) 21px 3px / 10px 8px no-repeat,
+    linear-gradient(currentColor 0 0) 3px 15px / 10px 8px no-repeat,
+    linear-gradient(currentColor 0 0) 21px 15px / 10px 8px no-repeat;
+}
+
+.sf-block-icon.text::after {
+  left: 8px;
+  right: 8px;
+  top: 8px;
+  height: 2px;
+  background: currentColor;
+  box-shadow: 0 5px 0 currentColor, 0 10px 0 currentColor;
+}
+
+.sf-block-icon.button::before {
+  left: 5px;
+  right: 5px;
+  top: 8px;
+  height: 12px;
+  border: 2px solid currentColor;
+  border-radius: 999px;
+}
+
+.sf-block-icon.image::before {
+  inset: 2px;
+  border: 2px solid currentColor;
+  border-radius: 4px;
+}
+
+.sf-block-icon.image::after {
+  left: 8px;
+  bottom: 6px;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-bottom: 10px solid currentColor;
+}
+
+.sf-block-icon.form::after {
+  left: 8px;
+  right: 8px;
+  top: 8px;
+  height: 2px;
+  background: currentColor;
+  box-shadow: 0 6px 0 currentColor;
 }
 
 .gjs-block-label {

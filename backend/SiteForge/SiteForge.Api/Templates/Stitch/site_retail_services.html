@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+
+<html lang="zh-TW"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Services &amp; Membership - Muji-Inspired Retail</title>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Theme Configuration -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#e9e7eb",
+                        "tertiary-fixed-dim": "#83d8a6",
+                        "on-tertiary-fixed": "#002111",
+                        "secondary-fixed-dim": "#f8bc4b",
+                        "on-error-container": "#93000a",
+                        "on-surface-variant": "#43474e",
+                        "surface-container-highest": "#e3e2e6",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#9ff5c1",
+                        "on-secondary-fixed": "#271900",
+                        "on-background": "#1a1c1e",
+                        "on-surface": "#1a1c1e",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#efedf1",
+                        "inverse-primary": "#adc7f7",
+                        "surface-dim": "#dad9dd",
+                        "secondary-container": "#ffc250",
+                        "inverse-on-surface": "#f1f0f4",
+                        "on-primary-container": "#86a0cd",
+                        "on-tertiary-container": "#5caf81",
+                        "on-error": "#ffffff",
+                        "outline-variant": "#c4c6cf",
+                        "on-tertiary-fixed-variant": "#005231",
+                        "secondary-fixed": "#ffdeaa",
+                        "on-primary-fixed-variant": "#2d476f",
+                        "surface-tint": "#455f88",
+                        "outline": "#74777f",
+                        "primary-container": "#1a365d",
+                        "surface-container-low": "#f4f3f7",
+                        "background": "#faf9fd",
+                        "surface-variant": "#e3e2e6",
+                        "secondary": "#7d5700",
+                        "on-secondary-container": "#725000",
+                        "primary": "#002045",
+                        "tertiary": "#002715",
+                        "primary-fixed-dim": "#adc7f7",
+                        "on-primary-fixed": "#001b3c",
+                        "surface": "#faf9fd",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#2f3033",
+                        "on-secondary-fixed-variant": "#5f4100",
+                        "surface-bright": "#faf9fd",
+                        "primary-fixed": "#d6e3ff",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#003f25"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "80px",
+                        "gutter": "24px",
+                        "md": "24px",
+                        "base": "8px",
+                        "container-max": "1280px",
+                        "sm": "12px",
+                        "lg": "48px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Noto Sans", "sans-serif"],
+                        "label-caps": ["Noto Sans", "sans-serif"],
+                        "title-sm": ["Noto Sans", "sans-serif"],
+                        "body-md": ["Noto Sans", "sans-serif"],
+                        "display-lg": ["Noto Sans", "sans-serif"],
+                        "body-sm": ["Noto Sans", "sans-serif"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["32px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "title-sm": ["20px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+</head>
+<body class="bg-background text-on-background antialiased selection:bg-primary-container selection:text-on-primary-container">
+<!-- TopNavBar (JSON Injected) -->
+<nav class="bg-surface sticky w-full top-0 z-50 border-b border-outline-variant">
+<div class="flex justify-between items-center w-full px-gutter max-w-container-max mx-auto h-20">
+<!-- Brand Logo -->
+<a class="font-headline-md text-headline-md font-bold tracking-tighter text-primary hover:text-secondary transition-colors duration-200" href="#">
+                MUJI-INSPIRED RETAIL
+            </a>
+<!-- Navigation Links -->
+<div class="hidden md:flex gap-md items-center">
+<a class="text-on-surface-variant font-label-caps text-label-caps hover:text-secondary transition-colors duration-200 uppercase" href="#">Life</a>
+<a class="text-on-surface-variant font-label-caps text-label-caps hover:text-secondary transition-colors duration-200 uppercase" href="#">Food</a>
+<a class="text-on-surface-variant font-label-caps text-label-caps hover:text-secondary transition-colors duration-200 uppercase" href="#">Fashion</a>
+<a class="text-on-surface-variant font-label-caps text-label-caps hover:text-secondary transition-colors duration-200 uppercase" href="#">Home</a>
+<a class="text-on-surface-variant font-label-caps text-label-caps hover:text-secondary transition-colors duration-200 uppercase" href="#">Gifts</a>
+<!-- Active Nav Item -->
+<a class="text-primary border-b-2 border-primary pb-2 font-label-caps text-label-caps hover:text-secondary transition-colors duration-200 uppercase scale-95 transition-transform duration-150" href="#">Membership</a>
+</div>
+<!-- Trailing Icons -->
+<div class="flex gap-sm text-primary">
+<button class="hover:text-secondary transition-colors duration-200 p-2">
+<span class="material-symbols-outlined text-[24px]">shopping_cart</span>
+</button>
+<button class="hover:text-secondary transition-colors duration-200 p-2">
+<span class="material-symbols-outlined text-[24px]">person</span>
+</button>
+<button class="hover:text-secondary transition-colors duration-200 p-2">
+<span class="material-symbols-outlined text-[24px]">location_on</span>
+</button>
+</div>
+</div>
+</nav>
+<!-- Main Content Canvas -->
+<main class="w-full">
+<!-- Hero Section: Membership Registration & Points -->
+<section class="max-w-container-max mx-auto px-gutter py-xl">
+<div class="flex flex-col md:flex-row items-center gap-lg">
+<div class="w-full md:w-1/2 space-y-md">
+<div class="inline-block px-3 py-1 bg-surface-variant text-on-surface-variant font-label-caps text-label-caps rounded-full uppercase">
+                        專屬禮遇 (Exclusive Privileges)
+                    </div>
+<h1 class="font-display-lg text-display-lg text-primary">會員計畫與點數回饋</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-lg">
+                        加入我們的質感生活圈。每次消費皆可累積點數，享有專屬折扣、生日禮遇以及優先購買限量商品的資格。讓美好的設計融入您的日常。
+                    </p>
+<div class="pt-sm flex gap-sm">
+<button class="bg-secondary text-on-secondary font-label-caps text-label-caps py-3 px-6 rounded hover:opacity-90 transition-opacity uppercase tracking-widest">
+                            立即註冊
+                        </button>
+<button class="border border-primary text-primary font-label-caps text-label-caps py-3 px-6 rounded hover:bg-surface-variant transition-colors uppercase tracking-widest">
+                            登入會員
+                        </button>
+</div>
+</div>
+<div class="w-full md:w-1/2">
+<div class="aspect-[4/3] rounded-lg overflow-hidden bg-surface-container border border-outline-variant">
+<img alt="Membership Card" class="w-full h-full object-cover" data-alt="A meticulously arranged flat lay featuring a sleek, minimalist physical membership card crafted from matte grey material, resting alongside a minimal leather wallet and modern keys. The composition is set on a pristine white marble surface, bathed in bright, diffused natural light that casts soft, cool shadows. The overarching aesthetic is sophisticated, corporate modern, and deeply serene, reflecting a premium lifestyle brand's quiet authority. The color palette emphasizes clean whites, slate greys, and subtle navy accents." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD_NV4iyINEeL2H-6rlgBXXKAN6kBzwU3LhiGZUR2NEBAwu1JXg0avloc83Ebg6Re31AxIWIXu6b413yK3yUhUB53Fxkn0dRJ--BQ05I_Pim-F1RIpdr2S5lyiLiC5mrgtdhbSTZvGTQ_RM0qGiJCJWeF7NlHHjdioxHLMucb4S-7u0TAabKKVgMMd5ws2-jRVYnCBmwZE_-yEeD-FysuUfABHBT93HMPzozATGKyhUbarI_c_SK_AdU8JzZdpeV5evrKNJj41nG5I"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Bento Grid Services Section -->
+<section class="max-w-container-max mx-auto px-gutter pb-xl">
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<!-- OMO: Online Order, Store Pickup -->
+<div class="md:col-span-2 group border border-outline-variant bg-surface rounded-lg overflow-hidden hover:shadow-[0px_10px_25px_rgba(26,54,93,0.08)] transition-shadow duration-300 flex flex-col md:flex-row relative">
+<div class="w-full md:w-1/2 p-lg flex flex-col justify-center space-y-sm relative z-10 bg-surface">
+<span class="material-symbols-outlined text-primary text-[32px] mb-xs">storefront</span>
+<h2 class="font-headline-md text-headline-md text-primary">線上訂購，實體取貨</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                            享受無縫的購物體驗 (OMO)。在線上瀏覽我們的高品質商品並下單，選擇離您最近的門市快速取貨，省去等待物流的時間。
+                        </p>
+<div class="pt-sm">
+<a class="font-label-caps text-label-caps text-secondary hover:underline uppercase flex items-center gap-xs" href="#">
+                                了解取貨流程 <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+</a>
+</div>
+</div>
+<div class="w-full md:w-1/2 aspect-square md:aspect-auto">
+<img alt="Store Pickup" class="w-full h-full object-cover" data-alt="A clean, minimalist retail storefront exterior featuring large glass windows and simple geometric architecture. A neatly packaged brown paper shopping bag with sturdy handles sits on a smooth concrete counter inside the bright, well-organized store. The lighting is crisp and natural, highlighting the premium quality of the retail environment. The mood conveys modern efficiency and quiet professionalism, dominated by neutral tones, crisp whites, and a touch of deep navy framing." src="https://lh3.googleusercontent.com/aida-public/AB6AXuA23VwOvyW16u8sSdAJC6GN7DM7TMVX0kiMfyZ6ULlD_lf0stH6_13hkoFFCMrQgYbKt5s1_nAl9WHhz1SLlwtys6Mkc6rayjwdCle47dQOncdH8-JnFK2NO3Qz6i8ZOsfFYy9a-gh89ohMphDf8UNmPJoh_iice-Ke7Y1ZR120Zh5FTPTD2xmz1C2aGyNJZ5S7TNbUYZhTxSa-xlKB3nkXkC11-GtpP_aSaAzR3p78bfp7wOT4_RiGmv314fxQw8eSyRTYWkqUGE8"/>
+</div>
+</div>
+<!-- Returns Policy Summary -->
+<div class="border border-outline-variant bg-surface rounded-lg p-lg hover:shadow-[0px_10px_25px_rgba(26,54,93,0.08)] transition-shadow duration-300 flex flex-col justify-between">
+<div>
+<div class="w-12 h-12 bg-surface-container rounded-full flex items-center justify-center mb-md border border-outline-variant">
+<span class="material-symbols-outlined text-primary">replay</span>
+</div>
+<h2 class="font-title-sm text-title-sm text-primary mb-sm">安心退換貨政策</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-md">
+                            我們重視您的滿意度。提供 30 天內無條件退換貨服務。只要商品保持全新狀態及完整包裝，皆可於原購買門市或透過線上流程辦理。
+                        </p>
+</div>
+<a class="font-label-caps text-label-caps text-primary hover:text-secondary transition-colors uppercase border-b border-primary w-max pb-xs" href="#">
+                        閱讀完整政策
+                    </a>
+</div>
+<!-- Corporate Procurement & Gift Cards -->
+<div class="md:col-span-3 border border-outline-variant bg-surface-container-lowest rounded-lg p-lg hover:shadow-[0px_10px_25px_rgba(26,54,93,0.08)] transition-shadow duration-300 flex flex-col md:flex-row items-center gap-lg">
+<div class="w-full md:w-2/3 space-y-sm">
+<h2 class="font-headline-md text-headline-md text-primary">企業採購與專屬禮物卡</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                            無論是企業節慶贈禮、辦公空間佈置，或是員工福利發放，我們提供量身定制的採購方案。實體與數位禮物卡更是傳遞心意的最佳選擇，讓收禮者自由挑選喜愛的質感物件。
+                        </p>
+</div>
+<div class="w-full md:w-1/3 flex justify-start md:justify-end gap-sm">
+<button class="bg-primary text-on-primary font-label-caps text-label-caps py-3 px-6 rounded hover:opacity-90 transition-opacity uppercase">
+                            聯絡企業專員
+                        </button>
+<button class="border border-outline-variant text-primary font-label-caps text-label-caps py-3 px-6 rounded hover:bg-surface-variant transition-colors uppercase">
+                            購買禮物卡
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Customer Support FAQ Section -->
+<section class="max-w-container-max mx-auto px-gutter pb-xl">
+<div class="border-t border-outline-variant pt-lg">
+<div class="text-center mb-lg">
+<h2 class="font-headline-md text-headline-md text-primary">客戶服務與常見問題</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-sm">為您解答關於購物、會員與服務的疑問</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-x-lg gap-y-md max-w-4xl mx-auto">
+<!-- FAQ Item -->
+<div class="border-b border-outline-variant pb-md">
+<h3 class="font-title-sm text-title-sm text-primary mb-xs flex items-start gap-sm">
+<span class="material-symbols-outlined text-secondary text-[20px] mt-1">help_outline</span>
+                            點數的有效期限是多久？
+                        </h3>
+<p class="font-body-md text-body-md text-on-surface-variant pl-8">
+                            會員點數自發放日起算，有效期限為一年。您隨時可以在會員中心查詢即將到期的點數。
+                        </p>
+</div>
+<!-- FAQ Item -->
+<div class="border-b border-outline-variant pb-md">
+<h3 class="font-title-sm text-title-sm text-primary mb-xs flex items-start gap-sm">
+<span class="material-symbols-outlined text-secondary text-[20px] mt-1">help_outline</span>
+                            如何修改線上訂單的門市取貨地點？
+                        </h3>
+<p class="font-body-md text-body-md text-on-surface-variant pl-8">
+                            若訂單尚未進入準備階段，您可透過「我的訂單」進行修改。若已進入準備流程，請直接聯繫客服中心為您處理。
+                        </p>
+</div>
+<!-- FAQ Item -->
+<div class="border-b border-outline-variant pb-md md:border-b-0">
+<h3 class="font-title-sm text-title-sm text-primary mb-xs flex items-start gap-sm">
+<span class="material-symbols-outlined text-secondary text-[20px] mt-1">help_outline</span>
+                            海外顧客可以加入會員嗎？
+                        </h3>
+<p class="font-body-md text-body-md text-on-surface-variant pl-8">
+                            目前會員計畫僅適用於本地區。海外顧客可註冊一般帳號進行購物，但暫無法累積點數。
+                        </p>
+</div>
+<!-- FAQ Item -->
+<div class="border-b border-outline-variant pb-md md:border-b-0">
+<h3 class="font-title-sm text-title-sm text-primary mb-xs flex items-start gap-sm">
+<span class="material-symbols-outlined text-secondary text-[20px] mt-1">help_outline</span>
+                            發票可否開立統編？
+                        </h3>
+<p class="font-body-md text-body-md text-on-surface-variant pl-8">
+                            可以的。在結帳流程中，請於發票資訊欄位選擇「公司戶電子發票」，並輸入統一編號與公司抬頭。
+                        </p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer (JSON Injected) -->
+<footer class="bg-primary w-full py-lg mt-xl">
+<div class="flex flex-col md:flex-row justify-between items-start w-full px-gutter max-w-container-max mx-auto gap-md">
+<!-- Brand & Copyright -->
+<div class="flex flex-col gap-sm">
+<span class="font-title-sm text-title-sm font-bold text-on-primary">
+                    MUJI-INSPIRED RETAIL
+                </span>
+<span class="font-body-sm text-body-sm text-on-primary opacity-80">
+                    © 2024 Retail Business Corp. All rights reserved.
+                </span>
+</div>
+<!-- Footer Links -->
+<div class="flex flex-wrap gap-md md:gap-lg">
+<a class="font-label-caps text-label-caps text-surface-variant opacity-80 hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer uppercase" href="#">
+                    Privacy Policy
+                </a>
+<a class="font-label-caps text-label-caps text-surface-variant opacity-80 hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer uppercase" href="#">
+                    Terms of Service
+                </a>
+<a class="font-label-caps text-label-caps text-surface-variant opacity-80 hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer uppercase" href="#">
+                    CSR
+                </a>
+<!-- Active Footer Link (Contextual to page intent) -->
+<a class="font-label-caps text-label-caps text-secondary-fixed font-bold hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer uppercase" href="#">
+                    Membership FAQ
+                </a>
+<a class="font-label-caps text-label-caps text-surface-variant opacity-80 hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer uppercase" href="#">
+                    Contact Us
+                </a>
+<a class="font-label-caps text-label-caps text-surface-variant opacity-80 hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer uppercase" href="#">
+                    Global Stores
+                </a>
+</div>
+</div>
+</footer>
+</body></html>

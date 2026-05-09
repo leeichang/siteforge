@@ -1,11 +1,11 @@
 <template>
   <div id="app" :data-theme="theme">
-    <!-- Login page has no sidebar -->
-    <template v-if="isLoginPage">
+    <!-- Login, workspace, and editor pages own their full-screen layout. -->
+    <template v-if="isFullScreenPage">
       <router-view />
     </template>
     
-    <!-- Main app with sidebar -->
+    <!-- Dashboard shell -->
     <template v-else>
       <!-- Side Navigation -->
       <aside class="sf-sidebar">
@@ -14,7 +14,7 @@
           <span class="material-symbols-outlined material-symbols-filled sf-brand-icon">architecture</span>
           <div>
             <h1 class="sf-headline-sm" style="font-weight: 700; color: var(--sf-on-surface);">SiteForge AI</h1>
-            <p class="sf-label-sm" style="color: var(--sf-on-surface-variant);">Pro Plan</p>
+            <p class="sf-label-sm" style="color: var(--sf-on-surface-variant);">{{ t('app.proPlan') }}</p>
           </div>
         </div>
         
@@ -26,50 +26,33 @@
             :class="{ active: $route.path === '/' }"
           >
             <span class="material-symbols-outlined material-symbols-filled">folder</span>
-            <span class="sf-label-lg">Project</span>
+            <span class="sf-label-lg">{{ t('app.project') }}</span>
           </router-link>
-          <a href="#" class="sf-nav-item">
-            <span class="material-symbols-outlined">layers</span>
-            <span class="sf-label-lg">Layers</span>
-          </a>
-          <a href="#" class="sf-nav-item">
-            <span class="material-symbols-outlined">widgets</span>
-            <span class="sf-label-lg">Blocks</span>
-          </a>
-          <a href="#" class="sf-nav-item">
-            <span class="material-symbols-outlined">palette</span>
-            <span class="sf-label-lg">Styles</span>
-          </a>
-          <a href="#" class="sf-nav-item">
-            <span class="material-symbols-outlined">image</span>
-            <span class="sf-label-lg">Assets</span>
-          </a>
-          <a href="#" class="sf-nav-item">
-            <span class="material-symbols-outlined" style="color: var(--sf-primary-fixed-dim);">auto_awesome</span>
-            <span class="sf-label-lg">AI Assistant</span>
-          </a>
         </nav>
         
         <!-- Footer -->
         <div class="sf-sidebar-footer">
-          <button class="sf-btn-primary" @click="$router.push('/workspace')" style="width: 100%; justify-content: center;">
+          <button class="sf-btn-primary" @click="$router.push('/')" style="width: 100%; justify-content: center;">
             <span class="material-symbols-outlined material-symbols-filled">add</span>
-            New Project
+            {{ t('app.newProject') }}
           </button>
           <router-link to="/" class="sf-nav-item" style="margin-top: 8px;">
             <span class="material-symbols-outlined">settings</span>
-            <span class="sf-label-lg">Settings</span>
+            <span class="sf-label-lg">{{ t('app.settings') }}</span>
           </router-link>
           <div class="sf-user-card">
             <div class="sf-avatar">{{ initials }}</div>
             <div class="sf-user-info">
-              <p class="sf-label-lg" style="color: var(--sf-on-surface);">{{ auth.user?.displayName || 'User' }}</p>
+              <p class="sf-label-lg" style="color: var(--sf-on-surface);">{{ auth.user?.displayName || t('common.user') }}</p>
               <p class="sf-label-sm" style="color: var(--sf-on-surface-variant);">{{ auth.user?.email || '' }}</p>
             </div>
-            <button @click="toggleTheme" class="sf-theme-btn" :title="theme === 'dark' ? 'Light mode' : 'Dark mode'">
+            <button @click="toggleLocale" class="sf-theme-btn" :title="t('common.language')">
+              <span class="sf-locale-label">{{ locale === 'en' ? '繁' : 'EN' }}</span>
+            </button>
+            <button @click="toggleTheme" class="sf-theme-btn" :title="theme === 'dark' ? t('common.switchToLight') : t('common.switchToDark')">
               <span class="material-symbols-outlined">{{ theme === 'dark' ? 'light_mode' : 'dark_mode' }}</span>
             </button>
-            <button @click="auth.logout" class="sf-theme-btn" title="Logout">
+            <button @click="auth.logout" class="sf-theme-btn" :title="t('common.logout')">
               <span class="material-symbols-outlined">logout</span>
             </button>
           </div>
@@ -89,13 +72,17 @@ import { computed } from 'vue'
 import { useRoute } from 'vue-router'
 import { useAuthStore } from './stores/auth'
 import { useThemeStore } from './stores/theme'
+import { useLocaleStore } from './stores/locale'
 
 const route = useRoute()
 const auth = useAuthStore()
 const themeStore = useThemeStore()
+const localeStore = useLocaleStore()
 
-const isLoginPage = computed(() => route.path === '/login')
+const isFullScreenPage = computed(() => route.path === '/login' || route.path.startsWith('/sites/') || route.path.startsWith('/editor/'))
 const theme = computed(() => themeStore.theme)
+const locale = computed(() => localeStore.locale)
+const t = localeStore.t
 
 const initials = computed(() => {
   const name = auth.user?.displayName || auth.user?.email || 'U'
@@ -103,7 +90,11 @@ const initials = computed(() => {
 })
 
 const toggleTheme = () => {
-  themeStore.toggleTheme()
+  themeStore.toggle()
+}
+
+const toggleLocale = () => {
+  localeStore.toggleLocale()
 }
 </script>
 
@@ -206,6 +197,14 @@ const toggleTheme = () => {
 .sf-theme-btn:hover {
   background: var(--sf-surface-variant);
   color: var(--sf-on-surface);
+}
+
+.sf-locale-label {
+  min-width: 24px;
+  font-size: 12px;
+  font-weight: 700;
+  line-height: 24px;
+  text-align: center;
 }
 
 .sf-main {

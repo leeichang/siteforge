@@ -15,4 +15,7 @@
     <ProjectReference Include="..\SiteForge.Core\SiteForge.Core.csproj" />
     <ProjectReference Include="..\SiteForge.Infrastructure\SiteForge.Infrastructure.csproj" />
   </ItemGroup>
+  <ItemGroup>
+    <Content Include="Templates\Stitch\**\*.html" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
 </Project>

@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-Hant"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-tint": "#004ced",
+                    "surface-variant": "#e0e3e5",
+                    "outline": "#737688",
+                    "on-surface-variant": "#434656",
+                    "inverse-on-surface": "#eff1f3",
+                    "secondary-fixed-dim": "#b9c7df",
+                    "on-tertiary-container": "#dde4ff",
+                    "on-secondary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "tertiary-container": "#5e667d",
+                    "background": "#f7f9fb",
+                    "primary-container": "#0052ff",
+                    "surface": "#f7f9fb",
+                    "surface-container-highest": "#e0e3e5",
+                    "on-secondary-container": "#57657a",
+                    "on-primary-fixed": "#001452",
+                    "tertiary": "#464e64",
+                    "secondary-container": "#d5e3fc",
+                    "secondary": "#515f74",
+                    "surface-bright": "#f7f9fb",
+                    "primary-fixed-dim": "#b7c4ff",
+                    "inverse-primary": "#b7c4ff",
+                    "on-secondary-fixed-variant": "#3a485b",
+                    "on-primary-fixed-variant": "#0038b6",
+                    "secondary-fixed": "#d5e3fc",
+                    "inverse-surface": "#2d3133",
+                    "on-tertiary-fixed-variant": "#3f465c",
+                    "tertiary-fixed": "#dae2fd",
+                    "surface-container-high": "#e6e8ea",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed": "#131b2e",
+                    "primary-fixed": "#dde1ff",
+                    "outline-variant": "#c3c5d9",
+                    "on-primary-container": "#dfe3ff",
+                    "on-surface": "#191c1e",
+                    "on-tertiary": "#ffffff",
+                    "on-background": "#191c1e",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#f2f4f6",
+                    "error": "#ba1a1a",
+                    "surface-container": "#eceef0",
+                    "primary": "#003ec7",
+                    "surface-dim": "#d8dadc",
+                    "tertiary-fixed-dim": "#bec6e0",
+                    "on-primary": "#ffffff",
+                    "on-secondary-fixed": "#0d1c2e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-edge": "32px",
+                    "stack-md": "16px",
+                    "gutter": "24px",
+                    "section-gap": "80px",
+                    "unit": "8px",
+                    "stack-sm": "8px",
+                    "container-max": "1280px",
+                    "stack-lg": "32px"
+            },
+            "fontFamily": {
+                    "body-md": ["Hanken Grotesk"],
+                    "data-tabular": ["Hanken Grotesk"],
+                    "display-lg": ["Hanken Grotesk"],
+                    "headline-md": ["Hanken Grotesk"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "label-sm": ["Hanken Grotesk"],
+                    "label-md": ["Hanken Grotesk"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "data-tabular": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        body { font-family: 'Hanken Grotesk', sans-serif; }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-on-background border-b border-outline-variant dark:border-outline docked full-width top-0 sticky z-50">
+<div class="flex justify-between items-center max-w-container-max mx-auto px-margin-edge h-20 w-full">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim text-headline-md">devices</span>
+<span class="text-headline-md font-headline-md font-bold tracking-tight text-primary dark:text-primary-fixed-dim">TECH-ELITE</span>
+</div>
+<nav class="hidden md:flex items-center gap-gutter">
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-md hover:text-primary transition-colors" href="#">Products</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-md hover:text-primary transition-colors" href="#">Solutions</a>
+<a class="text-primary dark:text-primary-fixed-dim font-bold border-b-2 border-primary pb-1" href="#">About Us</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-md hover:text-primary transition-colors" href="#">Support Center</a>
+</nav>
+<div class="flex items-center gap-4">
+<button class="hidden lg:block text-primary dark:text-primary-fixed-dim font-label-md">Corporate Sales</button>
+<span class="material-symbols-outlined text-on-surface-variant cursor-pointer">search</span>
+</div>
+</div>
+</header>
+<main>
+<!-- Hero Section: Brand Promise -->
+<section class="relative h-[600px] flex items-center overflow-hidden bg-inverse-surface">
+<div class="absolute inset-0 opacity-40">
+<img class="w-full h-full object-cover" data-alt="A cinematic low-angle shot of a futuristic corporate headquarters building with clean glass lines and steel architecture. The lighting is cold and professional, utilizing a deep blue and slate palette to evoke feelings of technological stability and authoritative presence. The atmosphere is sharp, modern, and high-end, representing industrial excellence." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBkQYrNUiGtY-7wkEz0KiDsbEtDpqhT4le6-L_6TM0SFQ29qzPRkimBwnrHmiClr-3M1rkDewMJi_uflI7rgn-uWPRNHmEfUJzb-2UdXqdDsXrF-QRNERfVX25z2MZDfENJpsswr7YqYnToFyyfYohyrgb1BukH5KKJEwwLb-cwAXAoysTdIUkJSHwKq4iefC8I_jX94Wt4efZNB655ft3KmjQow9JT88TOKWksF7ZCljvFPBZgYudxc8A-a6OW-H8-wcGW421NcEud"/>
+</div>
+<div class="relative z-10 max-w-container-max mx-auto px-margin-edge w-full">
+<div class="max-w-2xl">
+<span class="font-label-sm text-label-sm text-primary-fixed-dim uppercase tracking-widest mb-stack-sm block">Established Precision</span>
+<h1 class="font-display-lg text-display-lg text-white mb-stack-md">專業級硬體的核心價值</h1>
+<p class="font-body-lg text-body-lg text-surface-variant mb-stack-lg">TECH-ELITE 致力於為全球企業提供最可靠的技術解決方案，讓每一次數據交換與硬體運行都展現卓越的穩定性。</p>
+<div class="flex gap-gutter">
+<button class="bg-primary-container text-on-primary-container px-8 py-3 font-label-md rounded shadow-lg hover:opacity-90 transition-all">探索解決方案</button>
+<button class="border border-white text-white px-8 py-3 font-label-md rounded hover:bg-white/10 transition-all">聯繫技術專員</button>
+</div>
+</div>
+</div>
+</section>
+<!-- Company Profile & Mission -->
+<section class="py-section-gap max-w-container-max mx-auto px-margin-edge">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-section-gap items-center">
+<div class="space-y-stack-lg">
+<div class="inline-block px-3 py-1 bg-secondary-container text-on-secondary-container rounded-sm font-label-sm">企業使命</div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">以可靠技術賦能未來</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">在快速迭代的電子產業中，我們深知穩定的硬體是企業數位轉型的基石。TECH-ELITE 成立的初衷，是為了打破昂貴與耐用之間的隔閡，提供具備專業認證且能應對極端環境的 3C 硬體設備。</p>
+<div class="grid grid-cols-2 gap-gutter py-stack-md">
+<div class="border-l-4 border-primary pl-4">
+<div class="font-display-lg text-display-lg text-primary">150+</div>
+<div class="font-label-md text-label-md text-secondary">全球合作夥伴</div>
+</div>
+<div class="border-l-4 border-primary pl-4">
+<div class="font-display-lg text-display-lg text-primary">99.9%</div>
+<div class="font-label-md text-label-md text-secondary">產品運行可靠度</div>
+</div>
+</div>
+</div>
+<div class="relative bg-surface-container rounded-xl overflow-hidden shadow-xl aspect-video">
+<img class="w-full h-full object-cover" data-alt="A clean, minimalist workspace featuring professional-grade electronic components like server blades and high-end circuits on a polished surface. The color scheme is dominated by white, tech-blue, and slate gray. Lighting is crisp and bright, highlighting the intricate engineering details of the hardware to convey a sense of precision and corporate modernism." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqlSuW3yp3C-mIjHIJffNlcZ0ZGYcKX53wKOpOEqx0L8_7u_Cr1OD2OAu0OG40ucKLYnp4VA4zJERFk1p6k38vxVuGr1LFlNFMcqUKyRF2GPDWURQZZxUQArSCxjJ-VvFHhvmcz_h1BKFhqAb9YbWiO6M7KhHrZkVk9JcGcC3ZgsU_1PNqN-J68npGp0zBabcdYJI27wF3OtK40Wb3EaiVvbnWu6jGiKwTA8b6rO3Ec9ouJKmEGuVBrN9bU6jwxR9KKDAnYFsc3_Fp"/>
+</div>
+</div>
+</section>
+<!-- Technical Background & R&D (Bento Grid) -->
+<section class="py-section-gap bg-surface-container-low">
+<div class="max-w-container-max mx-auto px-margin-edge">
+<div class="text-center mb-stack-lg">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">研發實力與技術背景</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-2">我們將年度營收的 15% 投入技術研發，確保領先業界的技術儲備。</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter h-auto lg:h-[600px]">
+<div class="md:col-span-2 relative group overflow-hidden rounded-lg bg-white border border-outline-variant shadow-sm flex flex-col">
+<img class="h-2/3 w-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A high-tech research laboratory scene with specialized engineers wearing protective lab gear, working with precision instruments and robotic arms in a cleanroom environment. Bright, even white lighting illuminates the space, creating a professional and clinical mood. The palette consists of sterling silver, bright whites, and deep corporate blues." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCDfgOAgcZedAFB2sktqrevN8N-7B5fL6GZCfOUSiy5C_TXyK-Yg6gCFkjzZVWT6hYpRTmO6CtiXHdOG3mOlbZfN_JDxyKCUILrKjaQfUQdsm2ikB9SK9hM7fW0iAwV7KHMNEnjsXh7zOyruB1NhM3rL0-DJmAoWzL_9oFq9_HEKU9bS9CC0ZZ0uP1wJJN7oJequenL17Zcy8Z3CFG_4UAjXUBqE9qdmL4HX355xxtPQoxE4GQTh_acCSHMNIF4Rzn_Xp6amMM9cGIu"/>
+<div class="p-stack-lg">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">先進材料實驗室</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">專注於耐高溫與抗腐蝕材料的開發，確保設備在極端氣候下的正常運行。</p>
+</div>
+</div>
+<div class="relative group overflow-hidden rounded-lg bg-white border border-outline-variant shadow-sm">
+<div class="p-stack-lg h-full flex flex-col justify-center text-center">
+<div class="mb-4">
+<span class="material-symbols-outlined text-primary text-6xl">biotech</span>
+</div>
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">專利證書</h3>
+<div class="font-display-lg text-display-lg text-primary">850+</div>
+<p class="font-label-md text-label-md text-secondary uppercase tracking-widest mt-2">全球技術專利</p>
+</div>
+</div>
+<div class="relative group overflow-hidden rounded-lg bg-inverse-surface text-white">
+<div class="p-stack-lg h-full flex flex-col justify-end">
+<h3 class="font-headline-md text-headline-md mb-2">年度研發投入</h3>
+<p class="text-3xl font-bold text-primary-fixed-dim">$1.2B+</p>
+<p class="font-body-md mt-4 opacity-80">我們不惜成本追求極限性能，這是對專業客戶最堅定的承諾。</p>
+</div>
+</div>
+<div class="md:col-span-2 relative group overflow-hidden rounded-lg bg-white border border-outline-variant shadow-sm flex flex-col md:flex-row">
+<div class="p-stack-lg md:w-1/2 flex flex-col justify-center">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-2">工程專家團隊</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">匯集全球頂尖電子工程師與軟體架構師，平均產業經驗超過 12 年。</p>
+</div>
+<div class="md:w-1/2 h-full">
+<img class="w-full h-full object-cover" data-alt="A diverse team of high-end tech professionals in a modern, collaborative glass-walled meeting room. They are reviewing complex architectural blueprints for hardware on a large digital screen. The space is filled with natural daylight, conveying transparency and high-level corporate teamwork. Colors are neutral and professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvGwP6hKt-fJ37JUDPRnTv73mjEadewl4Mqq6J3paXBgpBhYwBuMzOd3Cw8eCd8qVQ4_L7lW2qYhcSVCfgOb6imnQ9d1yRora_vgaHulrkw1TqTkOxaIr8myRtPGVKFmNVEK0dEDGeF9DHZ30goBXhOSuJ-e7a_D5oF1tIo-pO1AD8gu4GIIqHYB8L1p-aL-udKSlZEV2fnNeLWhBUwcG2HspBBgKyur6q59ojGHvo2TQB-5CbfFH-OZ1PlxpGOMmEp5-pWJjZXfCe"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Quality Control: Table Section -->
+<section class="py-section-gap max-w-container-max mx-auto px-margin-edge">
+<div class="flex flex-col lg:flex-row gap-section-gap">
+<div class="lg:w-1/3">
+<span class="font-label-sm text-label-sm text-primary uppercase tracking-widest block mb-2">無懈可擊的品質</span>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">嚴苛的測試標準</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mt-stack-md">每一件出廠的產品都必須通過高於國際標準的壓力測試。我們不相信運氣，只相信經過驗證的數據。</p>
+<div class="mt-stack-lg flex flex-wrap gap-2">
+<span class="px-3 py-1 border border-outline-variant rounded-full text-label-sm text-secondary">ISO 9001 認證</span>
+<span class="px-3 py-1 border border-outline-variant rounded-full text-label-sm text-secondary">MIL-STD 810G</span>
+<span class="px-3 py-1 border border-outline-variant rounded-full text-label-sm text-secondary">CE/FCC 安全認證</span>
+</div>
+</div>
+<div class="lg:w-2/3 bg-white border border-outline-variant rounded-lg overflow-hidden shadow-sm">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container text-label-sm uppercase text-on-surface-variant">
+<th class="p-4 font-semibold">測試項目</th>
+<th class="p-4 font-semibold">TECH-ELITE 標準</th>
+<th class="p-4 font-semibold">行業平均值</th>
+</tr>
+</thead>
+<tbody class="text-body-md divide-y divide-outline-variant">
+<tr>
+<td class="p-4 font-bold text-on-surface">耐壓衝擊測試</td>
+<td class="p-4 text-primary">50,000 次 / 無損</td>
+<td class="p-4 text-secondary">10,000 次</td>
+</tr>
+<tr>
+<td class="p-4 font-bold text-on-surface">極端環境溫度</td>
+<td class="p-4 text-primary">-40°C 至 +85°C</td>
+<td class="p-4 text-secondary">0°C 至 +40°C</td>
+</tr>
+<tr>
+<td class="p-4 font-bold text-on-surface">電壓波動耐受度</td>
+<td class="p-4 text-primary">±25% 瞬間波動</td>
+<td class="p-4 text-secondary">±10%</td>
+</tr>
+<tr>
+<td class="p-4 font-bold text-on-surface">全天候運行測試</td>
+<td class="p-4 text-primary">365 天 x 24 小時</td>
+<td class="p-4 text-secondary">8 小時 / 日</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<!-- Supply Chain & Logistics -->
+<section class="py-section-gap bg-surface">
+<div class="max-w-container-max mx-auto px-margin-edge grid grid-cols-1 lg:grid-cols-2 gap-gutter items-center">
+<div class="order-2 lg:order-1">
+<img class="rounded-xl shadow-lg" data-alt="A massive, highly organized automated warehouse with rows of high-tech machinery and robotic sorting systems. The scene is illuminated by soft overhead lighting that emphasizes the metallic textures and the precision of the supply chain network. The color palette features slate gray, electric blue highlights, and clean white accents, projecting efficiency and global scale." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC8r3_IVnV2hV_gYb6pXo5EZktsGm8ACVZJaaeg27bTIksBWBtOcBSW33cVb7KWSVCOjwMP7EnZC-8J96I5DeSq2Q6FPmoBQvQuNMZkgBeEc4Hvb_JxcutFBgpiuUIMe9Ns1tTihD1rM227nKS7BcXkzkZyHKpzrySRYfUlqQCMpgLAgs8kBA7sfs5J8IHhE1njDpWnV64MflRJNVqvCsndQmUcdQ_ST9lcg0d15HhE9PZXSD7-YUTCS6LbpQvis_9dEsTe3e7mvCOH"/>
+</div>
+<div class="order-1 lg:order-2 space-y-stack-md lg:pl-stack-lg">
+<h2 class="font-headline-lg text-headline-lg text-on-surface">高效供應鏈與全球物流</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">我們擁有垂直整合的生產體系與全球倉儲網絡。從核心零部件的採購到成品交付，TECH-ELITE 確保每一環節都受到嚴密監控，為全球企業客戶提供最即時的響應。</p>
+<ul class="space-y-4">
+<li class="flex items-start gap-4">
+<span class="material-symbols-outlined text-primary bg-primary-container/10 p-2 rounded">public</span>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface">全球 24 小時配送</h4>
+<p class="text-label-sm text-secondary">在主要經濟體設有核心倉儲，確保緊急備件即刻抵達。</p>
+</div>
+</li>
+<li class="flex items-start gap-4">
+<span class="material-symbols-outlined text-primary bg-primary-container/10 p-2 rounded">precision_manufacturing</span>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface">全自動化生產線</h4>
+<p class="text-label-sm text-secondary">降低人為誤差，提升產能穩定度，月產量達 1,000,000 件。</p>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</section>
+<!-- Brand Promise & Support -->
+<section class="py-section-gap bg-primary text-on-primary">
+<div class="max-w-container-max mx-auto px-margin-edge text-center max-w-3xl">
+<h2 class="font-headline-lg text-headline-lg mb-stack-md">我們的品牌承諾</h2>
+<p class="font-body-lg text-body-lg opacity-90 mb-stack-lg">我們不只是硬體供應商，更是您的技術夥伴。TECH-ELITE 承諾為所有產品提供終身技術指導與專業售後支持。</p>
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-gutter text-left">
+<div class="p-6 bg-white/10 rounded-lg">
+<span class="material-symbols-outlined mb-2">verified_user</span>
+<h4 class="font-label-md font-bold mb-1">5 年企業質保</h4>
+<p class="text-label-sm opacity-80">優於行業標竿的保固條款。</p>
+</div>
+<div class="p-6 bg-white/10 rounded-lg">
+<span class="material-symbols-outlined mb-2">support_agent</span>
+<h4 class="font-label-md font-bold mb-1">24/7 技術支援</h4>
+<p class="text-label-sm opacity-80">專業工程師全天候在線解答。</p>
+</div>
+<div class="p-6 bg-white/10 rounded-lg">
+<span class="material-symbols-outlined mb-2">settings_suggest</span>
+<h4 class="font-label-md font-bold mb-1">客製化配置</h4>
+<p class="text-label-sm opacity-80">針對企業特定需求量身定做。</p>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-high dark:bg-inverse-surface border-t border-outline-variant dark:border-outline">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter max-w-container-max mx-auto px-margin-edge py-stack-lg w-full">
+<div class="space-y-4">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-headline-md">devices</span>
+<span class="font-headline-md text-on-surface dark:text-inverse-on-surface">TECH-ELITE</span>
+</div>
+<p class="font-body-md text-body-md text-on-surface-variant">專業級硬體解決方案的全球領導者。我們致力於技術創新與品質卓越。</p>
+</div>
+<div>
+<h4 class="font-label-md text-on-surface mb-4 uppercase tracking-wider">產品中心</h4>
+<ul class="space-y-2">
+<li><a class="text-on-surface-variant dark:text-surface-variant font-label-sm hover:text-primary transition-all underline decoration-transparent hover:decoration-primary" href="#">專業伺服器</a></li>
+<li><a class="text-on-surface-variant dark:text-surface-variant font-label-sm hover:text-primary transition-all underline decoration-transparent hover:decoration-primary" href="#">工業級儲存</a></li>
+<li><a class="text-on-surface-variant dark:text-surface-variant font-label-sm hover:text-primary transition-all underline decoration-transparent hover:decoration-primary" href="#">精密網路設備</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-on-surface mb-4 uppercase tracking-wider">支持與政策</h4>
+<ul class="space-y-2">
+<li><a class="text-on-surface-variant dark:text-surface-variant font-label-sm hover:text-primary transition-all underline decoration-transparent hover:decoration-primary" href="#">保固政策</a></li>
+<li><a class="text-on-surface-variant dark:text-surface-variant font-label-sm hover:text-primary transition-all underline decoration-transparent hover:decoration-primary" href="#">下載中心</a></li>
+<li><a class="text-on-surface-variant dark:text-surface-variant font-label-sm hover:text-primary transition-all underline decoration-transparent hover:decoration-primary" href="#">隱私政策</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-on-surface mb-4 uppercase tracking-wider">聯絡我們</h4>
+<ul class="space-y-2">
+<li class="font-label-sm text-on-surface-variant">sales@tech-elite.com</li>
+<li class="font-label-sm text-on-surface-variant">+886 2 2345 6789</li>
+<li class="font-label-sm text-on-surface-variant">台北市信義區技術路 101 號</li>
+</ul>
+</div>
+</div>
+<div class="border-t border-outline-variant max-w-container-max mx-auto px-margin-edge py-6">
+<p class="font-label-sm text-label-sm text-on-surface-variant text-center">© 2024 Tech-Elite Electronics Professional Grade Hardware. All rights reserved.</p>
+</div>
+</footer>
+</body></html>

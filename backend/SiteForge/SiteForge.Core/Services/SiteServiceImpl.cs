@@ -161,10 +161,14 @@ public class SiteServiceImpl : SiteService
         var description = WebUtility.HtmlEncode(page.MetaDescription ?? site.Description ?? string.Empty);
         var body = string.IsNullOrWhiteSpace(page.HtmlContent) ? RenderEmptyPage(page) : page.HtmlContent;
         var css = page.CssContent ?? string.Empty;
-        var js = page.JsContent ?? string.Empty;
+        var (templateHead, js) = SplitTemplateHead(page.JsContent ?? string.Empty);
         var headerScript = site.CustomHeaderScript ?? string.Empty;
         var footerScript = site.CustomFooterScript ?? string.Empty;
-        var nav = RenderNavigation(site, pages);
+        var isStitchTemplate = !string.IsNullOrWhiteSpace(templateHead) || body.Contains("siteforge-stitch-template", StringComparison.OrdinalIgnoreCase);
+        var nav = isStitchTemplate ? string.Empty : RenderNavigation(site, pages);
+        var tailwindScript = templateHead.Contains("cdn.tailwindcss.com", StringComparison.OrdinalIgnoreCase)
+            ? string.Empty
+            : """<script src="https://cdn.tailwindcss.com"></script>""";
 
         return $$"""
         <!doctype html>
@@ -174,7 +178,8 @@ public class SiteServiceImpl : SiteService
           <meta name="viewport" content="width=device-width, initial-scale=1">
           <title>{{title}}</title>
           <meta name="description" content="{{description}}">
-          <script src="https://cdn.tailwindcss.com"></script>
+          {{templateHead}}
+          {{tailwindScript}}
           {{headerScript}}
           <style>
             body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
@@ -190,6 +195,22 @@ public class SiteServiceImpl : SiteService
         </body>
         </html>
         """;
+    }
+
+    private static (string Head, string Js) SplitTemplateHead(string js)
+    {
+        const string start = "/*SITEFORGE_TEMPLATE_HEAD_START";
+        const string end = "SITEFORGE_TEMPLATE_HEAD_END*/";
+        var startIndex = js.IndexOf(start, StringComparison.Ordinal);
+        if (startIndex < 0) return (string.Empty, js);
+
+        var contentStart = startIndex + start.Length;
+        var endIndex = js.IndexOf(end, contentStart, StringComparison.Ordinal);
+        if (endIndex < 0) return (string.Empty, js);
+
+        var head = js[contentStart..endIndex].Trim();
+        var remaining = (js[..startIndex] + js[(endIndex + end.Length)..]).Trim();
+        return (head, remaining);
     }
 
     private static string RenderNavigation(Site site, List<Page> pages)

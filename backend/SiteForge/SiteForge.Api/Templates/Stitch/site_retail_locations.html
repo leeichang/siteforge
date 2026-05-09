@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+
+<html lang="zh-Hant"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>門市據點 - MUJI-INSPIRED RETAIL</title>
+<!-- Google Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#e9e7eb",
+                        "tertiary-fixed-dim": "#83d8a6",
+                        "on-tertiary-fixed": "#002111",
+                        "secondary-fixed-dim": "#f8bc4b",
+                        "on-error-container": "#93000a",
+                        "on-surface-variant": "#43474e",
+                        "surface-container-highest": "#e3e2e6",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#9ff5c1",
+                        "on-secondary-fixed": "#271900",
+                        "on-background": "#1a1c1e",
+                        "on-surface": "#1a1c1e",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#efedf1",
+                        "inverse-primary": "#adc7f7",
+                        "surface-dim": "#dad9dd",
+                        "secondary-container": "#ffc250",
+                        "inverse-on-surface": "#f1f0f4",
+                        "on-primary-container": "#86a0cd",
+                        "on-tertiary-container": "#5caf81",
+                        "on-error": "#ffffff",
+                        "outline-variant": "#c4c6cf",
+                        "on-tertiary-fixed-variant": "#005231",
+                        "secondary-fixed": "#ffdeaa",
+                        "on-primary-fixed-variant": "#2d476f",
+                        "surface-tint": "#455f88",
+                        "outline": "#74777f",
+                        "primary-container": "#1a365d",
+                        "surface-container-low": "#f4f3f7",
+                        "background": "#faf9fd",
+                        "surface-variant": "#e3e2e6",
+                        "secondary": "#7d5700",
+                        "on-secondary-container": "#725000",
+                        "primary": "#002045",
+                        "tertiary": "#002715",
+                        "primary-fixed-dim": "#adc7f7",
+                        "on-primary-fixed": "#001b3c",
+                        "surface": "#faf9fd",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#2f3033",
+                        "on-secondary-fixed-variant": "#5f4100",
+                        "surface-bright": "#faf9fd",
+                        "primary-fixed": "#d6e3ff",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#003f25"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "80px",
+                        "gutter": "24px",
+                        "md": "24px",
+                        "base": "8px",
+                        "container-max": "1280px",
+                        "sm": "12px",
+                        "lg": "48px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Noto Sans"],
+                        "label-caps": ["Noto Sans"],
+                        "title-sm": ["Noto Sans"],
+                        "body-md": ["Noto Sans"],
+                        "display-lg": ["Noto Sans"],
+                        "body-sm": ["Noto Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["32px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "title-sm": ["20px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        /* Ambient shadow utility mimicking the specific request while keeping structure */
+        .shadow-ambient {
+            box-shadow: 0px 10px 25px rgba(26, 54, 93, 0.08);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background antialiased selection:bg-primary-fixed selection:text-on-primary-fixed">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-on-background docked full-width top-0 z-50 border-b border-outline-variant dark:border-outline">
+<div class="flex justify-between items-center w-full px-gutter max-w-container-max mx-auto h-20">
+<!-- Brand Logo -->
+<a class="font-headline-md text-headline-md font-bold tracking-tighter text-primary dark:text-primary-fixed" href="#">
+                MUJI-INSPIRED RETAIL
+            </a>
+<!-- Navigation Links (Web) -->
+<nav class="hidden md:flex items-center gap-md">
+<a class="text-on-surface-variant dark:text-outline-variant font-label-caps text-label-caps hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200" href="#">Life</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-label-caps text-label-caps hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200" href="#">Food</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-label-caps text-label-caps hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200" href="#">Fashion</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-label-caps text-label-caps hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200" href="#">Home</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-label-caps text-label-caps hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200" href="#">Gifts</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-label-caps text-label-caps hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200" href="#">Membership</a>
+</nav>
+<!-- Trailing Icons -->
+<div class="flex items-center gap-sm text-primary dark:text-primary-fixed">
+<button class="p-base hover:text-secondary transition-colors duration-200 flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">shopping_cart</span>
+</button>
+<button class="p-base hover:text-secondary transition-colors duration-200 flex items-center justify-center">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 0;">person</span>
+</button>
+<button class="p-base hover:text-secondary transition-colors duration-200 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">location_on</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="w-full">
+<!-- Search Hero Section -->
+<section class="w-full bg-surface-container-low border-b border-outline-variant py-xl px-gutter">
+<div class="max-w-container-max mx-auto flex flex-col items-center text-center">
+<h1 class="font-display-lg text-display-lg text-primary mb-base">尋找門市</h1>
+<p class="font-body-md text-body-md text-on-surface-variant mb-lg max-w-2xl">探索距離您最近的實體店鋪，體驗專業且寧靜的購物空間。</p>
+<div class="w-full max-w-2xl flex flex-col sm:flex-row gap-sm">
+<div class="relative flex-grow">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 text-outline">search</span>
+<input class="w-full h-12 pl-lg pr-sm bg-surface-container-lowest border border-outline-variant rounded text-on-surface font-body-md text-body-md focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" placeholder="輸入城市、行政區或門市名稱" type="text"/>
+</div>
+<button class="h-12 px-lg bg-secondary-container text-surface-container-lowest font-title-sm text-title-sm rounded hover:brightness-95 transition-all flex items-center justify-center shrink-0">
+                        搜尋
+                    </button>
+</div>
+</div>
+</section>
+<!-- Store Locator Grid -->
+<section class="max-w-container-max mx-auto px-gutter py-xl">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-xl items-start">
+<!-- Left Column: Store List -->
+<div class="lg:col-span-5 flex flex-col gap-md h-full">
+<h2 class="font-title-sm text-title-sm text-primary border-b border-outline-variant pb-sm mb-xs">推薦門市</h2>
+<!-- Featured Store Card -->
+<article class="bg-surface-container-lowest border border-outline-variant rounded overflow-hidden hover:shadow-ambient transition-shadow duration-300 group cursor-pointer">
+<div class="relative h-48 w-full overflow-hidden">
+<img alt="Featured Store" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A high-quality architectural photograph of a modern, minimalist retail store facade in a bustling city environment. The storefront features expansive floor-to-ceiling glass windows framed in sleek navy blue metal, showcasing a brightly lit, neatly organized interior with clean lines. The lighting is natural and bright, emphasizing a premium, professional corporate modern aesthetic. The atmosphere conveys quiet authority and high-end accessibility." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBN9Y6BG2PrhEqUkWQzoMg3bN34Tlt5zNtfRTBWLS9XpWAR0V62SR3LlbZBOnhX5LoUbg9oewbblaDMi6M3Pa5fJq0TY-vKZ3oOUsEDYwKKFbp9kESPM86yPA2C_wlhca2hcthHX4Fs-2M-_pp4JtX74Z64Ncmf4OIfgR5AKtA1eSHBwGHjaHmkdgL5CEDM_KjUvThw0ufbbJgXSdfcapZdq_cEAIGKmFzyW2_MesHGMSZupX2E2pWz9iuICAlrLQ1atBAbiYDoCLU"/>
+<div class="absolute top-sm left-sm bg-primary text-on-primary px-sm py-xs font-label-caps text-label-caps rounded-sm">
+                                新開幕
+                            </div>
+</div>
+<div class="p-md flex flex-col gap-sm">
+<h3 class="font-headline-md text-headline-md text-primary">台北信義旗艦店</h3>
+<div class="flex items-start gap-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] mt-xs shrink-0">location_on</span>
+<p class="font-body-sm text-body-sm">台北市信義區松智路17號 1F</p>
+</div>
+<div class="flex items-start gap-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] mt-xs shrink-0">schedule</span>
+<p class="font-body-sm text-body-sm">週一至週日 11:00 - 21:30</p>
+</div>
+<div class="flex items-start gap-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[18px] mt-xs shrink-0">call</span>
+<p class="font-body-sm text-body-sm">02-8789-3388</p>
+</div>
+</div>
+</article>
+<h2 class="font-title-sm text-title-sm text-primary border-b border-outline-variant pb-sm mt-md mb-xs">其他據點</h2>
+<!-- Regular Store Card 1 -->
+<article class="bg-surface-container-lowest border border-outline-variant rounded p-md flex flex-col gap-sm hover:shadow-ambient transition-shadow duration-300 cursor-pointer">
+<div class="flex justify-between items-start">
+<h3 class="font-title-sm text-title-sm text-primary">中山南西概念店</h3>
+<span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+</div>
+<div class="flex flex-col gap-xs mt-xs">
+<div class="flex items-center gap-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<p class="font-body-sm text-body-sm">台北市中山區南京西路14號</p>
+</div>
+<div class="flex items-center gap-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<p class="font-body-sm text-body-sm">11:00 - 22:00</p>
+</div>
+</div>
+</article>
+<!-- Regular Store Card 2 -->
+<article class="bg-surface-container-lowest border border-outline-variant rounded p-md flex flex-col gap-sm hover:shadow-ambient transition-shadow duration-300 cursor-pointer">
+<div class="flex justify-between items-start">
+<h3 class="font-title-sm text-title-sm text-primary">大安森林公園店</h3>
+<span class="material-symbols-outlined text-outline-variant">chevron_right</span>
+</div>
+<div class="flex flex-col gap-xs mt-xs">
+<div class="flex items-center gap-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">location_on</span>
+<p class="font-body-sm text-body-sm">台北市大安區新生南路二段1號</p>
+</div>
+<div class="flex items-center gap-sm text-on-surface-variant">
+<span class="material-symbols-outlined text-[16px]">schedule</span>
+<p class="font-body-sm text-body-sm">10:30 - 21:00</p>
+</div>
+</div>
+</article>
+</div>
+<!-- Right Column: Map & Info Bento -->
+<div class="lg:col-span-7 flex flex-col gap-md lg:sticky lg:top-24">
+<!-- Map Canvas -->
+<div class="w-full h-[400px] lg:h-[500px] bg-surface-container border border-outline-variant rounded overflow-hidden relative">
+<img alt="Store Location Map" class="w-full h-full object-cover opacity-90 grayscale-[30%]" data-alt="A clean, modern, minimalist digital map interface showing a simplified city grid layout. The map uses a muted color palette of soft off-whites, light slate grays, and subtle navy blue accents to indicate major roads and water bodies. A prominent golden mustard location pin marks a specific destination. The design is highly legible, professional, and free of clutter, perfectly matching a corporate modern aesthetic." data-location="Taipei, Taiwan" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC_9hctM3YuLkj7xCibcV-lBLbbvdN8FqOsD0FdKC1jv5yiRYnnegwyTWBkhJ9sON3Bue-oNs6vlcyZcIgW0f42D5o9XyfDIYKyXW1BNYZGQuRi6iaenqZvWzUdC1prVadkaHLf9g9YFWRIeAGqIZlNcSxzzfgUwiJcyoClWin6612oAMldSM1_6V7GceMv2Kzln1LZqUxmtui4PdbeW3VXcjvJ1IZgt5YQdHLM_PIWoDRxPrE9D5ju_PSc2GwPVPq7WKt9LQv2uEQ"/>
+<!-- Floating Map Action -->
+<div class="absolute bottom-md right-md flex gap-sm">
+<button class="w-12 h-12 bg-surface-container-lowest border border-outline-variant rounded-full flex items-center justify-center text-primary shadow-ambient hover:bg-surface-container transition-colors">
+<span class="material-symbols-outlined">my_location</span>
+</button>
+<button class="h-12 px-md bg-primary text-on-primary font-label-caps text-label-caps rounded shadow-ambient hover:bg-primary-container transition-colors flex items-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">directions</span>
+                                導航至此
+                            </button>
+</div>
+</div>
+<!-- Transport & Parking Info (Bento style) -->
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-md">
+<div class="bg-surface-container-low border border-outline-variant rounded p-md flex flex-col gap-sm">
+<div class="flex items-center gap-sm text-primary mb-xs">
+<span class="material-symbols-outlined">directions_subway</span>
+<h4 class="font-title-sm text-title-sm">大眾運輸</h4>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                                搭乘捷運板南線至市政府站，由3號出口出站，步行約5分鐘即可抵達。公車站牌為「松壽路口」。
+                            </p>
+</div>
+<div class="bg-surface-container-low border border-outline-variant rounded p-md flex flex-col gap-sm">
+<div class="flex items-center gap-sm text-primary mb-xs">
+<span class="material-symbols-outlined">local_parking</span>
+<h4 class="font-title-sm text-title-sm">停車資訊</h4>
+</div>
+<p class="font-body-sm text-body-sm text-on-surface-variant leading-relaxed">
+                                門市大樓附設地下收費停車場。憑當日消費滿NT$1,000元發票，可折抵1小時停車費，最高折抵4小時。
+                            </p>
+</div>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-primary dark:bg-primary-container w-full py-lg mt-xl border-t-0">
+<div class="flex flex-col md:flex-row justify-between items-start w-full px-gutter max-w-container-max mx-auto gap-md">
+<div class="flex flex-col gap-sm">
+<span class="font-title-sm text-title-sm font-bold text-on-primary dark:text-on-primary-container">
+                    MUJI-INSPIRED RETAIL
+                </span>
+<p class="font-body-sm text-body-sm text-on-primary dark:text-on-primary-container opacity-80">
+                    © 2024 Retail Business Corp. All rights reserved.
+                </p>
+</div>
+<nav class="flex flex-wrap gap-md mt-sm md:mt-0">
+<a class="text-surface-variant dark:text-outline-variant opacity-80 font-label-caps text-label-caps hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer" href="#">Privacy Policy</a>
+<a class="text-surface-variant dark:text-outline-variant opacity-80 font-label-caps text-label-caps hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer" href="#">Terms of Service</a>
+<a class="text-surface-variant dark:text-outline-variant opacity-80 font-label-caps text-label-caps hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer" href="#">CSR</a>
+<a class="text-surface-variant dark:text-outline-variant opacity-80 font-label-caps text-label-caps hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer" href="#">Membership FAQ</a>
+<a class="text-surface-variant dark:text-outline-variant opacity-80 font-label-caps text-label-caps hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer" href="#">Contact Us</a>
+<a class="text-secondary-fixed dark:text-secondary-fixed-dim font-bold font-label-caps text-label-caps hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer" href="#">Global Stores</a>
+</nav>
+</div>
+</footer>
+</body></html>

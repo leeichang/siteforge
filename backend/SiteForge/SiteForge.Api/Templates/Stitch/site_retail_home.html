@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+
+<html lang="zh-Hant"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>為每一天，挑選更好的生活 - 居家選品</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-family: 'Material Symbols Outlined';
+            font-weight: normal;
+            font-style: normal;
+            font-size: 24px;
+            line-height: 1;
+            letter-spacing: normal;
+            text-transform: none;
+            display: inline-block;
+            white-space: nowrap;
+            word-wrap: normal;
+            direction: ltr;
+            -webkit-font-feature-settings: 'liga';
+            -webkit-font-smoothing: antialiased;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error": "#ba1a1a",
+                      "surface-container-high": "#e9e7eb",
+                      "tertiary-fixed-dim": "#83d8a6",
+                      "on-tertiary-fixed": "#002111",
+                      "secondary-fixed-dim": "#f8bc4b",
+                      "on-error-container": "#93000a",
+                      "on-surface-variant": "#43474e",
+                      "surface-container-highest": "#e3e2e6",
+                      "surface-container-lowest": "#ffffff",
+                      "tertiary-fixed": "#9ff5c1",
+                      "on-secondary-fixed": "#271900",
+                      "on-background": "#1a1c1e",
+                      "on-surface": "#1a1c1e",
+                      "on-tertiary": "#ffffff",
+                      "surface-container": "#efedf1",
+                      "inverse-primary": "#adc7f7",
+                      "surface-dim": "#dad9dd",
+                      "secondary-container": "#ffc250",
+                      "inverse-on-surface": "#f1f0f4",
+                      "on-primary-container": "#86a0cd",
+                      "on-tertiary-container": "#5caf81",
+                      "on-error": "#ffffff",
+                      "outline-variant": "#c4c6cf",
+                      "on-tertiary-fixed-variant": "#005231",
+                      "secondary-fixed": "#ffdeaa",
+                      "on-primary-fixed-variant": "#2d476f",
+                      "surface-tint": "#455f88",
+                      "outline": "#74777f",
+                      "primary-container": "#1a365d",
+                      "surface-container-low": "#f4f3f7",
+                      "background": "#faf9fd",
+                      "surface-variant": "#e3e2e6",
+                      "secondary": "#7d5700",
+                      "on-secondary-container": "#725000",
+                      "primary": "#002045",
+                      "tertiary": "#002715",
+                      "primary-fixed-dim": "#adc7f7",
+                      "on-primary-fixed": "#001b3c",
+                      "surface": "#faf9fd",
+                      "on-primary": "#ffffff",
+                      "inverse-surface": "#2f3033",
+                      "on-secondary-fixed-variant": "#5f4100",
+                      "surface-bright": "#faf9fd",
+                      "primary-fixed": "#d6e3ff",
+                      "error-container": "#ffdad6",
+                      "on-secondary": "#ffffff",
+                      "tertiary-container": "#003f25"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.25rem",
+                      "lg": "0.5rem",
+                      "xl": "0.75rem",
+                      "full": "9999px"
+              },
+              "spacing": {
+                      "xl": "80px",
+                      "gutter": "24px",
+                      "md": "24px",
+                      "base": "8px",
+                      "container-max": "1280px",
+                      "sm": "12px",
+                      "lg": "48px",
+                      "xs": "4px"
+              },
+              "fontFamily": {
+                      "headline-md": ["Noto Sans"],
+                      "label-caps": ["Noto Sans"],
+                      "title-sm": ["Noto Sans"],
+                      "body-md": ["Noto Sans"],
+                      "display-lg": ["Noto Sans"],
+                      "body-sm": ["Noto Sans"]
+              },
+              "fontSize": {
+                      "headline-md": ["32px", {"lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700"}],
+                      "title-sm": ["20px", {"lineHeight": "1.4", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}]
+              }
+      },
+          },
+        }
+    </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md antialiased">
+<!-- TopNavBar -->
+<header class="bg-surface dark:bg-on-background sticky top-0 z-50 border-b border-outline-variant dark:border-outline full-width">
+<div class="flex justify-between items-center w-full px-gutter max-w-container-max mx-auto h-20">
+<div class="font-headline-md text-headline-md font-bold tracking-tighter text-primary dark:text-primary-fixed cursor-pointer">
+                MUJI-INSPIRED RETAIL
+            </div>
+<nav class="hidden md:flex gap-md items-center h-full pt-4">
+<a class="text-on-surface-variant dark:text-outline-variant font-label-caps text-label-caps hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200" href="#">Life</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-label-caps text-label-caps hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200" href="#">Food</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-label-caps text-label-caps hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200" href="#">Fashion</a>
+<a class="text-primary dark:text-primary-fixed border-b-2 border-primary dark:border-primary-fixed pb-2 font-label-caps text-label-caps h-full flex items-center mt-2 hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200" href="#">Home</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-label-caps text-label-caps hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200" href="#">Gifts</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-label-caps text-label-caps hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200" href="#">Membership</a>
+</nav>
+<div class="flex gap-sm items-center text-primary dark:text-primary-fixed">
+<button class="hover:text-secondary transition-colors duration-200 scale-95 transition-transform duration-150"><span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span></button>
+<button class="hover:text-secondary transition-colors duration-200 scale-95 transition-transform duration-150"><span class="material-symbols-outlined" data-icon="person">person</span></button>
+<button class="hover:text-secondary transition-colors duration-200 scale-95 transition-transform duration-150"><span class="material-symbols-outlined" data-icon="location_on">location_on</span></button>
+</div>
+</div>
+</header>
+<!-- Main Canvas -->
+<main class="w-full">
+<!-- Hero Section -->
+<section class="max-w-container-max mx-auto px-gutter py-xl">
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-xl items-center">
+<div class="flex flex-col gap-lg order-2 lg:order-1">
+<div class="flex flex-col gap-sm">
+<h1 class="font-display-lg text-display-lg text-on-surface text-balance">
+                            為每一天，挑選更好的生活
+                        </h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-lg mt-base">
+                            從日常必需到風格選品，我們用穩定品質、合理價格與貼心服務，陪你完成每一次購物。
+                        </p>
+</div>
+<div class="flex flex-wrap gap-md">
+<button class="bg-secondary-container text-on-secondary-container font-label-caps text-label-caps px-md py-sm rounded hover:brightness-95 transition-all active:scale-95">
+                            探索商品
+                        </button>
+<button class="bg-transparent border border-primary text-primary font-label-caps text-label-caps px-md py-sm rounded hover:bg-surface-variant transition-all active:scale-95">
+                            查找門市
+                        </button>
+</div>
+</div>
+<div class="order-1 lg:order-2 h-[500px] w-full rounded-lg overflow-hidden bg-surface-variant relative">
+<img alt="Minimalist lifestyle retail setup" class="w-full h-full object-cover" data-alt="A brightly lit, minimalist lifestyle retail store setting. Soft natural light illuminates a meticulously organized wooden table featuring simple, functional household items like ceramic mugs, folded linen napkins, and a subtle green plant. The aesthetic is clean, modern, and Muji-inspired, dominated by warm neutral tones, pristine whites, and light oak wood textures. The mood is calm and inviting." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDaniBFpYvlHlaYxar0TBMv4lH7HxSkEtuaB-ZAS8pI3LWWXksZXnBLONSDJV1Y8PNIFHJWtISgLqG5It7YbQXWpC4ap2sWTs1mdSiRRBoiFmXVGEbGSClBmoc2m7zdLC4l7c7VMpaZuFeBIIcUkNXOD4hBTotEjKk_5BTF80dCgBJag0xuOZWiif3ApGfB3UKE9cGsb0aZVhXIqSDZQCq7CNyKCzMCAmlxj8XcVd8xi0sCMk8Dm6KTJJXGtLmleG_GMqcWFXr3hO4"/>
+</div>
+</div>
+</section>
+<!-- Trust Indicators -->
+<section class="border-y border-outline-variant bg-surface-container-low">
+<div class="max-w-container-max mx-auto px-gutter py-lg flex flex-wrap justify-around items-center gap-lg">
+<div class="text-center flex flex-col gap-base">
+<span class="font-display-lg text-display-lg text-primary">25+</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">深耕年份</span>
+</div>
+<div class="text-center flex flex-col gap-base">
+<span class="font-display-lg text-display-lg text-primary">120</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">全球門市</span>
+</div>
+<div class="text-center flex flex-col gap-base">
+<span class="font-display-lg text-display-lg text-primary">2M+</span>
+<span class="font-label-caps text-label-caps text-on-surface-variant">忠實會員</span>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="bg-primary dark:bg-primary-container w-full py-lg mt-xl">
+<div class="flex flex-col md:flex-row justify-between items-start w-full px-gutter max-w-container-max mx-auto gap-md">
+<div class="flex flex-col gap-md">
+<div class="font-title-sm text-title-sm font-bold text-on-primary dark:text-on-primary-container">
+                        MUJI-INSPIRED RETAIL
+                    </div>
+<div class="font-body-sm text-body-sm text-on-primary dark:text-on-primary-container opacity-80">
+                        © 2024 Retail Business Corp. All rights reserved.
+                    </div>
+</div>
+<div class="flex flex-wrap gap-md md:gap-lg">
+<a class="text-surface-variant dark:text-outline-variant opacity-80 font-label-caps text-label-caps hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer" href="#">Privacy Policy</a>
+<a class="text-surface-variant dark:text-outline-variant opacity-80 font-label-caps text-label-caps hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer" href="#">Terms of Service</a>
+<a class="text-surface-variant dark:text-outline-variant opacity-80 font-label-caps text-label-caps hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer" href="#">CSR</a>
+<a class="text-surface-variant dark:text-outline-variant opacity-80 font-label-caps text-label-caps hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer" href="#">Membership FAQ</a>
+<a class="text-surface-variant dark:text-outline-variant opacity-80 font-label-caps text-label-caps hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer" href="#">Contact Us</a>
+<a class="text-surface-variant dark:text-outline-variant opacity-80 font-label-caps text-label-caps hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer" href="#">Global Stores</a>
+</div>
+</div>
+</footer>
+</main>
+</body></html>

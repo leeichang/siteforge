@@ -8,6 +8,7 @@ public interface AiConversationService
     Task<ConversationDto> CreateAsync(CreateConversationRequest request);
     Task<List<MessageDto>> GetMessagesAsync(Guid conversationId);
     Task<MessageDto> SendMessageAsync(Guid conversationId, SendMessageRequest request);
+    List<AiTemplateDto> GetTemplates(string? kind = null);
     Task<AiGenerateSiteResponse> GenerateSiteAsync(Guid userId, AiGenerateSiteRequest request);
     Task<AiGeneratedPageDto> GeneratePageAsync(Guid userId, AiGeneratePageRequest request);
 }

@@ -34,6 +34,10 @@ public class AiConversationsController : ApiControllerBase
     public async Task<ActionResult<ApiResponse<MessageDto>>> SendMessage(Guid conversationId, SendMessageRequest request) =>
         OkResponse(await _conversations.SendMessageAsync(conversationId, request), "Message saved.");
 
+    [HttpGet("templates")]
+    public ActionResult<ApiResponse<List<AiTemplateDto>>> GetTemplates([FromQuery] string? kind = null) =>
+        OkResponse(_conversations.GetTemplates(kind));
+
     [HttpPost("generate-site")]
     public async Task<ActionResult<ApiResponse<AiGenerateSiteResponse>>> GenerateSite(AiGenerateSiteRequest request) =>
         OkResponse(await _conversations.GenerateSiteAsync(CurrentUserId, request), "Website generated.");

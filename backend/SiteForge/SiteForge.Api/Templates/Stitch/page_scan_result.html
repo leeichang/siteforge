@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-TW"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ScanVerify - 掃描結果</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface": "#f8f9ff",
+                        "surface-tint": "#006780",
+                        "secondary": "#006e2d",
+                        "on-primary-fixed": "#001f28",
+                        "inverse-primary": "#6cd3f7",
+                        "primary-fixed-dim": "#6cd3f7",
+                        "surface-bright": "#f8f9ff",
+                        "error": "#ba1a1a",
+                        "tertiary-fixed-dim": "#ffb873",
+                        "on-secondary-fixed": "#002109",
+                        "on-secondary-fixed-variant": "#005320",
+                        "on-surface-variant": "#3e484d",
+                        "tertiary-container": "#a86516",
+                        "primary-fixed": "#b7eaff",
+                        "on-error-container": "#93000a",
+                        "tertiary-fixed": "#ffdcbf",
+                        "background": "#f8f9ff",
+                        "surface-dim": "#d1dbec",
+                        "surface-container-low": "#eef4ff",
+                        "primary-container": "#007f9d",
+                        "inverse-on-surface": "#eaf1ff",
+                        "secondary-fixed-dim": "#62df7d",
+                        "error-container": "#ffdad6",
+                        "surface-container-highest": "#d9e3f4",
+                        "secondary-container": "#7cf994",
+                        "on-background": "#121c28",
+                        "outline": "#6e797e",
+                        "outline-variant": "#bdc8ce",
+                        "on-tertiary-fixed-variant": "#6a3b00",
+                        "on-surface": "#121c28",
+                        "on-secondary-container": "#007230",
+                        "on-tertiary-fixed": "#2d1600",
+                        "on-primary-container": "#fafdff",
+                        "on-secondary": "#ffffff",
+                        "on-tertiary": "#ffffff",
+                        "on-primary-fixed-variant": "#004e61",
+                        "surface-variant": "#d9e3f4",
+                        "on-error": "#ffffff",
+                        "secondary-fixed": "#7ffc97",
+                        "surface-container": "#e5eeff",
+                        "on-primary": "#ffffff",
+                        "primary": "#00647c",
+                        "surface-container-high": "#dfe9fa",
+                        "surface-container-lowest": "#ffffff",
+                        "inverse-surface": "#27313e",
+                        "tertiary": "#894e00",
+                        "on-tertiary-container": "#fffbff"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "stack-gap-lg": "1.5rem",
+                        "section-padding": "2rem",
+                        "container-margin": "1rem",
+                        "stack-gap-md": "1rem",
+                        "stack-gap-sm": "0.5rem"
+                    },
+                    "fontFamily": {
+                        "h1": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "body-main": ["Inter"],
+                        "h2": ["Inter"],
+                        "body-sm": ["Inter"],
+                        "status-badge": ["Inter"]
+                    },
+                    "fontSize": {
+                        "h1": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "label-caps": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "body-main": ["16px", {"lineHeight": "24px", "letterSpacing": "0", "fontWeight": "400"}],
+                        "h2": ["18px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "body-sm": ["14px", {"lineHeight": "20px", "letterSpacing": "0", "fontWeight": "400"}],
+                        "status-badge": ["14px", {"lineHeight": "1", "letterSpacing": "0.02em", "fontWeight": "700"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #f8f9ff;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="font-body-main text-on-surface">
+<!-- TopAppBar -->
+<header class="bg-surface-container-lowest dark:bg-surface-container-lowest docked full-width top-0 sticky z-50 shadow-sm">
+<div class="flex justify-between items-center px-container-margin py-stack-gap-sm w-full max-w-[600px] mx-auto">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="qr_code_scanner">qr_code_scanner</span>
+<h1 class="font-h1 text-h1 font-bold text-primary dark:text-primary-fixed-dim">ScanVerify</h1>
+</div>
+<button class="hover:bg-surface-container-low dark:hover:bg-surface-container-high transition-colors active:scale-95 duration-150 p-2 rounded-full flex items-center justify-center">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="language">language</span>
+</button>
+</div>
+</header>
+<main class="w-full max-w-[600px] mx-auto px-container-margin py-section-padding flex flex-col gap-stack-gap-lg">
+<!-- Success Banner -->
+<section class="flex flex-col items-center text-center gap-stack-gap-sm">
+<div class="w-16 h-16 bg-secondary-container text-on-secondary-container rounded-full flex items-center justify-center mb-2">
+<span class="material-symbols-outlined text-[40px]" data-icon="check_circle" style="font-variation-settings: 'FILL' 1;">check_circle</span>
+</div>
+<h2 class="font-h1 text-h1 text-on-surface">掃碼成功</h2>
+<p class="font-body-sm text-body-sm text-on-surface-variant">資訊已通過驗證，請參閱下方詳細內容。</p>
+</section>
+<!-- Metadata Bento Card -->
+<div class="bg-surface-container-lowest rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant p-stack-gap-md grid grid-cols-2 gap-stack-gap-md">
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-1 uppercase">掃碼時間</span>
+<span class="font-body-main text-body-main font-semibold">2024/05/20 14:30</span>
+</div>
+<div class="flex flex-col">
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-1 uppercase">掃碼類型</span>
+<span class="font-body-main text-body-main font-semibold">商品資訊</span>
+</div>
+<div class="col-span-2 pt-2 border-t border-outline-variant">
+<span class="font-label-caps text-label-caps text-on-surface-variant mb-1 uppercase">來源代碼</span>
+<span class="font-body-sm text-body-sm font-mono text-primary">SV-QR-8829-XLY09</span>
+</div>
+</div>
+<!-- Primary Info Card -->
+<article class="bg-surface-container-lowest rounded-xl shadow-[0_4px_12px_rgba(0,0,0,0.05)] border border-outline-variant overflow-hidden">
+<div class="relative w-full aspect-video">
+<img alt="Product Visual" class="w-full h-full object-cover" data-alt="A high-end, professional close-up of premium coffee beans inside a sleek, dark artisanal bag. The lighting is soft and cinematic, highlighting the rich textures and deep brown tones of the beans. The background is a clean, minimalist kitchen setting with a soft bokeh effect. The overall mood is sophisticated and evokes a sense of high quality and freshness." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB_CyXyS1Lf3vcVXDgh29_8SPjC_orx4Eh05i0PX_76sGN9QX51ri1sTOR7Bs3Wr5yt001kR8stOU11c57dSIva8FgnimsfkxcWwmk8rRJr3RV9Xsv-ASmvwqxjlVMqW6BuOMOXSgZRCS0hnzpsZ2NGI5_8GMXBoJndXU06fUm9ptb70TwMOqXqSiwzbJb-2rV6UyosuTEpars1-_DrEabtHO7eprbBNC2OoblECjguirUznKNXt-jTf8Gjab9Z4tcmzr2PTYp-sA_b"/>
+<div class="absolute top-4 right-4">
+<span class="bg-secondary text-on-secondary px-3 py-1 rounded-full font-status-badge text-status-badge flex items-center gap-1">
+<span class="material-symbols-outlined text-[16px]" data-icon="verified" style="font-variation-settings: 'FILL' 1;">verified</span>
+                        有效
+                    </span>
+</div>
+</div>
+<div class="p-stack-gap-md flex flex-col gap-stack-gap-sm">
+<h3 class="font-h1 text-h1 text-on-surface">精選莊園咖啡豆</h3>
+<p class="font-body-main text-body-main text-on-surface-variant">產自衣索比亞精品莊園，低溫烘焙保留最純粹的果香與花香韻味。每一口都能感受到大自然的原始能量。</p>
+</div>
+</article>
+<!-- Actions Area -->
+<section class="flex flex-col gap-stack-gap-sm">
+<a class="bg-primary hover:bg-primary-container text-on-primary font-h2 text-h2 py-4 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-[0.98]" href="#">
+                領取優惠
+                <span class="material-symbols-outlined" data-icon="redeem">redeem</span>
+</a>
+<div class="grid grid-cols-2 gap-stack-gap-sm">
+<button class="bg-surface-container border border-outline-variant hover:bg-surface-container-high text-on-surface font-body-main py-3 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95">
+<span class="material-symbols-outlined text-primary" data-icon="support_agent">support_agent</span>
+                    聯絡客服
+                </button>
+<button class="bg-surface-container border border-outline-variant hover:bg-surface-container-high text-on-surface font-body-main py-3 rounded-xl flex items-center justify-center gap-2 transition-all active:scale-95">
+<span class="material-symbols-outlined text-primary" data-icon="download">download</span>
+                    下載文件
+                </button>
+</div>
+</section>
+<!-- Supplementary Info List -->
+<section class="flex flex-col gap-stack-gap-md">
+<div class="flex flex-col gap-stack-gap-sm">
+<div class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-primary" data-icon="info">info</span>
+<h4 class="font-h2 text-h2">使用說明</h4>
+</div>
+<div class="bg-surface-container-low rounded-lg p-stack-gap-md">
+<ul class="list-disc list-inside font-body-sm text-body-sm text-on-surface-variant flex flex-col gap-2">
+<li>此優惠券僅限於指定門市兌換使用。</li>
+<li>結帳前請出示此頁面供服務人員確認。</li>
+<li>每人限領取乙次，不可與其他優惠併用。</li>
+</ul>
+</div>
+</div>
+<div class="flex items-center justify-between bg-surface-container-low rounded-lg p-stack-gap-md">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary" data-icon="event_available">event_available</span>
+<span class="font-body-main text-body-main font-semibold">有效期限</span>
+</div>
+<span class="font-body-main text-body-main text-error font-bold">2024/12/31</span>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-dim dark:bg-inverse-surface w-full mt-auto border-t border-outline-variant dark:border-outline">
+<div class="flex flex-col items-center gap-stack-gap-md px-container-margin py-section-padding text-center w-full max-w-[600px] mx-auto">
+<span class="font-label-caps text-label-caps text-on-surface-variant">© 2024 ScanVerify Solutions. All rights reserved.</span>
+<div class="flex flex-wrap justify-center gap-x-4 gap-y-2">
+<a class="font-body-sm text-body-sm text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-inverse-primary underline transition-opacity duration-200" href="#">Support</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-inverse-primary underline transition-opacity duration-200" href="#">Privacy Policy</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-inverse-primary underline transition-opacity duration-200" href="#">Terms of Service</a>
+<a class="font-body-sm text-body-sm text-on-surface-variant dark:text-outline-variant hover:text-primary dark:hover:text-inverse-primary underline transition-opacity duration-200" href="#">Contact</a>
+</div>
+</div>
+</footer>
+</body></html>

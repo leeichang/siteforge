@@ -6,6 +6,7 @@ using SiteForge.Core.Utilities;
 using System.Diagnostics;
 using System.Net;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace SiteForge.Core.Services;
 
@@ -67,11 +68,35 @@ public class AiConversationServiceImpl : AiConversationService
         return Mappers.ToDto(message);
     }
 
+    public List<AiTemplateDto> GetTemplates(string? kind = null) => StitchTemplateCatalog
+        .All()
+        .Where(template => string.IsNullOrWhiteSpace(kind) || template.Kind.Equals(kind, StringComparison.OrdinalIgnoreCase))
+        .Select(template => new AiTemplateDto
+        {
+            Key = template.Key,
+            Kind = template.Kind,
+            Category = template.Category,
+            Label = template.Label,
+            Description = template.Description,
+            ThumbnailUrl = StitchTemplateCatalog.GetThumbnailUrl(template),
+            PageCount = template.Pages.Count,
+            PageTypes = template.Pages.Select(page => page.PageType).Distinct().ToList()
+        })
+        .ToList();
+
     public async Task<AiGenerateSiteResponse> GenerateSiteAsync(Guid userId, AiGenerateSiteRequest request)
     {
         var stopwatch = Stopwatch.StartNew();
         var siteName = CleanTitle(request.SiteName, "AI Generated Site");
         var prompt = CleanPrompt(request.Prompt, siteName);
+
+        if (!string.IsNullOrWhiteSpace(request.TemplateKey) &&
+            StitchTemplateCatalog.TryGet(request.TemplateKey, out var siteTemplate) &&
+            siteTemplate.Kind == "site")
+        {
+            return await GenerateTemplateSiteAsync(userId, request, siteName, prompt, siteTemplate, stopwatch);
+        }
+
         var pageTypes = NormalizePageTypes(request.PageTypes);
 
         var site = await _sites.AddAsync(new Site
@@ -141,10 +166,16 @@ public class AiConversationServiceImpl : AiConversationService
             if (page is null || page.SiteId != site.Id) throw new InvalidOperationException("Page not found.");
         }
 
-        var pageName = CleanTitle(request.PageName, page?.Title ?? PageNameForType(request.PageType));
-        var pageType = NormalizePageType(request.PageType);
+        StitchTemplateDefinition? selectedTemplate = null;
+        var hasTemplate = !string.IsNullOrWhiteSpace(request.TemplateKey) &&
+            StitchTemplateCatalog.TryGet(request.TemplateKey, out selectedTemplate);
+        var templatePage = selectedTemplate?.Pages.FirstOrDefault();
+        var pageType = hasTemplate && templatePage is not null ? templatePage.PageType : NormalizePageType(request.PageType);
+        var pageName = CleanTitle(request.PageName, page?.Title ?? templatePage?.Title ?? PageNameForType(pageType));
         var prompt = CleanPrompt(request.Prompt, pageName);
-        var generated = GeneratePageDocument(site.Name, pageName, pageType, prompt, request.Style, request.ContentLength);
+        var generated = hasTemplate && selectedTemplate is not null && templatePage is not null
+            ? GenerateTemplatePageDocument(site.Name, pageName, prompt, templatePage, selectedTemplate)
+            : GeneratePageDocument(site.Name, pageName, pageType, prompt, request.Style, request.ContentLength);
 
         if (page is null)
         {
@@ -181,6 +212,66 @@ public class AiConversationServiceImpl : AiConversationService
 
         var response = ToGeneratedPageDto(page, generated, stopwatch.ElapsedMilliseconds);
         await RecordGenerationAsync(site.Id, page.Id, "AI generated page", prompt, response);
+        return response;
+    }
+
+    private async Task<AiGenerateSiteResponse> GenerateTemplateSiteAsync(
+        Guid userId,
+        AiGenerateSiteRequest request,
+        string siteName,
+        string prompt,
+        StitchTemplateDefinition siteTemplate,
+        Stopwatch stopwatch)
+    {
+        var site = await _sites.AddAsync(new Site
+        {
+            UserId = userId,
+            Name = siteName,
+            Description = string.IsNullOrWhiteSpace(request.Description) ? siteTemplate.Description : request.Description.Trim(),
+            Slug = await CreateUniqueSiteSlugAsync(siteName)
+        });
+
+        var response = new AiGenerateSiteResponse
+        {
+            SiteId = site.Id,
+            SiteName = site.Name,
+            Slug = site.Slug ?? string.Empty
+        };
+
+        var order = 0;
+        foreach (var templatePage in siteTemplate.Pages)
+        {
+            var generated = GenerateTemplatePageDocument(site.Name, templatePage.Title, prompt, templatePage, siteTemplate);
+            var page = await _pages.AddAsync(new Page
+            {
+                SiteId = site.Id,
+                Title = templatePage.Title,
+                Slug = templatePage.IsHome ? "home" : await CreateUniquePageSlugAsync(site.Id, templatePage.Slug),
+                PageType = templatePage.PageType,
+                IsHome = templatePage.IsHome,
+                DisplayOrder = order++,
+                ShowInNav = templatePage.ShowInNav,
+                HtmlContent = generated.Html,
+                CssContent = generated.Css,
+                JsContent = generated.Js,
+                Components = "[]",
+                Styles = "[]",
+                MetaTitle = generated.MetaTitle,
+                MetaDescription = generated.MetaDescription
+            });
+
+            response.Pages.Add(ToGeneratedPageDto(page, generated, stopwatch.ElapsedMilliseconds));
+        }
+
+        response.GenerationTimeMs = stopwatch.ElapsedMilliseconds;
+        response.AiSuggestions = new List<string>
+        {
+            $"已套用 Stitch 樣板網站「{siteTemplate.Label}」。",
+            "每個頁面都保留原始 Stitch head 資源，可在發佈時維持高保真視覺。",
+            "進入 Editor 後可繼續替換品牌文案、圖片、CTA 與資料欄位。"
+        };
+
+        await RecordGenerationAsync(site.Id, response.Pages.FirstOrDefault()?.PageId, "Stitch template website", prompt, response);
         return response;
     }
 
@@ -579,6 +670,71 @@ public class AiConversationServiceImpl : AiConversationService
         return $"https://source.unsplash.com/1200x900/?{Uri.EscapeDataString(query)}";
     }
 
+    private static GeneratedPageDocument GenerateTemplatePageDocument(
+        string siteName,
+        string pageName,
+        string prompt,
+        StitchTemplatePage templatePage,
+        StitchTemplateDefinition template)
+    {
+        var source = StitchTemplateCatalog.Load(templatePage.FileName);
+        var escapedTemplateKey = WebUtility.HtmlEncode(template.Key);
+        var html = ReplaceBrandTokens(source.Body, template.DefaultBrandName, siteName);
+        var head = ReplaceBrandTokens(source.Head, template.DefaultBrandName, siteName);
+        var bodyClass = string.IsNullOrWhiteSpace(source.BodyClass) ? string.Empty : $" {source.BodyClass}";
+
+        html = $$"""
+        <div class="siteforge-stitch-template{{bodyClass}}" data-siteforge-template="{{escapedTemplateKey}}" data-siteforge-template-page="{{WebUtility.HtmlEncode(templatePage.PageType)}}">
+          {{html}}
+        </div>
+        """;
+
+        var js = $$"""
+        /*SITEFORGE_TEMPLATE_HEAD_START
+        {{head}}
+        SITEFORGE_TEMPLATE_HEAD_END*/
+        document.documentElement.dataset.siteforgeTemplate = "{{template.Key}}";
+        document.documentElement.dataset.siteforgeTemplatePage = "{{templatePage.PageType}}";
+        """;
+
+        var css = """
+        .siteforge-stitch-template { min-height: 100vh; }
+        .siteforge-stitch-template img { max-width: 100%; }
+        """;
+
+        return new GeneratedPageDocument(
+            html,
+            css,
+            js,
+            $"{pageName} | {siteName}",
+            string.IsNullOrWhiteSpace(prompt) ? template.Description : SummarizePrompt(prompt),
+            new List<string>
+            {
+                $"已套用 Stitch 樣板「{template.Label} / {templatePage.Title}」。",
+                "此頁保留 Stitch 匯出的 Tailwind、字體與 Material Symbols 設定。",
+                "建議替換圖片、品牌名稱、CTA 連結與資料欄位後再發佈。"
+            });
+    }
+
+    private static string ReplaceBrandTokens(string value, string defaultBrandName, string siteName)
+    {
+        if (string.IsNullOrWhiteSpace(value)) return string.Empty;
+
+        var output = value
+            .Replace(defaultBrandName, WebUtility.HtmlEncode(siteName), StringComparison.OrdinalIgnoreCase)
+            .Replace("MUJI-INSPIRED RETAIL", WebUtility.HtmlEncode(siteName), StringComparison.OrdinalIgnoreCase)
+            .Replace("Muji-Inspired Retail", WebUtility.HtmlEncode(siteName), StringComparison.OrdinalIgnoreCase)
+            .Replace("AETHERIS 瑰麗美學", WebUtility.HtmlEncode(siteName), StringComparison.OrdinalIgnoreCase)
+            .Replace("VINTAGE &amp; VINE DISTRIBUTORS", WebUtility.HtmlEncode(siteName), StringComparison.OrdinalIgnoreCase)
+            .Replace("VINTAGE & VINE DISTRIBUTORS", WebUtility.HtmlEncode(siteName), StringComparison.OrdinalIgnoreCase)
+            .Replace("VINTAGE &amp; VINE", WebUtility.HtmlEncode(siteName), StringComparison.OrdinalIgnoreCase)
+            .Replace("VINTAGE & VINE", WebUtility.HtmlEncode(siteName), StringComparison.OrdinalIgnoreCase)
+            .Replace("DPP Explorer", WebUtility.HtmlEncode(siteName), StringComparison.OrdinalIgnoreCase)
+            .Replace("VeriShield AI", WebUtility.HtmlEncode(siteName), StringComparison.OrdinalIgnoreCase);
+
+        return output;
+    }
+
     private sealed record GeneratedPageDocument(
         string Html,
         string Css,
@@ -586,6 +742,187 @@ public class AiConversationServiceImpl : AiConversationService
         string MetaTitle,
         string MetaDescription,
         List<string> Suggestions);
+
+    private sealed record StitchTemplateDefinition(
+        string Key,
+        string Kind,
+        string Category,
+        string Label,
+        string Description,
+        string DefaultBrandName,
+        List<StitchTemplatePage> Pages);
+
+    private sealed record StitchTemplatePage(
+        string Title,
+        string Slug,
+        string PageType,
+        string FileName,
+        bool IsHome = false,
+        bool ShowInNav = true);
+
+    private sealed record StitchTemplateSource(string Head, string Body, string BodyClass);
+
+    private static class StitchTemplateCatalog
+    {
+        private static readonly List<StitchTemplateDefinition> Templates = new()
+        {
+            new("site-retail", "site", "零售業", "零售業品牌網站", "從 Stitch 匯入的零售品牌完整網站，包含首頁、關於、產品、會員服務、門市、消息與聯絡頁。", "MUJI-INSPIRED RETAIL", new()
+            {
+                new("Home", "home", "home", "site_retail_home.html", true),
+                new("About", "about", "about", "site_retail_about.html"),
+                new("Products", "products", "product", "site_retail_product.html"),
+                new("Services", "services", "services", "site_retail_services.html"),
+                new("Locations", "locations", "locations", "site_retail_locations.html"),
+                new("News", "news", "blog", "site_retail_news.html"),
+                new("Contact", "contact", "contact", "site_retail_contact.html")
+            }),
+            new("site-beauty", "site", "美妝業", "美妝保養品牌網站", "從 Stitch 匯入的精品美妝網站，包含品牌首頁、產品、成分、顧問服務與聯絡頁。", "AETHERIS 瑰麗美學", new()
+            {
+                new("Home", "home", "home", "site_beauty_home.html", true),
+                new("Products", "products", "product", "site_beauty_product.html"),
+                new("Ingredients", "ingredients", "ingredients", "site_beauty_ingredients.html"),
+                new("Consultation", "consultation", "services", "site_beauty_services.html"),
+                new("Contact", "contact", "contact", "site_beauty_contact.html")
+            }),
+            new("site-beverage", "site", "酒水業", "酒水品牌與通路網站", "從 Stitch 匯入的高質感酒水品牌網站，包含首頁、品牌故事、產品系列、通路合作、部落格與聯絡頁。", "VINTAGE & VINE", new()
+            {
+                new("Home", "home", "home", "site_beverage_home.html", true),
+                new("About", "about", "about", "site_beverage_about.html"),
+                new("Collections", "collections", "product", "site_beverage_product.html"),
+                new("Partnership", "partnership", "services", "site_beverage_services.html"),
+                new("Journal", "journal", "blog", "site_beverage_blog.html"),
+                new("Contact", "contact", "contact", "site_beverage_contact.html")
+            }),
+            new("site-3c", "site", "3C 產業", "3C 科技平台網站", "從 Stitch 匯入的 3C 與硬體解決方案網站，包含首頁、關於、產品、服務、支援與聯絡頁。", "ApexEdge", new()
+            {
+                new("Home", "home", "home", "site_3c_home.html", true),
+                new("About", "about", "about", "site_3c_about.html"),
+                new("Products", "products", "product", "site_3c_product.html"),
+                new("Solutions", "solutions", "services", "site_3c_services.html"),
+                new("Support", "support", "support", "site_3c_support.html"),
+                new("Contact", "contact", "contact", "site_3c_contact.html")
+            }),
+            new("page-anti-counterfeit", "page", "樣板網頁", "防偽顯示網頁", "掃碼或輸入序號後顯示正品驗證結果、產品資訊與客服回報 CTA。", "VeriShield AI", new()
+            {
+                new("防偽驗證", "anti-counterfeit", "anti-counterfeit", "page_anti_counterfeit.html", true)
+            }),
+            new("page-scan-result", "page", "樣板網頁", "掃碼顯示網頁", "通用掃碼結果頁，適合商品資訊、活動入口、文件下載與會員互動。", "ScanLink", new()
+            {
+                new("掃碼結果", "scan-result", "scan-result", "page_scan_result.html", true)
+            }),
+            new("page-lottery", "page", "樣板網頁", "抽獎顯示網頁", "掃碼抽獎結果頁，包含中獎狀態、獎項、兌換碼與活動規則。", "Grand Sweepstakes", new()
+            {
+                new("抽獎結果", "lottery", "lottery", "page_lottery_result.html", true)
+            }),
+            new("page-points-redemption", "page", "樣板網頁", "點數兌換顯示網頁", "會員點數兌換結果頁，包含點數餘額、兌換品項、條碼與推薦兌換。", "PointsPlus", new()
+            {
+                new("點數兌換", "points-redemption", "points-redemption", "page_points_redemption.html", true)
+            }),
+            new("page-traceability", "page", "樣板網頁", "追蹤追溯顯示網頁", "產品追蹤追溯頁，呈現批號、來源、檢驗、物流與通路時間軸。", "TraceFlow", new()
+            {
+                new("追蹤追溯", "traceability", "traceability", "page_traceability.html", true)
+            }),
+            new("page-dpp", "page", "樣板網頁", "DPP 顯示網頁", "Digital Product Passport 顯示頁，呈現產品身份、材料、合規、永續、維修與回收資訊。", "DPP Explorer", new()
+            {
+                new("DPP 數位產品護照", "dpp", "dpp", "page_dpp.html", true)
+            })
+        };
+
+        public static List<StitchTemplateDefinition> All() => Templates;
+
+        public static string GetThumbnailUrl(StitchTemplateDefinition template)
+        {
+            var pages = template.Pages
+                .OrderByDescending(page => page.IsHome)
+                .ThenBy(page => page.ShowInNav ? 0 : 1);
+
+            foreach (var page in pages)
+            {
+                try
+                {
+                    var source = Load(page.FileName);
+                    var url = ExtractFirstImageUrl($"{source.Head}\n{source.Body}");
+                    if (!string.IsNullOrWhiteSpace(url)) return url;
+                }
+                catch
+                {
+                    // Thumbnail discovery should not make the template catalog fail.
+                }
+            }
+
+            return string.Empty;
+        }
+
+        public static bool TryGet(string? key, out StitchTemplateDefinition template)
+        {
+            template = Templates.FirstOrDefault(item => item.Key.Equals(key?.Trim(), StringComparison.OrdinalIgnoreCase))!;
+            return template is not null;
+        }
+
+        public static StitchTemplateSource Load(string fileName)
+        {
+            var path = Path.Combine(Directory.GetCurrentDirectory(), "Templates", "Stitch", fileName);
+            if (!File.Exists(path))
+            {
+                throw new InvalidOperationException($"Template file not found: {fileName}");
+            }
+
+            var html = File.ReadAllText(path);
+            var head = NormalizeHead(MatchInner(html, "head"));
+            var body = MatchInner(html, "body");
+            var bodyClass = Regex.Match(html, "<body[^>]*class=\"(?<class>[^\"]*)\"", RegexOptions.IgnoreCase).Groups["class"].Value;
+            return new StitchTemplateSource(head, string.IsNullOrWhiteSpace(body) ? html : body, bodyClass);
+        }
+
+        private static string NormalizeHead(string head)
+        {
+            if (string.IsNullOrWhiteSpace(head)) return string.Empty;
+
+            var configMatch = Regex.Match(
+                head,
+                @"<script\s+id=""tailwind-config""[^>]*>.*?</script>",
+                RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            var cdnMatch = Regex.Match(
+                head,
+                @"<script[^>]+src=""https://cdn\.tailwindcss\.com[^""]*""[^>]*>\s*</script>",
+                RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+            if (!configMatch.Success || !cdnMatch.Success || configMatch.Index < cdnMatch.Index)
+            {
+                return head;
+            }
+
+            var withoutConfig = head.Remove(configMatch.Index, configMatch.Length).Trim();
+            var nextCdnMatch = Regex.Match(
+                withoutConfig,
+                @"<script[^>]+src=""https://cdn\.tailwindcss\.com[^""]*""[^>]*>\s*</script>",
+                RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+            return nextCdnMatch.Success
+                ? withoutConfig.Insert(nextCdnMatch.Index, $"{configMatch.Value}\n")
+                : $"{configMatch.Value}\n{withoutConfig}";
+        }
+
+        private static string MatchInner(string html, string tag)
+        {
+            var match = Regex.Match(html, $@"<{tag}[^>]*>(?<content>.*?)</{tag}>", RegexOptions.IgnoreCase | RegexOptions.Singleline);
+            return match.Success ? match.Groups["content"].Value.Trim() : string.Empty;
+        }
+
+        private static string ExtractFirstImageUrl(string html)
+        {
+            var imageMatches = Regex.Matches(html, "<img[^>]+src=[\"'](?<url>https?://[^\"']+)[\"']", RegexOptions.IgnoreCase);
+            var backgroundMatches = Regex.Matches(html, "url\\(['\"]?(?<url>https?://[^)'\"\\s]+)['\"]?\\)", RegexOptions.IgnoreCase);
+
+            return imageMatches
+                .Cast<Match>()
+                .Concat(backgroundMatches.Cast<Match>())
+                .Where(match => match.Success)
+                .OrderBy(match => match.Index)
+                .Select(match => match.Groups["url"].Value.Trim())
+                .FirstOrDefault(url => !string.IsNullOrWhiteSpace(url)) ?? string.Empty;
+        }
+    }
 
     private sealed record Palette(string Primary, string Secondary, string Accent, string Soft)
     {

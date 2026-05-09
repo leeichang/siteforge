@@ -108,6 +108,27 @@ profile_email="$(printf '%s' "$profile_json" | "$JQ_BIN" -r '.data.email // .ema
 [[ "$profile_email" == "$email" ]]
 pass "loaded authenticated profile"
 
+template_catalog_json="$(json_request GET /api/AiConversations/templates "$token")"
+site_template_count="$(printf '%s' "$template_catalog_json" | "$JQ_BIN" '[.data // . | .[] | select(.kind == "site")] | length')"
+page_template_count="$(printf '%s' "$template_catalog_json" | "$JQ_BIN" '[.data // . | .[] | select(.kind == "page")] | length')"
+[[ "$site_template_count" -ge 4 && "$page_template_count" -ge 6 ]]
+pass "loaded Stitch template catalog" "$site_template_count site templates, $page_template_count page templates"
+
+template_site_json="$(json_request POST /api/AiConversations/generate-site "$token" "{\"siteName\":\"Template Retail $stamp\",\"prompt\":\"Create a retail website from the Stitch template.\",\"templateKey\":\"site-retail\"}")"
+template_site_id="$(printf '%s' "$template_site_json" | "$JQ_BIN" -r '.data.siteId // .siteId')"
+template_site_pages="$(printf '%s' "$template_site_json" | "$JQ_BIN" '.data.pages // .pages | length')"
+template_home_html="$(printf '%s' "$template_site_json" | "$JQ_BIN" -r '.data.pages[0].htmlContent // .pages[0].htmlContent')"
+[[ "$template_site_id" != "null" && -n "$template_site_id" && "$template_site_pages" -ge 5 ]]
+printf '%s' "$template_home_html" | "$GREP_BIN" -q "siteforge-stitch-template"
+pass "generated Stitch template website" "$template_site_pages pages"
+
+template_page_json="$(json_request POST /api/AiConversations/generate-page "$token" "{\"siteId\":\"$template_site_id\",\"pageName\":\"DPP Passport\",\"templateKey\":\"page-dpp\",\"prompt\":\"Create a DPP display page from the Stitch template.\"}")"
+template_page_id="$(printf '%s' "$template_page_json" | "$JQ_BIN" -r '.data.pageId // .pageId')"
+template_page_html="$(printf '%s' "$template_page_json" | "$JQ_BIN" -r '.data.htmlContent // .htmlContent')"
+[[ "$template_page_id" != "null" && -n "$template_page_id" ]]
+printf '%s' "$template_page_html" | "$GREP_BIN" -q "siteforge-stitch-template"
+pass "generated Stitch template page" "$template_page_id"
+
 ai_site_json="$(json_request POST /api/AiConversations/generate-site "$token" "{\"siteName\":\"AI Studio $stamp\",\"prompt\":\"Create a polished AI generated website for a design studio with services, trust signals, and a contact path.\",\"style\":\"tech\",\"contentLength\":\"medium\",\"pageTypes\":[\"home\",\"about\",\"services\",\"contact\"]}")"
 ai_site_id="$(printf '%s' "$ai_site_json" | "$JQ_BIN" -r '.data.siteId // .siteId')"
 ai_page_count="$(printf '%s' "$ai_site_json" | "$JQ_BIN" '.data.pages // .pages | length')"
@@ -185,4 +206,4 @@ published_file="$API_DIR/wwwroot$published_url/index.html"
 pass "verified static file output" "$published_file"
 
 print ""
-print "E2E smoke passed: 12 checks"
+print "E2E smoke passed: 15 checks"

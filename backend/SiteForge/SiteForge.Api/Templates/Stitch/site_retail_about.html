@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html lang="zh-TW"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>關於我們 | 企業簡介</title>
+<!-- Google Fonts: Noto Sans -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Config -->
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "error": "#ba1a1a",
+                        "surface-container-high": "#e9e7eb",
+                        "tertiary-fixed-dim": "#83d8a6",
+                        "on-tertiary-fixed": "#002111",
+                        "secondary-fixed-dim": "#f8bc4b",
+                        "on-error-container": "#93000a",
+                        "on-surface-variant": "#43474e",
+                        "surface-container-highest": "#e3e2e6",
+                        "surface-container-lowest": "#ffffff",
+                        "tertiary-fixed": "#9ff5c1",
+                        "on-secondary-fixed": "#271900",
+                        "on-background": "#1a1c1e",
+                        "on-surface": "#1a1c1e",
+                        "on-tertiary": "#ffffff",
+                        "surface-container": "#efedf1",
+                        "inverse-primary": "#adc7f7",
+                        "surface-dim": "#dad9dd",
+                        "secondary-container": "#ffc250",
+                        "inverse-on-surface": "#f1f0f4",
+                        "on-primary-container": "#86a0cd",
+                        "on-tertiary-container": "#5caf81",
+                        "on-error": "#ffffff",
+                        "outline-variant": "#c4c6cf",
+                        "on-tertiary-fixed-variant": "#005231",
+                        "secondary-fixed": "#ffdeaa",
+                        "on-primary-fixed-variant": "#2d476f",
+                        "surface-tint": "#455f88",
+                        "outline": "#74777f",
+                        "primary-container": "#1a365d",
+                        "surface-container-low": "#f4f3f7",
+                        "background": "#faf9fd",
+                        "surface-variant": "#e3e2e6",
+                        "secondary": "#7d5700",
+                        "on-secondary-container": "#725000",
+                        "primary": "#002045",
+                        "tertiary": "#002715",
+                        "primary-fixed-dim": "#adc7f7",
+                        "on-primary-fixed": "#001b3c",
+                        "surface": "#faf9fd",
+                        "on-primary": "#ffffff",
+                        "inverse-surface": "#2f3033",
+                        "on-secondary-fixed-variant": "#5f4100",
+                        "surface-bright": "#faf9fd",
+                        "primary-fixed": "#d6e3ff",
+                        "error-container": "#ffdad6",
+                        "on-secondary": "#ffffff",
+                        "tertiary-container": "#003f25"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                    "spacing": {
+                        "xl": "80px",
+                        "gutter": "24px",
+                        "md": "24px",
+                        "base": "8px",
+                        "container-max": "1280px",
+                        "sm": "12px",
+                        "lg": "48px",
+                        "xs": "4px"
+                    },
+                    "fontFamily": {
+                        "headline-md": ["Noto Sans"],
+                        "label-caps": ["Noto Sans"],
+                        "title-sm": ["Noto Sans"],
+                        "body-md": ["Noto Sans"],
+                        "display-lg": ["Noto Sans"],
+                        "body-sm": ["Noto Sans"]
+                    },
+                    "fontSize": {
+                        "headline-md": ["32px", { "lineHeight": "1.3", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+                        "label-caps": ["12px", { "lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "700" }],
+                        "title-sm": ["20px", { "lineHeight": "1.4", "fontWeight": "600" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "display-lg": ["48px", { "lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+                        "body-sm": ["14px", { "lineHeight": "1.5", "fontWeight": "400" }]
+                    }
+                }
+            }
+        }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .material-symbols-outlined[data-weight="fill"] {
+            font-variation-settings: 'FILL' 1;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md text-body-md antialiased">
+<!-- TopNavBar Component -->
+<header class="bg-surface dark:bg-on-background w-full top-0 z-50 border-b border-outline-variant dark:border-outline sticky">
+<div class="flex justify-between items-center w-full px-gutter max-w-container-max mx-auto h-20">
+<!-- Brand Logo -->
+<div class="font-headline-md text-headline-md font-bold tracking-tighter text-primary dark:text-primary-fixed">
+                MUJI-INSPIRED RETAIL
+            </div>
+<!-- Navigation Links -->
+<nav class="hidden md:flex gap-md items-center">
+<a class="text-on-surface-variant dark:text-outline-variant font-label-caps text-label-caps hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200" href="#">Life</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-label-caps text-label-caps hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200" href="#">Food</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-label-caps text-label-caps hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200" href="#">Fashion</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-label-caps text-label-caps hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200" href="#">Home</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-label-caps text-label-caps hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200" href="#">Gifts</a>
+<a class="text-on-surface-variant dark:text-outline-variant font-label-caps text-label-caps hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200" href="#">Membership</a>
+</nav>
+<!-- Trailing Icons -->
+<div class="flex items-center gap-sm text-primary dark:text-primary-fixed">
+<button aria-label="shopping_cart" class="hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200 p-base">
+<span class="material-symbols-outlined">shopping_cart</span>
+</button>
+<button aria-label="person" class="hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200 p-base">
+<span class="material-symbols-outlined">person</span>
+</button>
+<button aria-label="location_on" class="hover:text-secondary dark:hover:text-secondary-fixed transition-colors duration-200 p-base">
+<span class="material-symbols-outlined">location_on</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main>
+<!-- Hero: Company Profile -->
+<section class="max-w-container-max mx-auto px-gutter py-xl">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-md items-center">
+<div class="md:col-span-5 flex flex-col gap-md">
+<h1 class="font-display-lg text-display-lg text-primary">追求本質，<br/>回歸純粹。</h1>
+<p class="font-body-md text-body-md text-on-surface-variant">
+                        我們致力於提供設計簡潔、功能實用且價格合理的日常用品。透過剔除不必要的裝飾與過度包裝，我們將焦點回歸物品的本質，為現代生活帶來靜謐而沉穩的秩序感。
+                    </p>
+</div>
+<div class="md:col-span-7">
+<div class="w-full aspect-[4/3] bg-surface-container-high rounded-DEFAULT overflow-hidden border border-outline-variant">
+<img alt="Company Profile" class="w-full h-full object-cover" data-alt="A brightly lit, minimalist modern corporate office space reflecting a high-end retail brand philosophy. The room features clean lines, white walls, and warm wood flooring. Large windows let in natural, soft, high-key light, creating a serene and productive atmosphere. Sleek, unadorned furniture in neutral tones and navy accents reinforces the brand's 'quiet authority' aesthetic, with no clutter or unnecessary decoration." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAeZrMuiq_eYy8_WuiFs02lNUCkPsnALBcFtlE1jPm_ZovSEqhHFyfnPg63owMLsK8Utgo0nETRi5RsmDXyVznfmRsQmFgv4aH_6_QwzCpOBN4w_GColT4iPulegCOabUTZI104eRiznfjyr8qDjoBJnp8oMyUieWlNuoNBcICRbNFIFX8gLIhZ4kdfR-rV74cWxZ4v2QZJf1jbxY9nUL0II_3GXutaDFd5KHqmmkWy8iX1NF8kv5z1ZkLK2ED2cehZrpEezk0hJjM"/>
+</div>
+</div>
+</div>
+</section>
+<!-- Brand Philosophy: Bento Grid -->
+<section class="bg-surface-container-lowest py-xl border-t border-outline-variant">
+<div class="max-w-container-max mx-auto px-gutter">
+<div class="text-center mb-lg">
+<h2 class="font-headline-md text-headline-md text-primary mb-sm">品牌理念</h2>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-[600px] mx-auto">以客觀的角度審視生活，堅持三大核心原則，打造經得起時間考驗的優良品質。</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md">
+<!-- Bento Item 1 -->
+<div class="bg-surface border border-outline-variant rounded-DEFAULT p-md flex flex-col gap-sm hover:shadow-[0px_10px_25px_rgba(26,54,93,0.08)] transition-shadow duration-300">
+<span class="material-symbols-outlined text-primary text-[32px] mb-base">inventory_2</span>
+<h3 class="font-title-sm text-title-sm text-primary">精選素材</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                            嚴格挑選原物料，不盲目追求流行，而是尋找最適合產品功能且對環境友善的材質，確保每一件商品都能展現其天然本色。
+                        </p>
+</div>
+<!-- Bento Item 2 -->
+<div class="bg-surface border border-outline-variant rounded-DEFAULT p-md flex flex-col gap-sm hover:shadow-[0px_10px_25px_rgba(26,54,93,0.08)] transition-shadow duration-300">
+<span class="material-symbols-outlined text-primary text-[32px] mb-base">architecture</span>
+<h3 class="font-title-sm text-title-sm text-primary">改良工序</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                            省略無謂的加工與裝飾，專注於提升生產效率與產品耐用度。精簡的工序不僅降低成本，更能突顯產品純粹的設計美學。
+                        </p>
+</div>
+<!-- Bento Item 3 -->
+<div class="bg-surface border border-outline-variant rounded-DEFAULT p-md flex flex-col gap-sm hover:shadow-[0px_10px_25px_rgba(26,54,93,0.08)] transition-shadow duration-300">
+<span class="material-symbols-outlined text-primary text-[32px] mb-base">package_2</span>
+<h3 class="font-title-sm text-title-sm text-primary">簡化包裝</h3>
+<p class="font-body-sm text-body-sm text-on-surface-variant">
+                            拒絕過度包裝，採用簡約且可回收的包材。我們相信，真正的質感來自於產品本身，而非繁複的外在修飾。
+                        </p>
+</div>
+</div>
+</div>
+</section>
+<!-- CSR & Sustainable Sourcing -->
+<section class="max-w-container-max mx-auto px-gutter py-xl">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-md items-stretch border border-outline-variant rounded-DEFAULT overflow-hidden">
+<div class="bg-surface-container-high relative min-h-[300px]">
+<img alt="Sustainable Sourcing" class="absolute inset-0 w-full h-full object-cover" data-alt="A beautifully composed, minimalist photograph of natural, sustainable textile materials meticulously arranged on a clean white surface. Soft, ambient lighting highlights the organic textures of raw cotton and woven linen in natural off-white and subtle beige tones. The high-quality imagery conveys a sense of environmental responsibility and premium craftsmanship, aligning completely with the brand's quiet, modern aesthetic and commitment to sustainable sourcing." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBIzurJsi8YkvdkqwX-7CQiZwOEOPXELiu3Qs9wsWr0pa1PTf1igiEH81sGyW5o-cPUNfdMXu9F6KmVwaiEUlYnzjKK2bXWB4GfaJY-2xnPY99BrrJzwWWMDJZKIi5oC8dP3NASSJQktF5lwsdNlzwE6-JoaDRRKmzo_Ughum9_Zj2PBwDVZOiAjMf6QxxfpRZy2Mye9dy5SsXINEPdSePq-HMsUHMIQGxX5fgbeye-l-KAmqVcBSE5Zae2Eksrm3Xym6aKDZdXFY8"/>
+</div>
+<div class="p-lg bg-surface flex flex-col justify-center">
+<h2 class="font-headline-md text-headline-md text-primary mb-md">企業社會責任與永續未來</h2>
+<p class="font-body-md text-body-md text-on-surface-variant mb-sm">
+                        作為地球村的一份子，我們將永續發展視為企業營運的核心。從源頭的採購開始，我們積極尋找符合環保標準的供應商，推動有機棉的廣泛使用，並致力於減少生產過程中的碳足跡。
+                    </p>
+<p class="font-body-md text-body-md text-on-surface-variant mb-md">
+                        我們不僅追求產品的實用性，更期許這些產品能在不增加環境負擔的前提下，長久陪伴消費者的日常生活。透過持續的社區參與與透明的供應鏈管理，我們承諾為社會帶來正面影響。
+                    </p>
+<button class="bg-secondary text-on-secondary font-label-caps text-label-caps py-sm px-md rounded-DEFAULT w-max hover:scale-95 transition-transform duration-150">
+                        了解更多永續報告
+                    </button>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer Component -->
+<footer class="bg-primary dark:bg-primary-container text-on-primary dark:text-on-primary-container w-full py-lg mt-xl">
+<div class="flex flex-col md:flex-row justify-between items-start w-full px-gutter max-w-container-max mx-auto gap-md">
+<!-- Brand & Copyright -->
+<div class="flex flex-col gap-sm">
+<div class="font-title-sm text-title-sm font-bold text-on-primary dark:text-on-primary-container">
+                    MUJI-INSPIRED RETAIL
+                </div>
+<div class="font-body-sm text-body-sm opacity-80">
+                    © 2024 Retail Business Corp. All rights reserved.
+                </div>
+</div>
+<!-- Footer Links -->
+<nav class="flex flex-wrap gap-md">
+<a class="text-surface-variant dark:text-outline-variant opacity-80 font-label-caps text-label-caps hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer" href="#">Privacy Policy</a>
+<a class="text-surface-variant dark:text-outline-variant opacity-80 font-label-caps text-label-caps hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer" href="#">Terms of Service</a>
+<a class="text-surface-variant dark:text-outline-variant opacity-80 font-label-caps text-label-caps hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer" href="#">CSR</a>
+<a class="text-surface-variant dark:text-outline-variant opacity-80 font-label-caps text-label-caps hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer" href="#">Membership FAQ</a>
+<a class="text-surface-variant dark:text-outline-variant opacity-80 font-label-caps text-label-caps hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer" href="#">Contact Us</a>
+<a class="text-surface-variant dark:text-outline-variant opacity-80 font-label-caps text-label-caps hover:opacity-100 hover:text-on-primary transition-opacity cursor-pointer" href="#">Global Stores</a>
+</nav>
+</div>
+</footer>
+</body></html>

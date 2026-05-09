@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+
+<html lang="zh-TW"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>MUJI-INSPIRED RETAIL - 產品分類</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "error": "#ba1a1a",
+                    "surface-container-high": "#e9e7eb",
+                    "tertiary-fixed-dim": "#83d8a6",
+                    "on-tertiary-fixed": "#002111",
+                    "secondary-fixed-dim": "#f8bc4b",
+                    "on-error-container": "#93000a",
+                    "on-surface-variant": "#43474e",
+                    "surface-container-highest": "#e3e2e6",
+                    "surface-container-lowest": "#ffffff",
+                    "tertiary-fixed": "#9ff5c1",
+                    "on-secondary-fixed": "#271900",
+                    "on-background": "#1a1c1e",
+                    "on-surface": "#1a1c1e",
+                    "on-tertiary": "#ffffff",
+                    "surface-container": "#efedf1",
+                    "inverse-primary": "#adc7f7",
+                    "surface-dim": "#dad9dd",
+                    "secondary-container": "#ffc250",
+                    "inverse-on-surface": "#f1f0f4",
+                    "on-primary-container": "#86a0cd",
+                    "on-tertiary-container": "#5caf81",
+                    "on-error": "#ffffff",
+                    "outline-variant": "#c4c6cf",
+                    "on-tertiary-fixed-variant": "#005231",
+                    "secondary-fixed": "#ffdeaa",
+                    "on-primary-fixed-variant": "#2d476f",
+                    "surface-tint": "#455f88",
+                    "outline": "#74777f",
+                    "primary-container": "#1a365d",
+                    "surface-container-low": "#f4f3f7",
+                    "background": "#faf9fd",
+                    "surface-variant": "#e3e2e6",
+                    "secondary": "#7d5700",
+                    "on-secondary-container": "#725000",
+                    "primary": "#002045",
+                    "tertiary": "#002715",
+                    "primary-fixed-dim": "#adc7f7",
+                    "on-primary-fixed": "#001b3c",
+                    "surface": "#faf9fd",
+                    "on-primary": "#ffffff",
+                    "inverse-surface": "#2f3033",
+                    "on-secondary-fixed-variant": "#5f4100",
+                    "surface-bright": "#faf9fd",
+                    "primary-fixed": "#d6e3ff",
+                    "error-container": "#ffdad6",
+                    "on-secondary": "#ffffff",
+                    "tertiary-container": "#003f25"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "xl": "80px",
+                    "gutter": "24px",
+                    "md": "24px",
+                    "base": "8px",
+                    "container-max": "1280px",
+                    "sm": "12px",
+                    "lg": "48px",
+                    "xs": "4px"
+            },
+            "fontFamily": {
+                    "headline-md": [
+                            "Noto Sans"
+                    ],
+                    "label-caps": [
+                            "Noto Sans"
+                    ],
+                    "title-sm": [
+                            "Noto Sans"
+                    ],
+                    "body-md": [
+                            "Noto Sans"
+                    ],
+                    "display-lg": [
+                            "Noto Sans"
+                    ],
+                    "body-sm": [
+                            "Noto Sans"
+                    ]
+            },
+            "fontSize": {
+                    "headline-md": [
+                            "32px",
+                            {
+                                    "lineHeight": "1.3",
+                                    "letterSpacing": "-0.01em",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "label-caps": [
+                            "12px",
+                            {
+                                    "lineHeight": "1",
+                                    "letterSpacing": "0.05em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "title-sm": [
+                            "20px",
+                            {
+                                    "lineHeight": "1.4",
+                                    "fontWeight": "600"
+                            }
+                    ],
+                    "body-md": [
+                            "16px",
+                            {
+                                    "lineHeight": "1.6",
+                                    "fontWeight": "400"
+                            }
+                    ],
+                    "display-lg": [
+                            "48px",
+                            {
+                                    "lineHeight": "1.2",
+                                    "letterSpacing": "-0.02em",
+                                    "fontWeight": "700"
+                            }
+                    ],
+                    "body-sm": [
+                            "14px",
+                            {
+                                    "lineHeight": "1.5",
+                                    "fontWeight": "400"
+                            }
+                    ]
+            }
+    },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md min-h-screen flex flex-col antialiased">
+<!-- TopNavBar -->
+<header class="bg-surface border-b border-outline-variant sticky top-0 z-50 w-full">
+<div class="flex justify-between items-center w-full px-gutter max-w-container-max mx-auto h-20">
+<!-- Brand Logo -->
+<a class="font-headline-md text-headline-md font-bold tracking-tighter text-primary" href="#">
+                MUJI-INSPIRED RETAIL
+            </a>
+<!-- Navigation Links (Web) -->
+<nav class="hidden md:flex gap-md">
+<a class="text-on-surface-variant font-label-caps text-label-caps hover:text-secondary transition-colors duration-200" href="#">Life</a>
+<a class="text-primary border-b-2 border-primary pb-2 font-label-caps text-label-caps font-bold transition-transform duration-150 scale-95" href="#">Food</a> <!-- Assuming Food is active based on generic Products & Categories context, we'll pick one, though normally determined by exact page match -->
+<a class="text-on-surface-variant font-label-caps text-label-caps hover:text-secondary transition-colors duration-200" href="#">Fashion</a>
+<a class="text-on-surface-variant font-label-caps text-label-caps hover:text-secondary transition-colors duration-200" href="#">Home</a>
+<a class="text-on-surface-variant font-label-caps text-label-caps hover:text-secondary transition-colors duration-200" href="#">Gifts</a>
+<a class="text-on-surface-variant font-label-caps text-label-caps hover:text-secondary transition-colors duration-200" href="#">Membership</a>
+</nav>
+<!-- Trailing Icons -->
+<div class="flex items-center gap-sm text-primary">
+<button aria-label="Search" class="p-2 hover:text-secondary transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button aria-label="Cart" class="p-2 hover:text-secondary transition-colors duration-200">
+<span class="material-symbols-outlined" data-icon="shopping_cart">shopping_cart</span>
+</button>
+<button aria-label="Profile" class="p-2 hover:text-secondary transition-colors duration-200 hidden md:block">
+<span class="material-symbols-outlined" data-icon="person">person</span>
+</button>
+<button aria-label="Location" class="p-2 hover:text-secondary transition-colors duration-200 hidden md:block">
+<span class="material-symbols-outlined" data-icon="location_on">location_on</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Main Content -->
+<main class="flex-grow w-full max-w-container-max mx-auto px-gutter py-lg">
+<!-- Breadcrumbs -->
+<nav aria-label="Breadcrumb" class="mb-lg">
+<ol class="flex items-center space-x-2 text-on-surface-variant font-body-sm text-body-sm">
+<li><a class="hover:text-primary transition-colors" href="#">首頁</a></li>
+<li class="flex items-center">
+<span class="material-symbols-outlined text-sm mx-1" data-icon="chevron_right">chevron_right</span>
+</li>
+<li aria-current="page" class="text-primary font-medium">所有商品</li>
+</ol>
+</nav>
+<!-- Page Header -->
+<div class="mb-xl text-center md:text-left">
+<h1 class="font-display-lg text-display-lg text-primary mb-sm">發現優質生活</h1>
+<p class="font-body-md text-body-md text-on-surface-variant max-w-2xl">從日常必需品到獨特禮品，我們精選高品質、簡約設計的商品，為您的生活帶來寧靜與美好。探索我們的核心分類，找到最適合您的那一份純粹。</p>
+</div>
+<!-- Categories Bento Grid -->
+<section class="mb-xl">
+<h2 class="font-title-sm text-title-sm text-primary mb-md pb-2 border-b border-outline-variant">探索分類</h2>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-md auto-rows-[250px]">
+<!-- Category 1 (Large) -->
+<a class="group relative overflow-hidden rounded-lg bg-surface-container border border-outline-variant md:col-span-2 md:row-span-2 flex flex-col justify-end p-md hover:shadow-[0px_10px_25px_rgba(26,54,93,0.08)] transition-all duration-300" href="#">
+<img alt="Life Category" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A clean, brightly lit modern home interior showcasing minimalist furniture. The room features a white sofa, a light wood coffee table, and large windows letting in natural sunlight. The aesthetic is MUJI-inspired, focusing on neutral tones, pristine whites, and light wood textures. The mood is calm, organized, and premium." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDTs_CPbaJ_Ge6VUBfAOjQ6VGji2iof1RXSaO_m676rIl_h3xEsQ7RkFnKqRY1QSPuOiZG9qjJXx-HWPMpQ3Q2HMwx16TBSXGxeX_-UA2TF4BLEASmSWqnPepmKnO0FyArtXrNUjwo4gswULJb7uwy55tc12CVXscdUhfotz_JC7fFJNlJD4UojdiJx9PuJCPMpyoaoAbKITz3uxzxJpg1JWZo_en5LEop0S81QWyo3AIM89r1hLvJxBF-vQE_JE6HMf7nT1wCe6gw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/80 to-transparent"></div>
+<div class="relative z-10 text-on-primary">
+<h3 class="font-headline-md text-headline-md mb-xs">Life 生活</h3>
+<p class="font-body-sm text-body-sm opacity-90">提升日常質感的必備良品，讓每一天都充滿秩序與美感。</p>
+</div>
+</a>
+<!-- Category 2 -->
+<a class="group relative overflow-hidden rounded-lg bg-surface-container border border-outline-variant flex flex-col justify-end p-md hover:shadow-[0px_10px_25px_rgba(26,54,93,0.08)] transition-all duration-300" href="#">
+<img alt="Food Category" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Close-up of fresh, artisanal ingredients on a clean white ceramic plate resting on a light oak wooden table. The lighting is bright and natural, highlighting the textures of the food. The setting is minimal and organized, emphasizing high-quality, natural produce. The overall tone is appetizing, fresh, and authentically simple." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBsgNH9IggSd4pzRvzwdBUkO6JVnIzCuwBpnZL1nCrkggataNROjqjfqEJx92yAYeA__zUfovGFwqX_0JdN-UIfndydSwaV9zeTBltuhNvZKdoa8LM2O37lRXaJexcqztCbuA-nKod5ksu59MVBzhAUduhib6km3LWETneiGPfayloNjaVuUsBD46quJoFpwkVTUhRfztzmL4z5WzLvdqHu-smB3rbsL2hr_KyJLQhh13kFDnjvKpAxLqQDV5lcJqc_BusSPqkF4Ho"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/70 to-transparent"></div>
+<div class="relative z-10 text-on-primary">
+<h3 class="font-title-sm text-title-sm mb-xs">Food 食品</h3>
+<p class="font-body-sm text-body-sm opacity-90 hidden md:block">自然純粹的美味選擇。</p>
+</div>
+</a>
+<!-- Category 3 -->
+<a class="group relative overflow-hidden rounded-lg bg-surface-container border border-outline-variant flex flex-col justify-end p-md hover:shadow-[0px_10px_25px_rgba(26,54,93,0.08)] transition-all duration-300" href="#">
+<img alt="Fashion Category" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="Neatly folded, high-quality cotton shirts stacked on a minimalist white display table in a bright, modern retail space. The clothing items are in muted, neutral colors like beige, white, and soft gray. The lighting is even and soft, creating a serene and premium shopping environment. The focus is on the clean lines and natural textures of the fabrics." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAq2V3b1750hqg9xeIBJcshAmgKW2-rajPm327F42WZg8NngxO4Br74eAXn52c_iBhe19ofsvcz2Y42MfCI7mKf2SA9KZaE3n5zqOOjjahFXSUBDgaj30MVdtrste0ngQN2T1FY_Y6fRY48bmyP40au1SIe1kZFhWbVlW-Wv-w-LRGw2FU-T4khrr2YR8xk8P-_mUjS9eYm6BIIehg9gUtVbW1VTFyIH4tdZ0s5NIJ5rw_4OXNV8AkIVpHOixjR0jA15RXMiNRu3dM"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/70 to-transparent"></div>
+<div class="relative z-10 text-on-primary">
+<h3 class="font-title-sm text-title-sm mb-xs">Fashion 服飾</h3>
+<p class="font-body-sm text-body-sm opacity-90 hidden md:block">舒適自在的穿搭哲學。</p>
+</div>
+</a>
+<!-- Category 4 -->
+<a class="group relative overflow-hidden rounded-lg bg-surface-container border border-outline-variant flex flex-col justify-end p-md hover:shadow-[0px_10px_25px_rgba(26,54,93,0.08)] transition-all duration-300" href="#">
+<img alt="Home Category" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A tranquil bedroom corner featuring a simple wooden bed frame dressed in crisp, white linen bedding. A small, elegant bedside table holds a single ceramic vase with dried flora. The room is bathed in soft, diffused natural light, emphasizing a minimalist, uncluttered aesthetic. The atmosphere is peaceful, restful, and deeply calming." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMZimGWUNsIIbqKnz6KCbevLNkdeUIdQuxuCM0ok15E9B890o4jLxRJN3OfelDL-Ehpa07aq0MKex59XawoLm8gv6s0PsaLwKZfHZxE-SS6RRtUAbtjO6e_VhjzMvRYtadMjNnmiMbMfAam1P2ABRKcy2899HB02f0GghRcfveJnATbfbQNfy4pNpznyWEYrwAPCSR-w9fj-dCavHZjaH4eZ17SoFlnDpBP7NLFdaQ5R5T7OcXt8QlJvXQ7oMft_5FP8o-JFOMaxc"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/70 to-transparent"></div>
+<div class="relative z-10 text-on-primary">
+<h3 class="font-title-sm text-title-sm mb-xs">Home 居家</h3>
+<p class="font-body-sm text-body-sm opacity-90 hidden md:block">打造寧靜舒適的避風港。</p>
+</div>
+</a>
+<!-- Category 5 -->
+<a class="group relative overflow-hidden rounded-lg bg-surface-container border border-outline-variant flex flex-col justify-end p-md hover:shadow-[0px_10px_25px_rgba(26,54,93,0.08)] transition-all duration-300" href="#">
+<img alt="Gifts Category" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A beautifully wrapped gift box in simple, unbleached kraft paper tied with a neat, thin cotton string. It sits on a pristine white surface against a light gray background. The lighting is studio-quality, casting a very soft, minimal shadow. The aesthetic is understated, elegant, and perfectly aligned with a premium, minimalist brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvNVgNmuNIb8uKMbTsts_3e_cRVPNmyUeeQfqXJF-K5RqW1cnl5TRE4LL-yEikq-v4522Lv3khW2WG2npShQ4fU8A1M6CzxL_gc-BwuZys5h8f2XSARV412-JbgpbbeoKdo5-vekfI5WZfh_nNoX0RrIdGSeZGewCjQU1-G-Aa6XoOzoaTR3VIXIHaDRJ393GUYPVMWfYNbLXh3gpnRl9H5hzZoO_8tkp9qap7rMws0Nmx_BfPqy1trBsuZkiatNBxW6oU0dq8FSY"/>
+<div class="absolute inset-0 bg-gradient-to-t from-primary/70 to-transparent"></div>
+<div class="relative z-10 text-on-primary">
+<h3 class="font-title-sm text-title-sm mb-xs">Gifts 禮品</h3>
+<p class="font-body-sm text-body-sm opacity-90 hidden md:block">傳遞心意的精緻之選。</p>
+</div>
+</a>
+</div>
+</section>
+<!-- Product Grid Layout (Sidebar + Content) -->
+<div class="flex flex-col lg:flex-row gap-xl mt-xl">
+<!-- Filter Sidebar -->
+<aside class="w-full lg:w-64 flex-shrink-0">
+<div class="sticky top-[104px]">
+<h3 class="font-title-sm text-title-sm text-primary mb-sm pb-2 border-b border-outline-variant">篩選商品</h3>
+<div class="mb-md">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant mb-xs">商品標籤</h4>
+<ul class="space-y-2">
+<li>
+<label class="flex items-center gap-2 cursor-pointer">
+<input checked="" class="rounded border-outline text-primary focus:ring-primary" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface">新品上市 (New)</span>
+</label>
+</li>
+<li>
+<label class="flex items-center gap-2 cursor-pointer">
+<input class="rounded border-outline text-primary focus:ring-primary" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface">暢銷商品 (Best Seller)</span>
+</label>
+</li>
+<li>
+<label class="flex items-center gap-2 cursor-pointer">
+<input class="rounded border-outline text-primary focus:ring-primary" type="checkbox"/>
+<span class="font-body-sm text-body-sm text-on-surface">限時優惠 (Limited Offer)</span>
+</label>
+</li>
+</ul>
+</div>
+<div class="mb-md">
+<h4 class="font-label-caps text-label-caps text-on-surface-variant mb-xs">價格範圍</h4>
+<div class="flex items-center gap-2">
+<input class="w-full rounded border-outline-variant px-2 py-1 font-body-sm text-body-sm focus:border-primary focus:ring-1 focus:ring-primary" placeholder="最低" type="number"/>
+<span class="text-on-surface-variant">-</span>
+<input class="w-full rounded border-outline-variant px-2 py-1 font-body-sm text-body-sm focus:border-primary focus:ring-1 focus:ring-primary" placeholder="最高" type="number"/>
+</div>
+</div>
+</div>
+</aside>
+<!-- Product Cards Grid -->
+<div class="flex-grow">
+<div class="flex justify-between items-center mb-md pb-2 border-b border-outline-variant">
+<h3 class="font-title-sm text-title-sm text-primary">精選推薦</h3>
+<div class="flex items-center gap-2">
+<span class="font-body-sm text-body-sm text-on-surface-variant">排序方式：</span>
+<select class="rounded border-outline-variant py-1 pl-2 pr-8 font-body-sm text-body-sm text-on-surface focus:border-primary focus:ring-primary bg-surface">
+<option>最新上架</option>
+<option>價格由低至高</option>
+<option>價格由高至低</option>
+</select>
+</div>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-md">
+<!-- Product Card 1 -->
+<div class="group bg-surface rounded border border-outline-variant overflow-hidden hover:shadow-[0px_10px_25px_rgba(26,54,93,0.08)] transition-all duration-300 flex flex-col">
+<div class="relative h-[240px] bg-surface-container overflow-hidden">
+<!-- Badge -->
+<div class="absolute top-sm left-sm z-10 bg-error text-on-error px-2 py-1 rounded-full font-label-caps text-label-caps shadow-sm">
+                                新品 (NEW)
+                            </div>
+<img alt="Organic Cotton Towel" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A neatly folded stack of premium organic cotton towels in pure white and soft beige tones. The towels are placed on a clean wooden shelf against a stark white wall. The lighting is bright and clear, highlighting the soft, plush texture of the fabric. The overall style is minimalist, clean, and highly professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBUQSnsl6_oY1wY4TYfctB4ly6S3GEVQLtpWoYp-m_OxVMpWlCm_V4am9PIngGVrmIm3XLHzC4onrAGvjjM_GqgFbIsuhMU_4KTMT5HMxVv4CALYTDNZ6YLdaEUpyTK4wreUR72XJMjkbx7aMBQ8pwni4rV4T3CaSkGrlOhoHLXm0jET7-Ok3USuK2M3ti6efGV4-k6GuFMDuCa__P-8KW3rLfK5JD78XLXmbd6ADGqxshMc2VqopqZUNcbTsdytDpNUAc9_lkHj7I"/>
+<!-- Hover Action -->
+<div class="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+<button class="bg-surface text-primary px-4 py-2 rounded font-label-caps text-label-caps shadow-md hover:bg-surface-variant transition-colors">
+                                    快速預覽
+                                </button>
+</div>
+</div>
+<div class="p-4 flex flex-col flex-grow">
+<div class="mb-xs text-on-surface-variant font-label-caps text-label-caps">Home • 適用於敏感肌膚</div>
+<h4 class="font-title-sm text-title-sm text-primary mb-xs">有機棉柔膚浴巾</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-sm line-clamp-2">採用100%有機棉製成，無漂白處理，保留棉花最純粹的柔軟觸感，吸水性極佳。</p>
+<div class="mt-auto flex justify-between items-end">
+<div class="font-title-sm text-title-sm text-primary font-bold">NT$ 650</div>
+<button aria-label="加入購物車" class="w-8 h-8 rounded-full border border-outline flex items-center justify-center text-primary hover:bg-primary hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="add_shopping_cart">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="group bg-surface rounded border border-outline-variant overflow-hidden hover:shadow-[0px_10px_25px_rgba(26,54,93,0.08)] transition-all duration-300 flex flex-col">
+<div class="relative h-[240px] bg-surface-container overflow-hidden">
+<!-- Badge -->
+<div class="absolute top-sm left-sm z-10 bg-secondary text-on-secondary px-2 py-1 rounded-full font-label-caps text-label-caps shadow-sm">
+                                暢銷 (BEST SELLER)
+                            </div>
+<img alt="Aroma Diffuser" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A sleek, cylindrical white ceramic aroma diffuser emitting a gentle plume of mist. It sits on a minimalist concrete table next to a small, green potted plant. The lighting is soft and ambient, creating a relaxing and zen-like atmosphere. The design is modern, uncluttered, and focuses on wellness and tranquility." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCdslM4en6EJqj3S3zR_SU5adoEH8nKxK5Qcs9v6XJ4DT5xIzaG71PkonfjnL8LXsU85ynNlZuLcEF43ye0EXM13puJEA8ekGcSN_yNxDlTzQtR4wI2RfPLBS1xPL7D7TAZUeltkT3xYRkFj2Q7qidn-g-g0XJrphgpOIdbnb2QsB4Q6epaATX2qANQULj6h81EnEKtzXz4bZcaIKtdhBUu5ZxP6PX3m8-Uo2_39ry0-OQ93eu8kz57myvIXEuxW7Al5KLg9K6WSo8"/>
+<!-- Hover Action -->
+<div class="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+<button class="bg-surface text-primary px-4 py-2 rounded font-label-caps text-label-caps shadow-md hover:bg-surface-variant transition-colors">
+                                    快速預覽
+                                </button>
+</div>
+</div>
+<div class="p-4 flex flex-col flex-grow">
+<div class="mb-xs text-on-surface-variant font-label-caps text-label-caps">Life • 適合辦公與居家</div>
+<h4 class="font-title-sm text-title-sm text-primary mb-xs">超音波芬香噴霧器</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-sm line-clamp-2">利用超音波震動產生細緻冷霧，有效擴散精油香氣，並附帶溫和的LED照明功能。</p>
+<div class="mt-auto flex justify-between items-end">
+<div class="font-title-sm text-title-sm text-primary font-bold">NT$ 1,690</div>
+<button aria-label="加入購物車" class="w-8 h-8 rounded-full border border-outline flex items-center justify-center text-primary hover:bg-primary hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="add_shopping_cart">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="group bg-surface rounded border border-outline-variant overflow-hidden hover:shadow-[0px_10px_25px_rgba(26,54,93,0.08)] transition-all duration-300 flex flex-col">
+<div class="relative h-[240px] bg-surface-container overflow-hidden">
+<!-- Badge -->
+<div class="absolute top-sm left-sm z-10 bg-secondary-container text-on-secondary-container px-2 py-1 rounded-full font-label-caps text-label-caps shadow-sm">
+                                限時優惠 (LIMITED)
+                            </div>
+<img alt="Canvas Sneakers" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" data-alt="A pair of clean, white minimalist canvas sneakers placed on a smooth, light gray studio backdrop. The shoes have no visible logos, emphasizing a pure, unbranded aesthetic. The lighting is crisp and even, eliminating harsh shadows and focusing purely on the product's shape and material texture. The mood is modern and effortless." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB8MsbTJzK4FUJ9GARM2633VO-d-fZgWQMbHmt19KLs0rzvAQHIUELD2jgRqXXaP_lk1JJmi6Or8MeyP_dDa04DnIVI_PvpKz9t4JuPTAuPc2tlq8KrHFtmGmUAY73sjHqarTcN2GbbccIjtMNxfhXino5zYo-FqNWTX9AflJ6GFB13OPhc-Fj5RBtOkGKzXmGtDJg1Q5aHepgTM6wvBQFKHKsqK-2knAB9OqsDr7pfJGsvaouGkdqaGzh9C_iA488EifIOgWwfehY"/>
+<!-- Hover Action -->
+<div class="absolute inset-0 bg-primary/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
+<button class="bg-surface text-primary px-4 py-2 rounded font-label-caps text-label-caps shadow-md hover:bg-surface-variant transition-colors">
+                                    快速預覽
+                                </button>
+</div>
+</div>
+<div class="p-4 flex flex-col flex-grow">
+<div class="mb-xs text-on-surface-variant font-label-caps text-label-caps">Fashion • 男女皆宜</div>
+<h4 class="font-title-sm text-title-sm text-primary mb-xs">撥水加工舒適休閒鞋</h4>
+<p class="font-body-sm text-body-sm text-on-surface-variant mb-sm line-clamp-2">採用防潑水加工處理的帆布材質，搭配符合足弓弧度的舒適鞋墊，減輕長時間行走的疲勞。</p>
+<div class="mt-auto flex flex-col">
+<div class="text-on-surface-variant text-xs line-through">NT$ 990</div>
+<div class="flex justify-between items-end">
+<div class="font-title-sm text-title-sm text-error font-bold">NT$ 790</div>
+<button aria-label="加入購物車" class="w-8 h-8 rounded-full border border-outline flex items-center justify-center text-primary hover:bg-primary hover:text-on-primary transition-colors">
+<span class="material-symbols-outlined text-[18px]" data-icon="add_shopping_cart">add_shopping_cart</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination -->
+<div class="mt-xl flex justify-center items-center gap-2">
+<button class="w-10 h-10 rounded border border-outline-variant flex items-center justify-center text-on-surface-variant hover:border-primary hover:text-primary transition-colors" disabled="">
+<span class="material-symbols-outlined" data-icon="chevron_left">chevron_left</span>
+</button>
+<button class="w-10 h-10 rounded bg-primary text-on-primary font-body-sm text-body-sm flex items-center justify-center">1</button>
+<button class="w-10 h-10 rounded border border-outline-variant text-on-surface font-body-sm text-body-sm flex items-center justify-center hover:border-primary hover:text-primary transition-colors">2</button>
+<button class="w-10 h-10 rounded border border-outline-variant text-on-surface font-body-sm text-body-sm flex items-center justify-center hover:border-primary hover:text-primary transition-colors">3</button>
+<span class="text-on-surface-variant px-2">...</span>
+<button class="w-10 h-10 rounded border border-outline-variant flex items-center justify-center text-on-surface hover:border-primary hover:text-primary transition-colors">
+<span class="material-symbols-outlined" data-icon="chevron_right">chevron_right</span>
+</button>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-primary dark:bg-primary-container w-full py-lg mt-xl">
+<div class="flex flex-col md:flex-row justify-between items-start w-full px-gutter max-w-container-max mx-auto gap-md">
+<div class="flex flex-col gap-sm max-w-sm">
+<span class="font-title-sm text-title-sm font-bold text-on-primary dark:text-on-primary-container">
+                    MUJI-INSPIRED RETAIL
+                </span>
+<p class="font-body-sm text-body-sm text-on-primary dark:text-on-primary-container opacity-80">
+                    提供簡約、高品質的日常用品，讓生活回歸純粹的本質。
+                </p>
+</div>
+<div class="flex flex-col md:flex-row gap-xl w-full md:w-auto">
+<nav class="flex flex-col gap-sm">
+<h5 class="font-label-caps text-label-caps text-on-primary opacity-60 mb-2">關於我們</h5>
+<a class="text-surface-variant dark:text-outline-variant opacity-80 hover:opacity-100 hover:text-on-primary transition-opacity font-body-sm text-body-sm cursor-pointer" href="#">Privacy Policy</a>
+<a class="text-surface-variant dark:text-outline-variant opacity-80 hover:opacity-100 hover:text-on-primary transition-opacity font-body-sm text-body-sm cursor-pointer" href="#">Terms of Service</a>
+<a class="text-surface-variant dark:text-outline-variant opacity-80 hover:opacity-100 hover:text-on-primary transition-opacity font-body-sm text-body-sm cursor-pointer" href="#">CSR</a>
+</nav>
+<nav class="flex flex-col gap-sm">
+<h5 class="font-label-caps text-label-caps text-on-primary opacity-60 mb-2">客戶服務</h5>
+<a class="text-surface-variant dark:text-outline-variant opacity-80 hover:opacity-100 hover:text-on-primary transition-opacity font-body-sm text-body-sm cursor-pointer" href="#">Membership FAQ</a>
+<a class="text-surface-variant dark:text-outline-variant opacity-80 hover:opacity-100 hover:text-on-primary transition-opacity font-body-sm text-body-sm cursor-pointer" href="#">Contact Us</a>
+<a class="text-surface-variant dark:text-outline-variant opacity-80 hover:opacity-100 hover:text-on-primary transition-opacity font-body-sm text-body-sm cursor-pointer" href="#">Global Stores</a>
+</nav>
+</div>
+</div>
+<div class="w-full px-gutter max-w-container-max mx-auto mt-lg pt-md border-t border-on-primary/20 flex flex-col md:flex-row justify-between items-center">
+<p class="font-body-sm text-body-sm text-surface-variant dark:text-outline-variant opacity-80">
+                © 2024 Retail Business Corp. All rights reserved.
+            </p>
+<div class="flex gap-4 mt-4 md:mt-0">
+<!-- Social Placeholders -->
+<a class="text-surface-variant opacity-80 hover:opacity-100 hover:text-on-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="public">public</span>
+</a>
+<a class="text-surface-variant opacity-80 hover:opacity-100 hover:text-on-primary transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]" data-icon="mail">mail</span>
+</a>
+</div>
+</div>
+</footer>
+</body></html>

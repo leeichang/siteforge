@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-TW"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;700&amp;family=EB+Garamond:ital,wght@0,400;0,500;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-surface": "#30312e",
+                    "primary-fixed-dim": "#c8c6c5",
+                    "secondary-fixed": "#ffdea5",
+                    "on-secondary-fixed": "#261900",
+                    "inverse-on-surface": "#f2f1ec",
+                    "surface-bright": "#fbf9f4",
+                    "on-primary": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "secondary-fixed-dim": "#e9c176",
+                    "on-secondary": "#ffffff",
+                    "surface-container": "#f0eee9",
+                    "surface-tint": "#5f5e5e",
+                    "tertiary": "#000000",
+                    "on-secondary-fixed-variant": "#5d4201",
+                    "on-primary-container": "#858383",
+                    "outline-variant": "#c4c7c7",
+                    "on-background": "#1b1c19",
+                    "surface": "#fbf9f4",
+                    "tertiary-container": "#410007",
+                    "secondary": "#775a19",
+                    "on-primary-fixed-variant": "#474746",
+                    "background": "#fbf9f4",
+                    "on-surface-variant": "#444748",
+                    "on-error": "#ffffff",
+                    "surface-dim": "#dbdad5",
+                    "on-error-container": "#93000a",
+                    "primary-fixed": "#e5e2e1",
+                    "on-primary-fixed": "#1c1b1b",
+                    "surface-container-low": "#f5f3ee",
+                    "tertiary-fixed-dim": "#ffb3b1",
+                    "on-surface": "#1b1c19",
+                    "error": "#ba1a1a",
+                    "on-tertiary-container": "#d16162",
+                    "surface-container-high": "#eae8e3",
+                    "outline": "#747878",
+                    "tertiary-fixed": "#ffdad8",
+                    "secondary-container": "#fed488",
+                    "on-tertiary-fixed": "#410007",
+                    "on-tertiary": "#ffffff",
+                    "inverse-primary": "#c8c6c5",
+                    "surface-variant": "#e4e2dd",
+                    "surface-container-lowest": "#ffffff",
+                    "surface-container-highest": "#e4e2dd",
+                    "on-secondary-container": "#785a1a",
+                    "primary-container": "#1c1b1b",
+                    "primary": "#000000",
+                    "on-tertiary-fixed-variant": "#82252a"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "md": "24px",
+                    "lg": "48px",
+                    "xl": "80px",
+                    "gutter": "24px",
+                    "xs": "4px",
+                    "sm": "12px",
+                    "container-max": "1280px",
+                    "base": "8px"
+            },
+            "fontFamily": {
+                    "body-md": ["Manrope"],
+                    "legal-sm": ["Manrope"],
+                    "headline-xl": ["EB Garamond"],
+                    "display-lg": ["EB Garamond"],
+                    "headline-md": ["EB Garamond"],
+                    "label-caps": ["Manrope"],
+                    "body-lg": ["Manrope"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "legal-sm": ["11px", {"lineHeight": "1.4", "fontWeight": "500"}],
+                    "headline-xl": ["48px", {"lineHeight": "1.2", "fontWeight": "500"}],
+                    "display-lg": ["64px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "500"}],
+                    "headline-md": ["32px", {"lineHeight": "1.3", "fontWeight": "400"}],
+                    "label-caps": ["12px", {"lineHeight": "1.4", "letterSpacing": "0.1em", "fontWeight": "700"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .text-label-caps { text-transform: none; } /* Casing Integrity Rule */
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-surface font-body-md antialiased">
+<!-- TopAppBar -->
+<header class="fixed top-0 left-0 w-full z-50 flex justify-between items-center px-gutter py-sm max-w-container-max mx-auto bg-surface border-b border-outline-variant">
+<div class="flex items-center gap-sm">
+<span class="material-symbols-outlined text-primary" data-icon="menu">menu</span>
+<span class="font-display-lg text-headline-md tracking-widest text-primary">VINTAGE &amp; VINE</span>
+</div>
+<nav class="hidden md:flex gap-lg">
+<a class="text-on-surface-variant font-medium hover:text-secondary transition-colors duration-300 font-label-caps text-label-caps" href="#">HOME</a>
+<a class="text-on-surface-variant font-medium hover:text-secondary transition-colors duration-300 font-label-caps text-label-caps" href="#">COLLECTIONS</a>
+<a class="text-primary font-bold border-b-2 border-secondary font-label-caps text-label-caps" href="#">PARTNERSHIP</a>
+<a class="text-on-surface-variant font-medium hover:text-secondary transition-colors duration-300 font-label-caps text-label-caps" href="#">JOURNAL</a>
+</nav>
+<button class="bg-primary text-on-primary font-label-caps text-label-caps px-md py-sm rounded tracking-widest hover:opacity-90 transition-all">B2B PARTNERSHIP</button>
+</header>
+<main class="pt-[100px]">
+<!-- Hero Section -->
+<section class="relative h-[530px] flex items-center px-gutter overflow-hidden bg-inverse-surface">
+<div class="absolute inset-0 opacity-40">
+<img class="w-full h-full object-cover" data-alt="A sophisticated, low-light photograph of a luxury wine cellar with rows of vintage bottles organized on dark wooden shelves. The lighting is warm and selective, highlighting the dust on the glass and the metallic gold labels. The atmosphere is quiet, prestigious, and reflects a modern heritage aesthetic with deep charcoal and cream tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAZ_NbKcFxeddeXBgNlPaoAqIkwRdC5ex8cJdJuqKF7xKfg77pkdTefJmZWfLpVftaysIpEa-g1U1bR8AzPUwbA4rb_Yh2dXnnTueWsS1zSoqB6y493omldKZd2wMq3ONRTvGKLS_usvjLGulpfB62pqfcO5sVngfI6p62OlzMm5c9mkM2citHXbfEWsiyVXzn316CTjC2XWZWTGSAujwpV8-WXTeJEKTQk0ybmubO1ej5nFH6AjVOQP1SJtCyDNOOD-i19UwTC9QY"/>
+</div>
+<div class="relative z-10 max-w-4xl">
+<p class="font-label-caps text-label-caps text-secondary-fixed mb-sm">GLOBAL DISTRIBUTION NETWORK</p>
+<h1 class="font-display-lg text-white mb-md">通路夥伴與企業合作專案</h1>
+<p class="font-body-lg text-primary-fixed-dim max-w-2xl">我們為頂尖餐廳、飯店及企業客戶提供全方位的酒類供應解決方案。從專業酒單策劃到穩定的物流配送，Vintage &amp; Vine 是您最值得信賴的通路增長夥伴。</p>
+</div>
+</section>
+<!-- Partnership Blocks (Bento-ish Grid) -->
+<section class="py-xl px-gutter max-w-container-max mx-auto">
+<div class="grid grid-cols-1 md:grid-cols-12 gap-md">
+<!-- Restaurant & Hospitality -->
+<div class="md:col-span-8 border border-outline-variant p-lg flex flex-col justify-between hover:bg-surface-container-low transition-colors group">
+<div>
+<span class="material-symbols-outlined text-secondary text-4xl mb-sm" data-icon="restaurant">restaurant</span>
+<h3 class="font-headline-md mb-md">餐飲通路與酒店供應</h3>
+<p class="text-on-surface-variant mb-lg">專為 Fine Dining、星級酒店設計的配酒方案。我們協助餐廳建立具競爭力的酒單，並提供侍酒師培訓與客製化採購建議。</p>
+</div>
+<ul class="space-y-sm font-label-caps text-label-caps text-secondary">
+<li class="flex items-center gap-xs"><span class="material-symbols-outlined text-sm" data-icon="check_circle">check_circle</span> 專業侍酒師選飲建議</li>
+<li class="flex items-center gap-xs"><span class="material-symbols-outlined text-sm" data-icon="check_circle">check_circle</span> 恆溫物流與即時配送</li>
+<li class="flex items-center gap-xs"><span class="material-symbols-outlined text-sm" data-icon="check_circle">check_circle</span> 免費店內人員產品教育訓練</li>
+</ul>
+</div>
+<!-- Corporate Procurement -->
+<div class="md:col-span-4 border border-outline-variant p-lg bg-surface-container-highest">
+<span class="material-symbols-outlined text-secondary text-4xl mb-sm" data-icon="business_center">business_center</span>
+<h3 class="font-headline-md mb-md">企業採購與大宗禮贈</h3>
+<p class="text-on-surface-variant mb-lg">提供企業三節禮贈、VIP 客戶回饋及尾牙春酒之大宗採購優惠。支援多點配送與精緻客製包裝服務。</p>
+<button class="border border-secondary text-secondary font-label-caps text-label-caps px-md py-sm w-full hover:bg-secondary hover:text-white transition-all">索取企業報價單</button>
+</div>
+<!-- Event Supply -->
+<div class="md:col-span-6 border border-outline-variant p-lg flex flex-col gap-md">
+<div class="h-48 overflow-hidden rounded">
+<img class="w-full h-full object-cover" data-alt="An elegant evening event setting with crystal glasses and decanters on a white linen tablecloth. Soft bokeh lighting from chandeliers creates a celebratory and premium mood. The visual style is minimalist and tactile, emphasizing the clarity of the glassware and the rich color of the red wine." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCpMdnfohA8KBrkpwva6Xd0doC5nfwXUlbDXRKvKjBy8TvxB370rLyd3nzJWp2OCWLC9z8C6EE3XseKDpm7kM1lcvvw0VAiT0zFjnG5wMrHDWzRREfGCN6ZlEqP8SAghgrzwDVOL1wfZno9lc79qcFeMaCHmWC0JbwjgcBw_t4cKtIl2RM5gJiDMyqyDYC2a_3hJ_M5L4Fda_1dJBukAXTwTNPvv35sNE3eJJzyDJEA_tYti49Rp8iVtNBd4yFUyvwlYj7XBQx4yDE"/>
+</div>
+<h3 class="font-headline-md">活動與婚宴酒水供應</h3>
+<p class="text-on-surface-variant">不論是發布會、婚宴或私人派對，我們提供專業的份量預估建議及開瓶費解決方案。確保您的活動在每一口品酩中展現卓越品味。</p>
+</div>
+<!-- Agencies -->
+<div class="md:col-span-6 border border-outline-variant p-lg flex flex-col justify-center bg-inverse-surface text-white">
+<span class="material-symbols-outlined text-secondary-fixed text-4xl mb-sm" data-icon="handshake">handshake</span>
+<h3 class="font-headline-md mb-md text-white">區域經銷合作</h3>
+<p class="text-primary-fixed-dim mb-lg">我們積極尋求具備共同價值觀的區域合作夥伴。透過 Vintage &amp; Vine 的強大品牌背書與供應鏈，共同開拓高端酒類市場市場。</p>
+<div class="flex gap-md">
+<a class="text-secondary-fixed underline font-label-caps text-label-caps hover:text-white transition-colors" href="#inquiry">合作洽詢</a>
+<a class="text-secondary-fixed underline font-label-caps text-label-caps hover:text-white transition-colors" href="#">下載招商手冊</a>
+</div>
+</div>
+</div>
+</section>
+<!-- Process Section -->
+<section class="py-xl bg-surface-container">
+<div class="max-w-container-max mx-auto px-gutter">
+<h2 class="font-headline-xl text-center mb-xl">合作流程說明</h2>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-lg relative">
+<!-- Steps -->
+<div class="text-center">
+<div class="w-12 h-12 bg-primary text-on-primary rounded-full flex items-center justify-center mx-auto mb-md font-bold">1</div>
+<h4 class="font-headline-md text-xl mb-sm">需求洽談</h4>
+<p class="text-on-surface-variant">聯繫專屬顧問，確認您的通路類型與預期採購規模。</p>
+</div>
+<div class="text-center">
+<div class="w-12 h-12 bg-primary text-on-primary rounded-full flex items-center justify-center mx-auto mb-md font-bold">2</div>
+<h4 class="font-headline-md text-xl mb-sm">方案報價</h4>
+<p class="text-on-surface-variant">根據需求提供批發價表與精選品項建議書。</p>
+</div>
+<div class="text-center">
+<div class="w-12 h-12 bg-primary text-on-primary rounded-full flex items-center justify-center mx-auto mb-md font-bold">3</div>
+<h4 class="font-headline-md text-xl mb-sm">資格審核</h4>
+<p class="text-on-surface-variant">核對 B2B 相關營業登記資訊，建立正式採購帳戶。</p>
+</div>
+<div class="text-center">
+<div class="w-12 h-12 bg-primary text-on-primary rounded-full flex items-center justify-center mx-auto mb-md font-bold">4</div>
+<h4 class="font-headline-md text-xl mb-sm">穩定供貨</h4>
+<p class="text-on-surface-variant">透過專屬 B2B 系統下單，享受穩定的物流配送服務。</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Inquiry Form Section -->
+<section class="py-xl px-gutter max-w-container-max mx-auto grid grid-cols-1 md:grid-cols-2 gap-xl" id="inquiry">
+<div>
+<p class="font-label-caps text-label-caps text-secondary mb-sm">BUSINESS INQUIRY</p>
+<h2 class="font-headline-xl mb-md">開啟您的專業合作</h2>
+<p class="font-body-lg text-on-surface-variant mb-lg">填寫下表，我們的專業商務顧問將於 24 小時內與您聯繫。如果您有緊急採購需求，請致電專線：+886 2 2345 6789。</p>
+<div class="flex items-start gap-md border-t border-outline-variant pt-lg mt-lg">
+<span class="material-symbols-outlined text-secondary" data-icon="support_agent">support_agent</span>
+<div>
+<p class="font-bold">專業顧問服務</p>
+<p class="text-sm text-on-surface-variant">我們提供 1 對 1 的顧問對接，針對不同的商業場景提供最精準的產品配置建議。</p>
+</div>
+</div>
+</div>
+<div class="bg-surface-container-low p-lg rounded-lg border border-outline-variant">
+<form class="space-y-md">
+<div class="grid grid-cols-2 gap-md">
+<div>
+<label class="font-label-caps text-label-caps mb-xs block text-on-surface-variant">姓名 / 聯繫人</label>
+<input class="w-full bg-transparent border-b border-outline focus:border-secondary transition-colors py-sm focus:ring-0" type="text"/>
+</div>
+<div>
+<label class="font-label-caps text-label-caps mb-xs block text-on-surface-variant">公司 / 單位名稱</label>
+<input class="w-full bg-transparent border-b border-outline focus:border-secondary transition-colors py-sm focus:ring-0" type="text"/>
+</div>
+</div>
+<div>
+<label class="font-label-caps text-label-caps mb-xs block text-on-surface-variant">聯繫電話</label>
+<input class="w-full bg-transparent border-b border-outline focus:border-secondary transition-colors py-sm focus:ring-0" type="tel"/>
+</div>
+<div>
+<label class="font-label-caps text-label-caps mb-xs block text-on-surface-variant">電子郵件</label>
+<input class="w-full bg-transparent border-b border-outline focus:border-secondary transition-colors py-sm focus:ring-0" type="email"/>
+</div>
+<div>
+<label class="font-label-caps text-label-caps mb-xs block text-on-surface-variant">合作類型</label>
+<select class="w-full bg-transparent border-b border-outline focus:border-secondary transition-colors py-sm focus:ring-0">
+<option>餐廳酒單合作</option>
+<option>企業大宗採購</option>
+<option>區域經銷代理</option>
+<option>活動供應洽詢</option>
+</select>
+</div>
+<div>
+<label class="font-label-caps text-label-caps mb-xs block text-on-surface-variant">需求細節</label>
+<textarea class="w-full bg-transparent border border-outline focus:border-secondary transition-colors p-sm focus:ring-0 mt-xs" placeholder="請描述您的預計採購頻率、偏好酒類或特定需求..." rows="4"></textarea>
+</div>
+<button class="w-full bg-primary text-on-primary font-label-caps text-label-caps py-md tracking-widest hover:bg-secondary transition-all" type="submit">送出合作需求洽詢</button>
+</form>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full px-gutter py-xl flex flex-col items-center gap-md max-w-container-max mx-auto bg-inverse-surface border-t border-outline">
+<div class="flex flex-col items-center gap-md mb-lg">
+<span class="font-headline-md text-headline-md text-surface-bright">VINTAGE &amp; VINE</span>
+<div class="flex gap-lg">
+<a class="text-surface-variant hover:text-secondary-fixed transition-colors font-label-caps text-label-caps" href="#">PRIVACY POLICY</a>
+<a class="text-surface-variant hover:text-secondary-fixed transition-colors font-label-caps text-label-caps" href="#">TERMS OF SERVICE</a>
+<a class="text-surface-variant hover:text-secondary-fixed transition-colors font-label-caps text-label-caps" href="#">RESPONSIBLE DRINKING</a>
+<a class="text-secondary-fixed underline font-label-caps text-label-caps" href="#">B2B INQUIRY</a>
+</div>
+</div>
+<p class="font-legal-sm text-legal-sm text-surface-variant text-center opacity-60">© 2024 VINTAGE &amp; VINE DISTRIBUTORS. EXCESSIVE DRINKING IS HAZARDOUS TO HEALTH.</p>
+</footer>
+<!-- Legal Warning Banner -->
+<div class="fixed bottom-0 left-0 w-full bg-primary text-on-primary py-xs z-[100] border-t border-on-primary/10">
+<div class="max-w-container-max mx-auto px-gutter flex justify-between items-center text-[13px] font-bold tracking-[0.2em]">
+<span>未滿十八歲禁止飲酒</span>
+<span>禁止酒駕：酒後不開車 安全有保障</span>
+<span>飲酒過量 有礙健康</span>
+</div>
+</div>
+</body></html>

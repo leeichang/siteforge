@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-Hant"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-tint": "#004ced",
+                    "surface-variant": "#e0e3e5",
+                    "outline": "#737688",
+                    "on-surface-variant": "#434656",
+                    "inverse-on-surface": "#eff1f3",
+                    "secondary-fixed-dim": "#b9c7df",
+                    "on-tertiary-container": "#dde4ff",
+                    "on-secondary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "tertiary-container": "#5e667d",
+                    "background": "#f7f9fb",
+                    "primary-container": "#0052ff",
+                    "surface": "#f7f9fb",
+                    "surface-container-highest": "#e0e3e5",
+                    "on-secondary-container": "#57657a",
+                    "on-primary-fixed": "#001452",
+                    "tertiary": "#464e64",
+                    "secondary-container": "#d5e3fc",
+                    "secondary": "#515f74",
+                    "surface-bright": "#f7f9fb",
+                    "primary-fixed-dim": "#b7c4ff",
+                    "inverse-primary": "#b7c4ff",
+                    "on-secondary-fixed-variant": "#3a485b",
+                    "on-primary-fixed-variant": "#0038b6",
+                    "secondary-fixed": "#d5e3fc",
+                    "inverse-surface": "#2d3133",
+                    "on-tertiary-fixed-variant": "#3f465c",
+                    "tertiary-fixed": "#dae2fd",
+                    "surface-container-high": "#e6e8ea",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed": "#131b2e",
+                    "primary-fixed": "#dde1ff",
+                    "outline-variant": "#c3c5d9",
+                    "on-primary-container": "#dfe3ff",
+                    "on-surface": "#191c1e",
+                    "on-tertiary": "#ffffff",
+                    "on-background": "#191c1e",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#f2f4f6",
+                    "error": "#ba1a1a",
+                    "surface-container": "#eceef0",
+                    "primary": "#003ec7",
+                    "surface-dim": "#d8dadc",
+                    "tertiary-fixed-dim": "#bec6e0",
+                    "on-primary": "#ffffff",
+                    "on-secondary-fixed": "#0d1c2e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-edge": "32px",
+                    "stack-md": "16px",
+                    "gutter": "24px",
+                    "section-gap": "80px",
+                    "unit": "8px",
+                    "stack-sm": "8px",
+                    "container-max": "1280px",
+                    "stack-lg": "32px"
+            },
+            "fontFamily": {
+                    "body-md": ["Hanken Grotesk"],
+                    "data-tabular": ["Hanken Grotesk"],
+                    "display-lg": ["Hanken Grotesk"],
+                    "headline-md": ["Hanken Grotesk"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "label-sm": ["Hanken Grotesk"],
+                    "label-md": ["Hanken Grotesk"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "data-tabular": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        .spec-grid-line {
+            background-image: radial-gradient(circle, #CBD5E1 1px, transparent 1px);
+            background-size: 4px 4px;
+            background-position: bottom;
+            background-repeat: repeat-x;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background font-body-md">
+<!-- TopAppBar -->
+<header class="bg-surface docked full-width top-0 sticky z-50 border-b border-outline-variant">
+<div class="flex justify-between items-center max-w-container-max mx-auto px-margin-edge h-20 w-full">
+<div class="flex items-center gap-stack-sm">
+<span class="material-symbols-outlined text-primary text-headline-md" data-icon="devices">devices</span>
+<span class="text-headline-md font-headline-md font-bold tracking-tight text-primary">TECH-ELITE</span>
+</div>
+<nav class="hidden md:flex gap-gutter items-center">
+<a class="text-primary font-bold border-b-2 border-primary pb-1 font-label-md" href="#">Products</a>
+<a class="text-secondary font-label-md hover:text-primary transition-colors" href="#">Solutions</a>
+<a class="text-secondary font-label-md hover:text-primary transition-colors" href="#">Support Center</a>
+<a class="text-secondary font-label-md hover:text-primary transition-colors" href="#">Warranty Policy</a>
+</nav>
+<div class="flex items-center gap-stack-md">
+<button class="hidden lg:block text-primary font-label-md px-4 py-2 hover:bg-surface-container-low transition-all duration-200">Corporate Sales</button>
+<button class="bg-primary text-on-primary px-6 py-2 font-label-md rounded-lg active:scale-95 transition-transform">Login</button>
+</div>
+</div>
+</header>
+<main class="max-w-container-max mx-auto px-margin-edge py-stack-lg">
+<!-- Hero & Title Section -->
+<section class="mb-section-gap">
+<h1 class="font-display-lg text-display-lg text-on-surface mb-stack-sm">專業級硬體解決方案</h1>
+<p class="font-body-lg text-body-lg text-secondary max-w-2xl">Tech-Elite 為企業與科技愛好者提供最高規格的 3C 電子產品。從高效能工作站到智慧辦公物聯網，我們定義了性能與耐用的新標準。</p>
+</section>
+<!-- Category Filter -->
+<section class="mb-stack-lg sticky top-20 z-40 bg-background/80 backdrop-blur-sm py-4">
+<div class="flex flex-wrap gap-stack-md">
+<button class="px-6 py-2 bg-primary text-on-primary rounded-full font-label-md transition-all">全部產品</button>
+<button class="px-6 py-2 bg-surface-container-low text-secondary border border-outline-variant rounded-full font-label-md hover:border-primary hover:text-primary transition-all">筆記型電腦</button>
+<button class="px-6 py-2 bg-surface-container-low text-secondary border border-outline-variant rounded-full font-label-md hover:border-primary hover:text-primary transition-all">行動配件</button>
+<button class="px-6 py-2 bg-surface-container-low text-secondary border border-outline-variant rounded-full font-label-md hover:border-primary hover:text-primary transition-all">智慧家居</button>
+<button class="px-6 py-2 bg-surface-container-low text-secondary border border-outline-variant rounded-full font-label-md hover:border-primary hover:text-primary transition-all">物聯網 (IoT)</button>
+<button class="px-6 py-2 bg-surface-container-low text-secondary border border-outline-variant rounded-full font-label-md hover:border-primary hover:text-primary transition-all">企業級方案</button>
+</div>
+</section>
+<!-- Product Grid -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-gutter">
+<!-- Product Card 1 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-stack-lg group hover:shadow-[0_4px_20px_rgba(15,23,42,0.08)] transition-all flex flex-col">
+<div class="relative mb-stack-md aspect-video overflow-hidden">
+<img alt="Pro Laptop" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A high-end professional titanium-colored laptop open on a white minimalist desk. The background features a clean corporate office with soft, natural lighting. The visual style is premium and sharp, highlighting the sleek edges and metallic texture of the machine. The composition is professional and balanced." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAnqpazcsZGkZpBjP0dUrSNw1TkRZA3RQEW1Ag0WxP0ZWQtg3yrhQvAoRUUrMEAhm87bQluic9TibMCl02NYXoVD4hhmI_4VlK9da3liac1j9AFwyUdTleVOZcBVHusJ1qFb42zYCE8MLB8QM968L5N-3wk-XknTdGKr4CCrdsiA9ZAuxA8j0TJkvt9T32wbRDEvKlxrH5Eim1UC-dibBS0UrWzpOY_z4UO8LZ6dREIf6HfizacGSII1X4iOZwHy1OS_jHIdrYRaXU7"/>
+<div class="absolute top-2 left-2 flex gap-1">
+<span class="bg-primary-container text-on-primary-container text-[10px] px-2 py-1 font-bold uppercase tracking-wider">New</span>
+<span class="bg-tertiary-container text-on-tertiary-container text-[10px] px-2 py-1 font-bold uppercase tracking-wider">Enterprise</span>
+</div>
+</div>
+<div class="mb-stack-md">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">EliteBook X1 Gen 5</h3>
+<p class="font-label-sm text-label-sm text-secondary tracking-widest uppercase">Workstation Series</p>
+</div>
+<div class="space-y-stack-sm mb-stack-lg flex-grow">
+<div class="flex justify-between items-end gap-2">
+<span class="font-label-md text-secondary shrink-0">處理器</span>
+<div class="spec-grid-line flex-grow h-px mb-1.5 opacity-30"></div>
+<span class="font-data-tabular text-on-surface">Intel Core i9-14900HX</span>
+</div>
+<div class="flex justify-between items-end gap-2">
+<span class="font-label-md text-secondary shrink-0">記憶體</span>
+<div class="spec-grid-line flex-grow h-px mb-1.5 opacity-30"></div>
+<span class="font-data-tabular text-on-surface">64GB DDR5 5600MHz</span>
+</div>
+<div class="flex justify-between items-end gap-2">
+<span class="font-label-md text-secondary shrink-0">螢幕</span>
+<div class="spec-grid-line flex-grow h-px mb-1.5 opacity-30"></div>
+<span class="font-data-tabular text-on-surface">16" 4K OLED HDR400</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-stack-md border-t border-outline-variant">
+<span class="font-headline-md text-primary">NT$ 84,900</span>
+<button class="bg-primary text-on-primary font-label-md px-6 py-3 rounded-lg hover:bg-primary-container transition-all">立即購買</button>
+</div>
+</div>
+<!-- Product Card 2 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-stack-lg group hover:shadow-[0_4px_20px_rgba(15,23,42,0.08)] transition-all flex flex-col">
+<div class="relative mb-stack-md aspect-video overflow-hidden">
+<img alt="Power Hub" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="A sleek, matte black high-capacity charging station with multiple glowing blue LED indicators. The device is set on a dark slate surface with professional studio lighting highlighting its industrial design and sharp angles. The atmosphere is high-tech and reliable, conveying power and stability." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAMelAFh7hCO3asY2yz52b2UdRAduSthRpEw7Hfl2ShvaCozXgWPVb_XszkaTCK8-41Ycz0CWjy-3EeI8eoiN7C7BVWyZ35rGNRhxErC0F3QbEXnL88iV9UuJb1YOqW_zY-BE9xxpc5F6mt6Q5Q_3hrdNx4km_5ucwA3qvkulqvn83p1TseJVvRKcgKAwa7anbmzXEzz--5WoitwrRt465lVAYpOTRaMlgsjua6ZgI3rbg0_b2LzBKNlCao_Ulx7eLcxt5RhsZ8J-_b"/>
+<div class="absolute top-2 left-2 flex gap-1">
+<span class="bg-error text-on-error text-[10px] px-2 py-1 font-bold uppercase tracking-wider">Hot</span>
+</div>
+</div>
+<div class="mb-stack-md">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">VoltMax Pro 240W</h3>
+<p class="font-label-sm text-label-sm text-secondary tracking-widest uppercase">Mobile Accessories</p>
+</div>
+<div class="space-y-stack-sm mb-stack-lg flex-grow">
+<div class="flex justify-between items-end gap-2">
+<span class="font-label-md text-secondary shrink-0">輸出功率</span>
+<div class="spec-grid-line flex-grow h-px mb-1.5 opacity-30"></div>
+<span class="font-data-tabular text-on-surface">240W Max Gan 5</span>
+</div>
+<div class="flex justify-between items-end gap-2">
+<span class="font-label-md text-secondary shrink-0">接口</span>
+<div class="spec-grid-line flex-grow h-px mb-1.5 opacity-30"></div>
+<span class="font-data-tabular text-on-surface">3x USB-C, 1x USB-A</span>
+</div>
+<div class="flex justify-between items-end gap-2">
+<span class="font-label-md text-secondary shrink-0">安全認證</span>
+<div class="spec-grid-line flex-grow h-px mb-1.5 opacity-30"></div>
+<span class="font-data-tabular text-on-surface">UL, CE, FCC, RoHS</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-stack-md border-t border-outline-variant">
+<span class="font-headline-md text-primary">NT$ 3,280</span>
+<button class="bg-primary text-on-primary font-label-md px-6 py-3 rounded-lg hover:bg-primary-container transition-all">立即購買</button>
+</div>
+</div>
+<!-- Product Card 3 -->
+<div class="bg-surface-container-lowest border border-outline-variant p-stack-lg group hover:shadow-[0_4px_20px_rgba(15,23,42,0.08)] transition-all flex flex-col border-primary border-2">
+<div class="relative mb-stack-md aspect-video overflow-hidden">
+<img alt="Smart Hub" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105" data-alt="An advanced IoT gateway device with a brushed aluminum finish and a minimalist interface. It is placed in a modern smart home environment with soft bokeh background. High-key lighting emphasizes its professional-grade construction. The visual aesthetic is clean, futuristic, and sophisticated." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBgXMXYkD9Ays36YE7lq2OAUZMSs8uk4BY47hJDWMQ4G1YWFzwc19iAGK2uI8W_CHk9jqsnFKGmvdxf8ba4o4LeILRKBK61pmQKtJ30abSVl2kgcGTKZxtD19MUy5RdDhv0pyDj_0s3DPxzDQi7cYuPTBRifxOeWUVBKIfPNhLWy0EIl11womquP_x1EiVK7taDwiKe59K_1XCb1xSdfOym5NfbzZVKvWruoSj_BjJQEt0D7eEAUYoZEcCqk6aPN72c-AK4YIX5Zkkj"/>
+<div class="absolute top-2 left-2 flex gap-1">
+<span class="bg-primary text-on-primary text-[10px] px-2 py-1 font-bold uppercase tracking-wider">Enterprise Only</span>
+</div>
+</div>
+<div class="mb-stack-md">
+<h3 class="font-headline-md text-headline-md text-on-surface mb-1">OmniConnect Gateway</h3>
+<p class="font-label-sm text-label-sm text-secondary tracking-widest uppercase">Smart Home / IoT</p>
+</div>
+<div class="space-y-stack-sm mb-stack-lg flex-grow">
+<div class="flex justify-between items-end gap-2">
+<span class="font-label-md text-secondary shrink-0">連接協議</span>
+<div class="spec-grid-line flex-grow h-px mb-1.5 opacity-30"></div>
+<span class="font-data-tabular text-on-surface">Matter, Zigbee 3.0</span>
+</div>
+<div class="flex justify-between items-end gap-2">
+<span class="font-label-md text-secondary shrink-0">同步數量</span>
+<div class="spec-grid-line flex-grow h-px mb-1.5 opacity-30"></div>
+<span class="font-data-tabular text-on-surface">Up to 256 Nodes</span>
+</div>
+<div class="flex justify-between items-end gap-2">
+<span class="font-label-md text-secondary shrink-0">保固</span>
+<div class="spec-grid-line flex-grow h-px mb-1.5 opacity-30"></div>
+<span class="font-data-tabular text-on-surface">5 Years Professional</span>
+</div>
+</div>
+<div class="flex items-center justify-between pt-stack-md border-t border-outline-variant">
+<span class="font-label-md text-secondary">聯繫業務獲取報價</span>
+<button class="border border-primary text-primary font-label-md px-6 py-3 rounded-lg hover:bg-surface-container-low transition-all">企業諮詢</button>
+</div>
+</div>
+</div>
+<!-- Comparison Tool Section -->
+<section class="mt-section-gap">
+<div class="bg-surface-container-high p-margin-edge border border-outline-variant rounded-xl overflow-hidden relative">
+<div class="absolute top-0 right-0 p-stack-lg opacity-10">
+<span class="material-symbols-outlined text-[120px]" data-icon="compare_arrows">compare_arrows</span>
+</div>
+<div class="relative z-10">
+<h2 class="font-headline-lg text-headline-lg mb-stack-sm text-on-surface">產品性能對比</h2>
+<p class="text-secondary mb-stack-lg max-w-lg">無法決定？將兩個產品並排對比其詳細規格。專為需要精確技術參數的專業人士設計。</p>
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-gutter bg-surface-container-lowest border border-outline-variant">
+<!-- Product A -->
+<div class="p-stack-lg border-b lg:border-b-0 lg:border-r border-outline-variant">
+<div class="flex items-center gap-stack-md mb-stack-lg">
+<div class="w-16 h-16 bg-surface-container rounded-lg flex items-center justify-center">
+<span class="material-symbols-outlined text-outline" data-icon="laptop_mac">laptop_mac</span>
+</div>
+<div>
+<p class="font-label-sm text-primary uppercase">選取產品 A</p>
+<h4 class="font-headline-md">EliteBook X1 Gen 5</h4>
+</div>
+</div>
+<div class="space-y-4">
+<div class="p-3 bg-surface-container-low rounded">
+<p class="text-[10px] text-outline font-bold uppercase mb-1">CPU Benchmark</p>
+<div class="h-2 w-full bg-outline-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[95%]"></div>
+</div>
+<p class="text-right text-[10px] mt-1 font-data-tabular">95/100</p>
+</div>
+<div class="p-3 bg-surface-container-low rounded">
+<p class="text-[10px] text-outline font-bold uppercase mb-1">Thermal Performance</p>
+<div class="h-2 w-full bg-outline-variant rounded-full overflow-hidden">
+<div class="h-full bg-primary w-[88%]"></div>
+</div>
+<p class="text-right text-[10px] mt-1 font-data-tabular">88/100</p>
+</div>
+</div>
+</div>
+<!-- Product B -->
+<div class="p-stack-lg">
+<div class="flex items-center gap-stack-md mb-stack-lg">
+<div class="w-16 h-16 bg-surface-container rounded-lg flex items-center justify-center border-2 border-dashed border-outline-variant">
+<span class="material-symbols-outlined text-outline" data-icon="add">add</span>
+</div>
+<div>
+<p class="font-label-sm text-outline uppercase">選取產品 B</p>
+<h4 class="font-headline-md text-outline">點擊選取對比項目...</h4>
+</div>
+</div>
+<div class="flex items-center justify-center h-24 border-2 border-dashed border-outline-variant rounded-lg">
+<button class="flex items-center gap-2 text-primary font-label-md">
+<span class="material-symbols-outlined" data-icon="search">search</span> 搜尋產品目錄
+                                </button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Solution Showcase (Bento Grid) -->
+<section class="mt-section-gap mb-section-gap">
+<h2 class="font-headline-lg text-headline-lg mb-stack-lg text-on-surface">企業級解決方案</h2>
+<div class="grid grid-cols-1 md:grid-cols-4 md:grid-rows-2 gap-stack-md h-[600px]">
+<div class="md:col-span-2 md:row-span-2 relative overflow-hidden group">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="A massive, high-tech server room with rows of glowing server racks emitting cool blue and neon cyan light. The floor is reflective, showing the complex wiring and hardware structures. The environment is clean, controlled, and represents state-of-the-art enterprise computing power." src="https://lh3.googleusercontent.com/aida-public/AB6AXuClQbH5ZgUNnRrYX8NdMGMp-GX14MKoLbhv3AbWiHBga2fXHUVyLeLw83soH_IVjqaG0IufEbCJGTcH5TPM7w3nJWTZRKjse98LooO9TyX6u60tJTPO6WIM1DhS4_GTynKhjcZ2Li8MflCS0Ma8YH3X2imEvV3sqhY-Bv7SzlnC_eq9uJ3ztifhqh3GrLxIIQddbjy2WYNkKo6OU3HS23f-uY17hScBE1_5x1OqjlrDMXi5dHs0tjzBtNrraz131OSH7noJrMHNDh56"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-background/90 to-transparent flex flex-col justify-end p-stack-lg">
+<span class="bg-primary px-3 py-1 text-on-primary text-[10px] font-bold uppercase w-fit mb-2">Enterprise</span>
+<h3 class="text-white font-headline-lg mb-2">雲端邊緣計算陣列</h3>
+<p class="text-outline-variant text-body-md max-w-sm">專為大規模數據處理設計的模組化硬體集群。</p>
+</div>
+</div>
+<div class="md:col-span-2 relative overflow-hidden group">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="A ultra-modern corporate boardroom with large seamless LED screens on the walls and minimalist furniture. The lighting is sophisticated, with architectural recessed lights. The style is sleek, bright, and professional, focused on collaboration and high-end executive technology." src="https://lh3.googleusercontent.com/aida-public/AB6AXuALcNZiE3fA62JHR7TGQXQZQmAQ7Fd9YtSCccdzKrWR3KFrOzlWCcsdsOpiU5100TGzy3yXh1AiflZA2rAJY0pjiL50bsyrK_ddCJAsnDyGOxk9Q2Z0HvrEv8Jgoh9Yo_-fwef3OFJIHeq990vouK2qoLI6pKjzmNnbZutk0QDJdBK6St7waFbYcUF5UdXB-BP8PC-Tv25OFJC0T9UUvENbi0svpZCghmZ7QVu9jfevDIlP2CrV1ZRvFF65AosKRdtzYWoMDLQdhvrw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-background/90 to-transparent flex flex-col justify-end p-stack-lg">
+<h3 class="text-white font-headline-md">智慧辦公協作終端</h3>
+</div>
+</div>
+<div class="md:col-span-1 relative overflow-hidden group">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="A robotic arm on an industrial assembly line working on complex electronic circuitry. The lighting is focused and dramatic, highlighting the precision of the high-performance components and mechanical movements. The overall mood is industrial, precise, and tech-driven." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDsNJ5mrNXGW3A5X6726eCgkY6dhoHY9ecG2ommaU_y4a1euMdyJd-INulNXNe24FNE0W_nWEANiiYyBpnEmASqO1g9CWews-yNHyjQm3S_8VIiQtuKM6JASqRkWqv1gtp2RqbrnyAjIAAVyH7VFU25tEmFL6ghmIzvGzfwLtdZVUYTyFQ4e2aNM18ShgZ_cDNPPf5wnI2weJF4WyH-C3e1nkl1fkVhCIGR4a4HCKEpR1obsujTDCW48SDRFtoJve6s7-bg7OO3Bxxh"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-background/90 to-transparent flex flex-col justify-end p-stack-lg">
+<h3 class="text-white font-label-md">工業 4.0 IoT</h3>
+</div>
+</div>
+<div class="md:col-span-1 relative overflow-hidden group">
+<img class="w-full h-full object-cover grayscale group-hover:grayscale-0 transition-all duration-700" data-alt="A stylized digital security visualization showing a glowing padlock overlaying a complex data stream on a dark monitor. The aesthetic is clean and corporate, using sharp lines and vibrant blue accents to represent cybersecurity and protection of digital assets." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbfnCf35GbUFeLLSgprJzR5AQV3V56AA89hSvg2Dt4YWyHY4cnOx2GkgNOiOLlN7bTwycOHhCvmBsBJ5A0FIL4XhDw47-Je_UEtYYl31JdrX0wVNbcs-_u309tMY5zkkGLTahLKh0IKjYyHPFtEzT2WjWK0SRaQQ96ZbrJmYmwe9x7Jup5iAbNglgw1pgU7TM_Tb7XwD1Utz3lqqorz0xC3knyAgbdv6E0-pg6uHVvXYRVoyUn-jN0Tdgf-3_LIdIisfOmo5mcboOo"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-background/90 to-transparent flex flex-col justify-end p-stack-lg">
+<h3 class="text-white font-label-md">網路安全防護層</h3>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-high border-t border-outline-variant full-width bottom-0">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter max-w-container-max mx-auto px-margin-edge py-stack-lg w-full">
+<div class="flex flex-col gap-stack-md">
+<div class="flex items-center gap-stack-sm">
+<span class="material-symbols-outlined text-primary text-headline-md" data-icon="devices">devices</span>
+<span class="font-headline-md text-on-surface">TECH-ELITE</span>
+</div>
+<p class="font-body-md text-on-surface-variant">致力於提供最頂尖的硬體與企業技術支援，驅動數位時代的無限可能。</p>
+</div>
+<div>
+<h4 class="font-label-md text-primary mb-stack-md uppercase tracking-wider">Product Categories</h4>
+<ul class="space-y-2">
+<li><a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">Laptops &amp; Workstations</a></li>
+<li><a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">Power &amp; Connectivity</a></li>
+<li><a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">IoT Edge Devices</a></li>
+<li><a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">Smart Office Solutions</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-primary mb-stack-md uppercase tracking-wider">Corporate</h4>
+<ul class="space-y-2">
+<li><a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">Corporate Sales</a></li>
+<li><a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">Bulk Procurement</a></li>
+<li><a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">Case Studies</a></li>
+<li><a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">Contact Us</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-primary mb-stack-md uppercase tracking-wider">Support</h4>
+<ul class="space-y-2">
+<li><a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">Support Center</a></li>
+<li><a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">Warranty Policy</a></li>
+<li><a class="text-on-surface-variant font-label-sm hover:text-primary transition-all" href="#">Downloads &amp; Drivers</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-margin-edge py-stack-md border-t border-outline-variant/30 flex justify-between items-center flex-wrap gap-4">
+<p class="font-label-sm text-on-surface-variant">© 2024 Tech-Elite Electronics Professional Grade Hardware. All rights reserved.</p>
+<div class="flex gap-stack-md">
+<a class="text-on-surface-variant font-label-sm hover:text-primary" href="#">Privacy Policy</a>
+<a class="text-on-surface-variant font-label-sm hover:text-primary" href="#">Terms of Service</a>
+</div>
+</div>
+</footer>
+</body></html>

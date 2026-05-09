@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-Hant"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-tint": "#004ced",
+                    "surface-variant": "#e0e3e5",
+                    "outline": "#737688",
+                    "on-surface-variant": "#434656",
+                    "inverse-on-surface": "#eff1f3",
+                    "secondary-fixed-dim": "#b9c7df",
+                    "on-tertiary-container": "#dde4ff",
+                    "on-secondary": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "tertiary-container": "#5e667d",
+                    "background": "#f7f9fb",
+                    "primary-container": "#0052ff",
+                    "surface": "#f7f9fb",
+                    "surface-container-highest": "#e0e3e5",
+                    "on-secondary-container": "#57657a",
+                    "on-primary-fixed": "#001452",
+                    "tertiary": "#464e64",
+                    "secondary-container": "#d5e3fc",
+                    "secondary": "#515f74",
+                    "surface-bright": "#f7f9fb",
+                    "primary-fixed-dim": "#b7c4ff",
+                    "inverse-primary": "#b7c4ff",
+                    "on-secondary-fixed-variant": "#3a485b",
+                    "on-primary-fixed-variant": "#0038b6",
+                    "secondary-fixed": "#d5e3fc",
+                    "inverse-surface": "#2d3133",
+                    "on-tertiary-fixed-variant": "#3f465c",
+                    "tertiary-fixed": "#dae2fd",
+                    "surface-container-high": "#e6e8ea",
+                    "surface-container-lowest": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-tertiary-fixed": "#131b2e",
+                    "primary-fixed": "#dde1ff",
+                    "outline-variant": "#c3c5d9",
+                    "on-primary-container": "#dfe3ff",
+                    "on-surface": "#191c1e",
+                    "on-tertiary": "#ffffff",
+                    "on-background": "#191c1e",
+                    "error-container": "#ffdad6",
+                    "surface-container-low": "#f2f4f6",
+                    "error": "#ba1a1a",
+                    "surface-container": "#eceef0",
+                    "primary": "#003ec7",
+                    "surface-dim": "#d8dadc",
+                    "tertiary-fixed-dim": "#bec6e0",
+                    "on-primary": "#ffffff",
+                    "on-secondary-fixed": "#0d1c2e"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-edge": "32px",
+                    "stack-md": "16px",
+                    "gutter": "24px",
+                    "section-gap": "80px",
+                    "unit": "8px",
+                    "stack-sm": "8px",
+                    "container-max": "1280px",
+                    "stack-lg": "32px"
+            },
+            "fontFamily": {
+                    "body-md": ["Hanken Grotesk"],
+                    "data-tabular": ["Hanken Grotesk"],
+                    "display-lg": ["Hanken Grotesk"],
+                    "headline-md": ["Hanken Grotesk"],
+                    "headline-lg": ["Hanken Grotesk"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "label-sm": ["Hanken Grotesk"],
+                    "label-md": ["Hanken Grotesk"]
+            },
+            "fontSize": {
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "data-tabular": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                    "display-lg": ["48px", {"lineHeight": "56px", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "label-sm": ["12px", {"lineHeight": "16px", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "label-md": ["14px", {"lineHeight": "20px", "letterSpacing": "0.01em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+            vertical-align: middle;
+        }
+        body {
+            font-family: 'Hanken Grotesk', sans-serif;
+            background-color: #f7f9fb;
+        }
+    </style>
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  </head>
+<body class="bg-background text-on-background">
+<!-- TopAppBar -->
+<header class="bg-surface dark:bg-on-background border-b border-outline-variant dark:border-outline docked full-width top-0 sticky z-50 h-20 w-full">
+<div class="flex justify-between items-center max-w-container-max mx-auto px-margin-edge h-full">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary dark:text-primary-fixed-dim" data-icon="devices">devices</span>
+<span class="text-headline-md font-headline-md font-bold tracking-tight text-primary dark:text-primary-fixed-dim">TECH-ELITE</span>
+</div>
+<nav class="hidden md:flex gap-gutter items-center">
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-md hover:text-primary transition-colors" href="#">Products</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-md hover:text-primary transition-colors" href="#">Solutions</a>
+<a class="text-secondary dark:text-secondary-fixed-dim font-label-md hover:text-primary transition-colors" href="#">Support Center</a>
+<a class="text-primary dark:text-primary-fixed-dim font-bold border-b-2 border-primary pb-1 font-label-md" href="#">Contact Us</a>
+</nav>
+<div class="flex items-center">
+<button class="bg-primary text-on-primary px-6 py-2 font-label-md rounded-lg hover:opacity-80 transition-all">Corporate Sales</button>
+</div>
+</div>
+</header>
+<main class="max-w-container-max mx-auto px-margin-edge py-section-gap">
+<!-- Hero Section -->
+<section class="mb-section-gap">
+<h1 class="font-display-lg text-display-lg mb-stack-md text-on-surface">聯繫我們</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+                無論是企業採購、技術支援或是產品維修，Tech-Elite 的專業團隊隨時為您提供高品質的服務與解決方案。
+            </p>
+</section>
+<!-- Main Layout: Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter">
+<!-- Contact Form Container -->
+<div class="lg:col-span-7 bg-surface-container-lowest border border-outline-variant rounded-lg p-stack-lg shadow-sm">
+<h2 class="font-headline-md text-headline-md mb-stack-lg text-on-surface">發送訊息</h2>
+<form class="space-y-stack-md">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-stack-md">
+<div class="flex flex-col">
+<label class="font-label-md text-label-md mb-2 text-on-surface-variant">姓名</label>
+<input class="bg-surface border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-4 py-3 outline-none transition-all" placeholder="請輸入姓名" type="text"/>
+</div>
+<div class="flex flex-col">
+<label class="font-label-md text-label-md mb-2 text-on-surface-variant">電子郵件</label>
+<input class="bg-surface border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-4 py-3 outline-none transition-all" placeholder="example@company.com" type="email"/>
+</div>
+</div>
+<div class="flex flex-col">
+<label class="font-label-md text-label-md mb-2 text-on-surface-variant">詢問類型</label>
+<select class="bg-surface border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-4 py-3 outline-none transition-all appearance-none">
+<option value="general">一般諮詢 (General)</option>
+<option value="repair">產品維修 (Repair)</option>
+<option value="b2b">企業採購 (B2B Inquiry)</option>
+<option value="tech">技術支援 (Tech Support)</option>
+</select>
+</div>
+<div class="flex flex-col">
+<label class="font-label-md text-label-md mb-2 text-on-surface-variant">訊息內容</label>
+<textarea class="bg-surface border border-outline-variant focus:border-primary focus:ring-1 focus:ring-primary rounded-lg px-4 py-3 outline-none transition-all" placeholder="請詳細描述您的需求..." rows="6"></textarea>
+</div>
+<button class="w-full bg-primary text-on-primary font-label-md py-4 rounded-lg hover:opacity-90 transition-all flex items-center justify-center gap-2" type="submit">
+<span>提交申請</span>
+<span class="material-symbols-outlined" data-icon="send">send</span>
+</button>
+</form>
+</div>
+<!-- Business Info & Sidebar -->
+<div class="lg:col-span-5 space-y-gutter">
+<!-- Corporate Info Card -->
+<div class="bg-surface-container-high border border-outline-variant rounded-lg p-stack-lg">
+<h2 class="font-headline-md text-headline-md mb-stack-lg text-on-surface">企業總部</h2>
+<div class="space-y-stack-md">
+<div class="flex items-start gap-4">
+<div class="bg-secondary-container p-2 rounded-lg">
+<span class="material-symbols-outlined text-on-secondary-container" data-icon="location_on">location_on</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface">地址</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">台北市信義區研發大道 101 號 25 樓</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="bg-secondary-container p-2 rounded-lg">
+<span class="material-symbols-outlined text-on-secondary-container" data-icon="call">call</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface">聯繫電話</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">+886 (02) 2720-8888</p>
+</div>
+</div>
+<div class="flex items-start gap-4">
+<div class="bg-secondary-container p-2 rounded-lg">
+<span class="material-symbols-outlined text-on-secondary-container" data-icon="mail">mail</span>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface">官方信箱</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">corporate@tech-elite.com.tw</p>
+</div>
+</div>
+</div>
+<div class="mt-stack-lg pt-stack-lg border-t border-outline-variant">
+<h4 class="font-label-md text-label-md text-on-surface mb-stack-md">追蹤我們的社群動態</h4>
+<div class="flex gap-4">
+<a class="w-10 h-10 flex items-center justify-center bg-surface-container-lowest border border-outline-variant rounded-full hover:bg-primary-container hover:text-on-primary-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="facebook">social_leaderboard</span>
+</a>
+<a class="w-10 h-10 flex items-center justify-center bg-surface-container-lowest border border-outline-variant rounded-full hover:bg-primary-container hover:text-on-primary-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="chat">chat</span>
+</a>
+<a class="w-10 h-10 flex items-center justify-center bg-surface-container-lowest border border-outline-variant rounded-full hover:bg-primary-container hover:text-on-primary-container transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="video_library">video_library</span>
+</a>
+</div>
+</div>
+</div>
+<!-- Small Info Box -->
+<div class="bg-primary text-on-primary rounded-lg p-stack-lg relative overflow-hidden">
+<div class="relative z-10">
+<h3 class="font-headline-md text-headline-md mb-2">售後維修專線</h3>
+<p class="font-body-md text-body-md opacity-90 mb-4">週一至週五 09:00 - 18:00，我們將第一時間解決您的問題。</p>
+<p class="font-display-lg text-3xl font-bold tracking-tight">0800-123-456</p>
+</div>
+<span class="material-symbols-outlined absolute -right-4 -bottom-4 text-9xl opacity-10" data-icon="support_agent" style="font-variation-settings: 'opsz' 48;">support_agent</span>
+</div>
+</div>
+</div>
+<!-- Map Section -->
+<section class="mt-section-gap">
+<div class="flex flex-col md:flex-row justify-between items-end mb-stack-lg">
+<div>
+<h2 class="font-headline-lg text-headline-lg text-on-surface">維修中心與據點</h2>
+<p class="font-body-md text-body-md text-on-surface-variant">全台共 12 處授權服務中心，為您提供即時技術支援。</p>
+</div>
+<button class="flex items-center gap-2 text-primary font-label-md py-2 px-4 border border-primary rounded-lg hover:bg-primary-container/10 transition-all mt-4 md:mt-0">
+<span class="material-symbols-outlined" data-icon="near_me">near_me</span>
+<span>查找最近據點</span>
+</button>
+</div>
+<div class="relative w-full h-[500px] bg-surface-container-highest rounded-xl overflow-hidden shadow-inner border border-outline-variant">
+<img class="w-full h-full object-cover grayscale opacity-80" data-alt="A high-definition architectural map of a futuristic urban business district, presented on a digital display with subtle blue glowing markers. The map is clean, professional, and minimalist, utilizing a slate gray and tech blue color palette to maintain a high-end corporate aesthetic. The lighting is soft and ambient, highlighting key service center locations across a metropolitan grid." data-location="Taipei" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAG25boR3gQRkvdda4ei33UZEDySYocWZfjam75HbRJS4o7D53esCbJHndUN69oeTCvpagQgyNhzfDUUHplwg0WZXeogr95UALJVppExh_Wh0Vlozhi9IipNAIr3tX_XxYpXJX4qk1HSZ3gYvv654Klhtdu5ufWQE3L04JKaen3p-aU_21UZh-R-yLNMBQGu3yg1aoiCveFVxWS_bIygPhPJ_5x2BQ62b1LMoeuCt99Cfs8n6omaCiXIprxBItBYsBbnKt6_6JUqQgy"/>
+<div class="absolute inset-0 bg-gradient-to-t from-surface-container-highest/50 to-transparent pointer-events-none"></div>
+<!-- Floating Info Card on Map -->
+<div class="absolute top-8 left-8 bg-surface p-stack-md rounded-lg shadow-xl border border-outline-variant max-w-xs hidden md:block">
+<h4 class="font-label-md text-label-md text-primary mb-1">台北旗艦中心</h4>
+<p class="font-body-md text-body-md text-on-surface mb-2">台北市中山區南京東路三段 15 號</p>
+<div class="flex items-center gap-4 text-label-sm font-label-sm text-on-surface-variant">
+<span class="flex items-center gap-1"><span class="material-symbols-outlined text-sm" data-icon="schedule">schedule</span> 營業中</span>
+<span class="text-error font-bold">預約熱絡</span>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="bg-surface-container-high dark:bg-inverse-surface border-t border-outline-variant dark:border-outline full-width bottom-0">
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-gutter max-w-container-max mx-auto px-margin-edge py-stack-lg w-full">
+<div>
+<span class="font-headline-md text-on-surface dark:text-inverse-on-surface block mb-stack-md">TECH-ELITE</span>
+<p class="font-body-md text-body-md text-on-surface-variant dark:text-surface-variant">專業級硬體解決方案的領導者，為企業與個人提供卓越的 3C 科技產品。</p>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface dark:text-inverse-on-surface mb-stack-md">產品資訊</h4>
+<ul class="space-y-2">
+<li><a class="text-on-surface-variant dark:text-surface-variant font-label-sm hover:text-primary dark:hover:text-primary-fixed-dim underline transition-all" href="#">Products</a></li>
+<li><a class="text-on-surface-variant dark:text-surface-variant font-label-sm hover:text-primary dark:hover:text-primary-fixed-dim underline transition-all" href="#">Solutions</a></li>
+<li><a class="text-on-surface-variant dark:text-surface-variant font-label-sm hover:text-primary dark:hover:text-primary-fixed-dim underline transition-all" href="#">Warranty Policy</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface dark:text-inverse-on-surface mb-stack-md">支援服務</h4>
+<ul class="space-y-2">
+<li><a class="text-on-surface-variant dark:text-surface-variant font-label-sm hover:text-primary dark:hover:text-primary-fixed-dim underline transition-all" href="#">Support Center</a></li>
+<li><a class="text-primary dark:text-primary-fixed-dim font-bold underline font-label-sm" href="#">Contact Us</a></li>
+<li><a class="text-on-surface-variant dark:text-surface-variant font-label-sm hover:text-primary dark:hover:text-primary-fixed-dim underline transition-all" href="#">Corporate Sales</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-md text-label-md text-on-surface dark:text-inverse-on-surface mb-stack-md">法律聲明</h4>
+<ul class="space-y-2">
+<li><a class="text-on-surface-variant dark:text-surface-variant font-label-sm hover:text-primary dark:hover:text-primary-fixed-dim underline transition-all" href="#">隱私權政策</a></li>
+<li><a class="text-on-surface-variant dark:text-surface-variant font-label-sm hover:text-primary dark:hover:text-primary-fixed-dim underline transition-all" href="#">服務條款</a></li>
+</ul>
+</div>
+</div>
+<div class="max-w-container-max mx-auto px-margin-edge py-stack-md border-t border-outline-variant/30 text-center">
+<p class="font-label-sm text-label-sm text-on-surface-variant dark:text-surface-variant opacity-70">
+                © 2024 Tech-Elite Electronics Professional Grade Hardware. All rights reserved.
+            </p>
+</div>
+</footer>
+</body></html>
