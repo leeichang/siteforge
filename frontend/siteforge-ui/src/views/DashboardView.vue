@@ -1,93 +1,104 @@
-
 <template>
   <div class="sf-dashboard">
-    <!-- Top Header -->
-    <header class="sf-header">
-      <div class="sf-header-left">
-        <h2 class="sf-title-lg" style="color: var(--sf-on-surface);">{{ t('dashboard.myProjects') }}</h2>
+    <!-- Page Header (simplified — the TopAppBar is in App.vue) -->
+    <header class="sf-dash-header">
+      <div class="sf-dash-header-left">
+        <h2 class="sf-title-lg">{{ t('dashboard.myProjects') }}</h2>
         <span class="sf-count-badge">{{ sites.length }}</span>
       </div>
-      <div class="sf-header-right">
+      <div class="sf-dash-header-right">
         <div class="sf-search-wrap">
           <span class="material-symbols-outlined sf-search-icon">search</span>
-          <input 
-            v-model="search" 
-            type="text" 
-            class="sf-input sf-search-input" 
+          <input
+            v-model="search"
+            type="text"
+            class="sf-input sf-search-input"
             :placeholder="t('dashboard.searchPlaceholder')"
           />
         </div>
-        <button class="sf-icon-btn">
+        <button class="sf-dash-icon-btn">
           <span class="material-symbols-outlined">filter_list</span>
         </button>
       </div>
     </header>
 
     <!-- Projects Grid -->
-    <div class="sf-content">
-      <div v-if="loading" class="sf-loading">{{ t('dashboard.loadingProjects') }}</div>
-      
-      <div v-else-if="filteredSites.length > 0" class="sf-grid">
-        <!-- Featured card (first project, spans 2 columns on large) -->
-        <div 
-          v-if="filteredSites[0]" 
-          class="sf-card sf-card-featured"
+    <div class="sf-dash-content">
+      <div v-if="loading" class="sf-dash-loading">{{ t('dashboard.loadingProjects') }}</div>
+
+      <div v-else-if="filteredSites.length > 0" class="sf-dash-grid">
+        <!-- Featured card (first project, spans 2 cols) -->
+        <div
+          v-if="filteredSites[0]"
+          class="sf-dash-card sf-dash-card-featured"
           @click="openSite(filteredSites[0].id)"
         >
-          <div class="sf-card-media">
-            <div class="sf-card-thumb" :class="{ published: filteredSites[0].status === 'published' }">
-              <span class="material-symbols-outlined" style="font-size: 48px; opacity: 0.3;">web</span>
+          <div class="sf-dash-card-media">
+            <div class="sf-dash-card-thumb" :class="{ published: filteredSites[0].status === 'published' }">
+              <span class="material-symbols-outlined dash-media-icon">web</span>
             </div>
-            <div class="sf-card-gradient"></div>
-            <div class="sf-card-status">
-              <span class="sf-badge" :class="filteredSites[0].status === 'published' ? 'sf-badge-published' : 'sf-badge-draft'">
+            <div class="sf-dash-card-gradient"></div>
+            <div class="sf-dash-card-status">
+              <button
+                class="sf-dash-badge"
+                :class="filteredSites[0].status === 'published' ? 'sf-badge-published' : 'sf-badge-draft'"
+                @click.stop="toggleStatus(filteredSites[0])"
+              >
                 {{ filteredSites[0].status === 'published' ? t('common.published') : t('common.draft') }}
-              </span>
+              </button>
             </div>
           </div>
-          <div class="sf-card-body">
-            <div class="sf-card-header">
-              <h3 class="sf-title-md sf-card-title">{{ filteredSites[0].name }}</h3>
-              <button class="sf-icon-btn sf-card-menu" @click.stop="showSiteMenu(filteredSites[0])">
+          <div class="sf-dash-card-body">
+            <div class="sf-dash-card-header">
+              <h3 class="sf-title-md sf-dash-card-title">{{ filteredSites[0].name }}</h3>
+              <button class="sf-dash-card-menu" @click.stop="showSiteMenu(filteredSites[0])">
                 <span class="material-symbols-outlined" style="font-size: 20px;">more_vert</span>
               </button>
             </div>
-            <p class="sf-body-md sf-card-desc">{{ filteredSites[0].description || t('common.noDescription') }}</p>
-            <div class="sf-card-meta">
+            <p class="sf-body-md sf-dash-card-desc">{{ filteredSites[0].description || t('common.noDescription') }}</p>
+            <div class="sf-dash-card-meta">
               <span class="sf-label-sm">
                 <span class="material-symbols-outlined" style="font-size: 14px;">edit_calendar</span>
                 {{ formatDate(filteredSites[0].updatedAt) }}
+              </span>
+              <span v-if="filteredSites[0]._pageCount" class="sf-label-sm">
+                <span class="material-symbols-outlined" style="font-size: 14px;">description</span>
+                {{ filteredSites[0]._pageCount }}
               </span>
             </div>
           </div>
         </div>
 
         <!-- Regular cards -->
-        <div 
-          v-for="site in filteredSites.slice(1)" 
-          :key="site.id" 
-          class="sf-card"
+        <div
+          v-for="site in filteredSites.slice(1)"
+          :key="site.id"
+          class="sf-dash-card"
           @click="openSite(site.id)"
         >
-          <div class="sf-card-media">
-            <div class="sf-card-thumb" :class="{ published: site.status === 'published' }">
-              <span class="material-symbols-outlined" style="font-size: 36px; opacity: 0.3;">web</span>
+          <div class="sf-dash-card-media">
+            <div class="sf-dash-card-thumb" :class="{ published: site.status === 'published' }">
+              <span class="material-symbols-outlined dash-media-icon">web</span>
             </div>
-            <div class="sf-card-gradient"></div>
-            <div class="sf-card-status">
-              <span class="sf-badge" :class="site.status === 'published' ? 'sf-badge-published' : 'sf-badge-draft'">
+            <div class="sf-dash-card-gradient"></div>
+            <div class="sf-dash-card-status">
+              <button
+                class="sf-dash-badge"
+                :class="site.status === 'published' ? 'sf-badge-published' : 'sf-badge-draft'"
+                @click.stop="toggleStatus(site)"
+              >
                 {{ site.status === 'published' ? t('common.published') : t('common.draft') }}
-              </span>
+              </button>
             </div>
           </div>
-          <div class="sf-card-body">
-            <div class="sf-card-header">
-              <h3 class="sf-title-md sf-card-title">{{ site.name }}</h3>
-              <button class="sf-icon-btn sf-card-menu" @click.stop="showSiteMenu(site)">
+          <div class="sf-dash-card-body">
+            <div class="sf-dash-card-header">
+              <h3 class="sf-title-md sf-dash-card-title">{{ site.name }}</h3>
+              <button class="sf-dash-card-menu" @click.stop="showSiteMenu(site)">
                 <span class="material-symbols-outlined" style="font-size: 20px;">more_vert</span>
               </button>
             </div>
-            <div class="sf-card-meta">
+            <div class="sf-dash-card-meta">
               <span class="sf-label-sm">
                 <span class="material-symbols-outlined" style="font-size: 14px;">edit_calendar</span>
                 {{ formatDate(site.updatedAt) }}
@@ -97,20 +108,20 @@
         </div>
 
         <!-- Create new card -->
-        <div class="sf-card sf-card-new" @click="showCreate = true">
-          <div class="sf-card-new-inner">
-            <div class="sf-new-icon">
+        <div class="sf-dash-card sf-dash-card-new" @click="showCreate = true">
+          <div class="sf-dash-new-inner">
+            <div class="sf-dash-new-icon">
               <span class="material-symbols-outlined" style="font-size: 28px;">add</span>
             </div>
-            <h3 class="sf-title-md" style="color: var(--sf-on-surface);">{{ t('dashboard.createNewSite') }}</h3>
-            <p class="sf-label-sm" style="color: var(--sf-on-surface-variant);">{{ t('dashboard.startFromScratch') }}</p>
+            <h3 class="sf-title-md" style="color: var(--sf-ink);">{{ t('dashboard.createNewSite') }}</h3>
+            <p class="sf-label-sm" style="color: var(--sf-ink-secondary);">{{ t('dashboard.startFromScratch') }}</p>
           </div>
         </div>
       </div>
 
-      <div v-else class="sf-empty">
-        <span class="material-symbols-outlined" style="font-size: 48px; color: var(--sf-on-surface-variant); opacity: 0.5;">folder_open</span>
-        <h3 class="sf-title-md" style="color: var(--sf-on-surface-variant); margin-top: 16px;">{{ t('dashboard.noProjects') }}</h3>
+      <div v-else class="sf-dash-empty">
+        <span class="material-symbols-outlined dash-empty-icon">folder_open</span>
+        <h3 class="sf-title-md dash-empty-text">{{ t('dashboard.noProjects') }}</h3>
         <button class="sf-btn-primary" @click="showCreate = true" style="margin-top: 16px;">
           <span class="material-symbols-outlined material-symbols-filled">add</span>
           {{ t('dashboard.createFirstProject') }}
@@ -121,30 +132,30 @@
     <!-- Create Modal -->
     <div v-if="showCreate" class="sf-modal-overlay" @click.self="showCreate = false">
       <div class="sf-modal">
-        <h2 class="sf-headline-sm" style="margin-bottom: 24px; color: var(--sf-on-surface);">{{ t('dashboard.createNewProject') }}</h2>
+        <h2 class="sf-headline-sm" style="margin-bottom: 24px; color: var(--sf-ink);">{{ t('dashboard.createNewProject') }}</h2>
         <p v-if="createError" class="sf-create-error">{{ createError }}</p>
         <div class="sf-form-field">
-          <label class="sf-label-lg" style="color: var(--sf-on-surface-variant); display: block; margin-bottom: 8px;">{{ t('dashboard.siteName') }}</label>
-          <input 
-            v-model="newSite.name" 
-            type="text" 
-            class="sf-input" 
+          <label class="sf-label-lg" style="color: var(--sf-ink-secondary); display: block; margin-bottom: 8px;">{{ t('dashboard.siteName') }}</label>
+          <input
+            v-model="newSite.name"
+            type="text"
+            class="sf-input"
             :placeholder="t('dashboard.siteNamePlaceholder')"
             style="padding-left: 16px; border-radius: 12px;"
           />
         </div>
         <div class="sf-form-field" style="margin-top: 16px;">
-          <label class="sf-label-lg" style="color: var(--sf-on-surface-variant); display: block; margin-bottom: 8px;">{{ t('dashboard.description') }}</label>
-          <input 
-            v-model="newSite.description" 
-            type="text" 
-            class="sf-input" 
+          <label class="sf-label-lg" style="color: var(--sf-ink-secondary); display: block; margin-bottom: 8px;">{{ t('dashboard.description') }}</label>
+          <input
+            v-model="newSite.description"
+            type="text"
+            class="sf-input"
             :placeholder="t('dashboard.descriptionPlaceholder')"
             style="padding-left: 16px; border-radius: 12px;"
           />
         </div>
         <div class="sf-form-field" style="margin-top: 16px;">
-          <label class="sf-label-lg" style="color: var(--sf-on-surface-variant); display: block; margin-bottom: 8px;">{{ t('dashboard.siteTemplate') }}</label>
+          <label class="sf-label-lg" style="color: var(--sf-ink-secondary); display: block; margin-bottom: 8px;">{{ t('dashboard.siteTemplate') }}</label>
           <div class="template-picker site-template-picker">
             <button
               type="button"
@@ -237,7 +248,7 @@ const formatDate = (d) => {
   if (!d) return t('common.recently')
   const date = new Date(d)
   const now = new Date()
-  const diff = (now - date) / 1000 / 60 / 60 // hours
+  const diff = (now - date) / 1000 / 60 / 60
   if (diff < 1) return t('common.justNow')
   if (diff < 24) return t('common.hoursAgo', { count: Math.floor(diff) })
   if (diff < 48) return t('common.yesterday')
@@ -265,6 +276,16 @@ const loadTemplates = async () => {
   } catch (e) {
     console.error('Failed to load templates:', e)
     templates.value = []
+  }
+}
+
+const toggleStatus = async (site) => {
+  const newStatus = site.status === 'published' ? 'draft' : 'published'
+  try {
+    await api.patch(`/Sites/${site.id}`, { status: newStatus })
+    site.status = newStatus
+  } catch (e) {
+    console.error('Failed to toggle status:', e)
   }
 }
 
@@ -309,7 +330,6 @@ const openSite = (id) => {
 }
 
 const showSiteMenu = (site) => {
-  // TODO: implement site context menu
   console.log('Site menu:', site.name)
 }
 
@@ -325,43 +345,43 @@ onMounted(() => {
 .sf-dashboard {
   display: flex;
   flex-direction: column;
-  height: 100vh;
-  overflow: hidden;
+  min-height: calc(100vh - 56px);
 }
 
-.sf-header {
+/* ── Dash Header ── */
+.sf-dash-header {
   height: 64px;
   padding: 0 24px;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background: var(--sf-bg);
-  border-bottom: 1px solid var(--sf-outline-variant);
+  border-bottom: 1px solid var(--sf-line);
   flex-shrink: 0;
   position: sticky;
   top: 0;
   z-index: 40;
 }
 
-.sf-header-left {
+.sf-dash-header-left {
   display: flex;
   align-items: center;
   gap: 12px;
 }
 
 .sf-count-badge {
-  background: var(--sf-surface-container-high);
-  color: var(--sf-on-surface-variant);
+  background: var(--sf-surface-2);
+  color: var(--sf-ink-secondary);
   padding: 2px 10px;
   border-radius: 9999px;
   font-size: 12px;
   font-weight: 500;
 }
 
-.sf-header-right {
+.sf-dash-header-right {
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 8px;
 }
 
 .sf-search-wrap {
@@ -374,7 +394,7 @@ onMounted(() => {
   left: 12px;
   top: 50%;
   transform: translateY(-50%);
-  color: var(--sf-on-surface-variant);
+  color: var(--sf-ink-secondary);
   font-size: 18px;
 }
 
@@ -382,31 +402,33 @@ onMounted(() => {
   padding-left: 40px;
 }
 
-.sf-icon-btn {
-  background: none;
-  border: none;
-  color: var(--sf-on-surface-variant);
-  cursor: pointer;
-  padding: 8px;
-  border-radius: 50%;
+.sf-dash-icon-btn {
+  width: 36px;
+  height: 36px;
   display: flex;
   align-items: center;
   justify-content: center;
+  border: none;
+  border-radius: 50%;
+  background: none;
+  color: var(--sf-ink-secondary);
+  cursor: pointer;
   transition: all 0.2s;
 }
-
-.sf-icon-btn:hover {
-  background: var(--sf-surface-variant);
-  color: var(--sf-on-surface);
+.sf-dash-icon-btn:hover {
+  background: var(--sf-chrome-btn-hover-bg);
+  color: var(--sf-ink);
 }
 
-.sf-content {
+/* ── Content Area ── */
+.sf-dash-content {
   flex: 1;
   overflow-y: auto;
   padding: 24px;
 }
 
-.sf-grid {
+/* ── Grid ── */
+.sf-dash-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 24px;
@@ -414,134 +436,167 @@ onMounted(() => {
 }
 
 @media (min-width: 1024px) {
-  .sf-grid {
+  .sf-dash-grid {
     grid-template-columns: repeat(3, 1fr);
   }
-  .sf-card-featured {
+  .sf-dash-card-featured {
     grid-column: span 2;
   }
 }
 
-.sf-card {
-  background: var(--sf-surface-container-low);
-  border: 1px solid var(--sf-outline-variant);
+/* ── Card ── */
+.sf-dash-card {
+  background: var(--sf-card-bg);
+  border: 1px solid var(--sf-line);
   border-radius: 16px;
   overflow: hidden;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.sf-card:hover {
-  border-color: rgba(208, 188, 255, 0.3);
-  box-shadow: 0 8px 30px rgba(0,0,0,0.4);
+.sf-dash-card:hover {
+  transform: translateY(-4px);
+  border-color: var(--sf-accent-soft);
+  box-shadow: 0 12px 40px var(--sf-card-shadow);
 }
 
-[data-theme="light"] .sf-card:hover {
-  border-color: rgba(79, 55, 138, 0.3);
-  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
-}
-
-.sf-card-featured {
+.sf-dash-card-featured {
   display: flex;
   flex-direction: column;
 }
 
 @media (min-width: 1024px) {
-  .sf-card-featured {
+  .sf-dash-card-featured {
     flex-direction: row;
   }
 }
 
-.sf-card-media {
+/* ── Card Media ── */
+.sf-dash-card-media {
   position: relative;
   height: 160px;
   overflow: hidden;
 }
 
-.sf-card-featured .sf-card-media {
+.sf-dash-card-featured .sf-dash-card-media {
   height: 200px;
 }
 
 @media (min-width: 1024px) {
-  .sf-card-featured .sf-card-media {
+  .sf-dash-card-featured .sf-dash-card-media {
     width: 60%;
     height: auto;
   }
 }
 
-.sf-card-thumb {
+.sf-dash-card-thumb {
   width: 100%;
   height: 100%;
   background: var(--sf-surface-variant);
   display: flex;
   align-items: center;
   justify-content: center;
-  color: var(--sf-on-surface-variant);
-  transition: transform 0.7s ease;
+  color: var(--sf-ink-secondary);
+  transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.sf-card:hover .sf-card-thumb {
-  transform: scale(1.05);
+.sf-dash-card:hover .sf-dash-card-thumb {
+  transform: scale(1.08);
 }
 
-.sf-card-thumb.published {
+.sf-dash-card-thumb.published {
   background: linear-gradient(135deg, var(--sf-primary-container), var(--sf-secondary-container));
 }
 
-.sf-card-gradient {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(to top, var(--sf-surface-container-low) 20%, transparent 100%);
+.dash-media-icon {
+  font-size: 48px;
+  opacity: 0.25;
 }
 
-.sf-card-status {
+.sf-dash-card-featured .dash-media-icon {
+  font-size: 64px;
+}
+
+.sf-dash-card-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--sf-card-bg) 20%, transparent 100%);
+  pointer-events: none;
+}
+
+.sf-dash-card-status {
   position: absolute;
   top: 12px;
   left: 12px;
 }
 
-.sf-badge {
+/* ── Badge (clickable toggle) ── */
+.sf-dash-badge {
   padding: 4px 12px;
   border-radius: 9999px;
   font-size: 12px;
   font-weight: 500;
+  border: none;
+  cursor: pointer;
   backdrop-filter: blur(8px);
+  transition: all 0.2s;
 }
 
-.sf-card-body {
+.sf-dash-badge:hover {
+  filter: brightness(1.15);
+  transform: scale(1.05);
+}
+
+/* Badge variants now use theme.css .sf-badge-published / .sf-badge-draft */
+
+/* ── Card Body ── */
+.sf-dash-card-body {
   padding: 16px;
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-.sf-card-header {
+.sf-dash-card-header {
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 8px;
 }
 
-.sf-card-title {
-  color: var(--sf-on-surface);
+.sf-dash-card-title {
+  color: var(--sf-ink);
   transition: color 0.2s;
 }
 
-.sf-card:hover .sf-card-title {
-  color: var(--sf-primary);
+.sf-dash-card:hover .sf-dash-card-title {
+  color: var(--sf-accent);
 }
 
-.sf-card-menu {
+.sf-dash-card-menu {
   opacity: 0;
   transition: opacity 0.2s;
+  background: none;
+  border: none;
+  color: var(--sf-ink-secondary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-.sf-card:hover .sf-card-menu {
+.sf-dash-card:hover .sf-dash-card-menu {
   opacity: 1;
 }
 
-.sf-card-desc {
-  color: var(--sf-on-surface-variant);
+.sf-dash-card-menu:hover {
+  background: var(--sf-chrome-btn-hover-bg);
+}
+
+.sf-dash-card-desc {
+  color: var(--sf-ink-secondary);
   margin-bottom: 16px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -549,34 +604,38 @@ onMounted(() => {
   overflow: hidden;
 }
 
-.sf-card-meta {
+.sf-dash-card-meta {
   margin-top: auto;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  color: var(--sf-on-surface-variant);
-  opacity: 0.7;
+  color: var(--sf-muted);
+  font-size: 12px;
 }
 
-.sf-card-meta span {
+.sf-dash-card-meta span {
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
-.sf-card-new {
+/* ── New Card ── */
+.sf-dash-card-new {
   border-style: dashed;
-  border-color: var(--sf-outline-variant);
+  border-color: var(--sf-line);
   background: var(--sf-surface-container-lowest);
   min-height: 240px;
 }
 
-.sf-card-new:hover {
-  border-color: var(--sf-primary);
+.sf-dash-card-new:hover {
+  border-color: var(--sf-accent);
+  border-style: solid;
   background: var(--sf-surface-container-low);
+  transform: translateY(-4px);
+  box-shadow: 0 12px 40px var(--sf-card-shadow);
 }
 
-.sf-card-new-inner {
+.sf-dash-new-inner {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -585,28 +644,40 @@ onMounted(() => {
   padding: 24px;
 }
 
-.sf-new-icon {
+.sf-dash-new-icon {
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: var(--sf-surface-variant);
+  background: var(--sf-surface-2);
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 12px;
-  color: var(--sf-on-surface-variant);
+  color: var(--sf-ink-secondary);
 }
 
-.sf-loading, .sf-empty {
+/* ── Loading / Empty ── */
+.sf-dash-loading,
+.sf-dash-empty {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   min-height: 400px;
-  color: var(--sf-on-surface-variant);
+  color: var(--sf-ink-secondary);
 }
 
-/* Modal */
+.dash-empty-icon {
+  font-size: 48px;
+  opacity: 0.4;
+}
+
+.dash-empty-text {
+  color: var(--sf-ink-secondary);
+  margin-top: 16px;
+}
+
+/* ── Modal ── */
 .sf-modal-overlay {
   position: fixed;
   inset: 0;
@@ -646,7 +717,7 @@ onMounted(() => {
 
 .template-hint {
   margin: 8px 0 0;
-  color: var(--sf-on-surface-variant);
+  color: var(--sf-ink-secondary);
   font-size: 12px;
   line-height: 1.5;
 }
@@ -662,7 +733,7 @@ onMounted(() => {
   border: 1px solid var(--sf-outline-variant);
   border-radius: 12px;
   background: var(--sf-surface-container-low);
-  color: var(--sf-on-surface);
+  color: var(--sf-ink);
   cursor: pointer;
   padding: 10px;
   text-align: left;
@@ -688,7 +759,7 @@ onMounted(() => {
 .template-card small {
   display: block;
   margin-top: 4px;
-  color: var(--sf-on-surface-variant);
+  color: var(--sf-ink-secondary);
   font-size: 12px;
   line-height: 1.35;
 }
@@ -736,7 +807,7 @@ onMounted(() => {
 .blank-preview {
   place-items: center;
   grid-template-rows: 1fr;
-  color: var(--sf-on-surface-variant);
+  color: var(--sf-ink-secondary);
   background: var(--sf-surface-container);
 }
 
@@ -770,7 +841,7 @@ onMounted(() => {
 .sf-btn-text {
   background: none;
   border: none;
-  color: var(--sf-on-surface-variant);
+  color: var(--sf-ink-secondary);
   padding: 10px 20px;
   border-radius: 9999px;
   cursor: pointer;
@@ -780,7 +851,7 @@ onMounted(() => {
 }
 
 .sf-btn-text:hover {
-  background: var(--sf-surface-variant);
-  color: var(--sf-on-surface);
+  background: var(--sf-chrome-btn-hover-bg);
+  color: var(--sf-ink);
 }
 </style>

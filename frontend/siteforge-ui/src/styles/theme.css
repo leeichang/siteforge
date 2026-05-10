@@ -45,6 +45,37 @@
   --sf-shadow: rgba(0,0,0,0.15);
   --sf-glass-bg: rgba(255,255,255,0.7);
   --sf-glass-border: rgba(0,0,0,0.08);
+
+  /* ✦ SiteForge extended tokens — default (light) ✦ */
+  --sf-ink: #1a1c1e;
+  --sf-ink-secondary: #494551;
+  --sf-muted: #7a7582;
+  --sf-line: #d9dbdf;
+  --sf-line-strong: #cbc4d2;
+  --sf-surface-2: #edeeef;
+  --sf-surface-3: #e1e3e4;
+  --sf-accent: #6750a4;
+  --sf-accent-soft: #e9ddff;
+  --sf-canvas-bg: #ffffff;
+  --sf-canvas-dot: rgba(0,0,0,0.08);
+  --sf-icon-bar-bg: #f3f4f5;
+  --sf-icon-bar-hover: #e1e3e4;
+  --sf-icon-bar-active: #6750a4;
+  --sf-icon-bar-active-bg: #e9ddff;
+  --sf-panel-bg: #f8f9fa;
+  --sf-panel-border: #e1e3e4;
+  --sf-toolbar-bg: rgba(248,249,250,0.85);
+  --sf-toolbar-border: #d9dbdf;
+  --sf-ai-bar-bg: #ffffff;
+  --sf-ai-bar-border: #d9dbdf;
+  --sf-card-bg: #ffffff;
+  --sf-card-shadow: rgba(0,0,0,0.08);
+  --sf-toggle-bg: #d9dbdf;
+  --sf-toggle-active: #6750a4;
+  --sf-chrome-btn-bg: transparent;
+  --sf-chrome-btn-hover-bg: rgba(0,0,0,0.06);
+  --sf-tag-bg: #e9ddff;
+  --sf-tag-text: #22005d;
 }
 
 /* Explicit light theme */
@@ -94,6 +125,37 @@
   --sf-shadow: rgba(0,0,0,0.15);
   --sf-glass-bg: rgba(255,255,255,0.7);
   --sf-glass-border: rgba(0,0,0,0.08);
+
+  /* ✦ SiteForge extended tokens — light ✦ */
+  --sf-ink: #1a1c1e;
+  --sf-ink-secondary: #494551;
+  --sf-muted: #7a7582;
+  --sf-line: #d9dbdf;
+  --sf-line-strong: #cbc4d2;
+  --sf-surface-2: #edeeef;
+  --sf-surface-3: #e1e3e4;
+  --sf-accent: #6750a4;
+  --sf-accent-soft: #e9ddff;
+  --sf-canvas-bg: #ffffff;
+  --sf-canvas-dot: rgba(0,0,0,0.08);
+  --sf-icon-bar-bg: #f3f4f5;
+  --sf-icon-bar-hover: #e1e3e4;
+  --sf-icon-bar-active: #6750a4;
+  --sf-icon-bar-active-bg: #e9ddff;
+  --sf-panel-bg: #f8f9fa;
+  --sf-panel-border: #e1e3e4;
+  --sf-toolbar-bg: rgba(248,249,250,0.85);
+  --sf-toolbar-border: #d9dbdf;
+  --sf-ai-bar-bg: #ffffff;
+  --sf-ai-bar-border: #d9dbdf;
+  --sf-card-bg: #ffffff;
+  --sf-card-shadow: rgba(0,0,0,0.08);
+  --sf-toggle-bg: #d9dbdf;
+  --sf-toggle-active: #6750a4;
+  --sf-chrome-btn-bg: transparent;
+  --sf-chrome-btn-hover-bg: rgba(0,0,0,0.06);
+  --sf-tag-bg: #e9ddff;
+  --sf-tag-text: #22005d;
 }
 
 [data-theme="dark"] {
@@ -143,6 +205,37 @@
   --sf-shadow: rgba(0,0,0,0.6);
   --sf-glass-bg: rgba(28,27,31,0.6);
   --sf-glass-border: rgba(255,255,255,0.05);
+
+  /* ✦ SiteForge extended tokens — dark ✦ */
+  --sf-ink: #e5e1e7;
+  --sf-ink-secondary: #cac4d0;
+  --sf-muted: #948f9a;
+  --sf-line: #353438;
+  --sf-line-strong: #49454f;
+  --sf-surface-2: #2b292d;
+  --sf-surface-3: #353438;
+  --sf-accent: #d0bcff;
+  --sf-accent-soft: #594983;
+  --sf-canvas-bg: #1c1b1f;
+  --sf-canvas-dot: rgba(255,255,255,0.08);
+  --sf-icon-bar-bg: #1c1b1f;
+  --sf-icon-bar-hover: #353438;
+  --sf-icon-bar-active: #d0bcff;
+  --sf-icon-bar-active-bg: #594983;
+  --sf-panel-bg: #141317;
+  --sf-panel-border: #353438;
+  --sf-toolbar-bg: rgba(20,19,23,0.9);
+  --sf-toolbar-border: #353438;
+  --sf-ai-bar-bg: #1c1b1f;
+  --sf-ai-bar-border: #353438;
+  --sf-card-bg: #201f23;
+  --sf-card-shadow: rgba(0,0,0,0.4);
+  --sf-toggle-bg: #353438;
+  --sf-toggle-active: #d0bcff;
+  --sf-chrome-btn-bg: transparent;
+  --sf-chrome-btn-hover-bg: rgba(255,255,255,0.08);
+  --sf-tag-bg: #594983;
+  --sf-tag-text: #e9ddff;
 }
 
 /* Base styles */
@@ -304,6 +397,50 @@ body {
   opacity: 0.9;
 }
 
+/* Button secondary (outlined) */
+.sf-btn-secondary {
+  background: var(--sf-chrome-btn-bg);
+  color: var(--sf-ink);
+  border: 1px solid var(--sf-line);
+  border-radius: 9999px;
+  padding: 10px 20px;
+  font-weight: 500;
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.sf-btn-secondary:hover {
+  background: var(--sf-chrome-btn-hover-bg);
+  border-color: var(--sf-line-strong);
+}
+
+/* Icon button (for icon bar) */
+.sf-icon-btn {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  border-radius: 10px;
+  background: var(--sf-chrome-btn-bg);
+  color: var(--sf-ink-secondary);
+  cursor: pointer;
+  transition: all 0.15s;
+  font-size: 22px;
+}
+.sf-icon-btn:hover {
+  background: var(--sf-chrome-btn-hover-bg);
+  color: var(--sf-ink);
+}
+.sf-icon-btn.active {
+  background: var(--sf-icon-bar-active-bg);
+  color: var(--sf-icon-bar-active);
+}
+
 /* Input */
 .sf-input {
   width: 100%;
@@ -357,8 +494,8 @@ body {
 
 /* Editor canvas grid */
 .sf-canvas-grid {
-  background-color: var(--sf-surface-container-lowest);
-  background-image: radial-gradient(var(--sf-surface-variant) 1px, transparent 1px);
+  background-color: var(--sf-canvas-bg);
+  background-image: radial-gradient(var(--sf-canvas-dot) 1px, transparent 1px);
   background-size: 24px 24px;
 }
 

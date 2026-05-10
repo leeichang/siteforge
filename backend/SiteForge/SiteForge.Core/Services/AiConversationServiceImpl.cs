@@ -3,8 +3,15 @@ using SiteForge.Core.Entities;
 using SiteForge.Core.Interfaces.Repositories;
 using SiteForge.Core.Interfaces.Services;
 using SiteForge.Core.Utilities;
+using Azure;
+using Azure.AI.OpenAI;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using OpenAI.Chat;
 using System.Diagnostics;
 using System.Net;
+using System.Net.Http.Headers;
+using System.Text;
 using System.Text.Json;
 using System.Text.RegularExpressions;
 
@@ -16,17 +23,26 @@ public class AiConversationServiceImpl : AiConversationService
     private readonly RAiMessageRepository _messages;
     private readonly RSiteRepository _sites;
     private readonly RPageRepository _pages;
+    private readonly ILogger<AiConversationServiceImpl> _logger;
+    private readonly IConfiguration _configuration;
+    private readonly IHttpClientFactory _httpClientFactory;
 
     public AiConversationServiceImpl(
         RAiConversationRepository conversations,
         RAiMessageRepository messages,
         RSiteRepository sites,
-        RPageRepository pages)
+        RPageRepository pages,
+        IConfiguration configuration,
+        IHttpClientFactory httpClientFactory,
+        ILogger<AiConversationServiceImpl> logger)
     {
         _conversations = conversations;
         _messages = messages;
         _sites = sites;
         _pages = pages;
+        _configuration = configuration;
+        _httpClientFactory = httpClientFactory;
+        _logger = logger;
     }
 
     public async Task<List<ConversationDto>> GetBySiteAsync(Guid siteId) =>
@@ -118,7 +134,22 @@ public class AiConversationServiceImpl : AiConversationService
         foreach (var pageType in pageTypes)
         {
             var pageName = PageNameForType(pageType);
-            var generated = GeneratePageDocument(siteName, pageName, pageType, prompt, request.Style, request.ContentLength);
+            var generated = await GenerateAiPageDocumentAsync(
+                siteName,
+                pageName,
+                pageType,
+                $"{prompt}\n\nCreate the {pageName} page for this site.",
+                new AiGeneratePageRequest
+                {
+                    SiteId = site.Id,
+                    PageName = pageName,
+                    PageType = pageType,
+                    Prompt = prompt,
+                    ProviderKey = request.ProviderKey,
+                    Style = request.Style,
+                    ContentLength = request.ContentLength
+                },
+                existingPage: null);
             var page = await _pages.AddAsync(new Page
             {
                 SiteId = site.Id,
@@ -143,12 +174,19 @@ public class AiConversationServiceImpl : AiConversationService
         response.GenerationTimeMs = stopwatch.ElapsedMilliseconds;
         response.AiSuggestions = new List<string>
         {
-            "已產生可由 GrapesJS 再編輯的 HTML/CSS 頁面。",
-            "可進入 Editor 後用 Blocks、Styles、Assets 繼續微調。",
-            "發佈前建議替換品牌圖片與 CTA 連結。"
+            "已使用設定的 AI provider 依照 prompt 生成可由 GrapesJS 再編輯的 HTML/CSS 頁面。",
+            "每個頁面會依照 page type 重新請 AI 設計，不再共用固定本地版型。",
+            "可進入 Editor 後用 Blocks、Styles、Assets 繼續微調。"
         };
 
-        await RecordGenerationAsync(site.Id, response.Pages.FirstOrDefault()?.PageId, "AI generated website", prompt, response);
+        await RecordGenerationAsync(
+            site.Id,
+            response.Pages.FirstOrDefault()?.PageId,
+            "AI generated website",
+            prompt,
+            response,
+            AiModelName(ResolveAiProvider(request.ProviderKey)),
+            "Generated a multi-page GrapesJS website with the configured AI provider.");
         return response;
     }
 
@@ -173,9 +211,10 @@ public class AiConversationServiceImpl : AiConversationService
         var pageType = hasTemplate && templatePage is not null ? templatePage.PageType : NormalizePageType(request.PageType);
         var pageName = CleanTitle(request.PageName, page?.Title ?? templatePage?.Title ?? PageNameForType(pageType));
         var prompt = CleanPrompt(request.Prompt, pageName);
+        var isIncrementalPageEdit = page is not null && !hasTemplate;
         var generated = hasTemplate && selectedTemplate is not null && templatePage is not null
             ? GenerateTemplatePageDocument(site.Name, pageName, prompt, templatePage, selectedTemplate)
-            : GeneratePageDocument(site.Name, pageName, pageType, prompt, request.Style, request.ContentLength);
+            : await GenerateAiPageDocumentAsync(site.Name, pageName, pageType, prompt, request, page);
 
         if (page is null)
         {
@@ -198,8 +237,11 @@ public class AiConversationServiceImpl : AiConversationService
         }
         else
         {
-            page.Title = pageName;
-            page.PageType = pageType;
+            if (!isIncrementalPageEdit)
+            {
+                page.Title = pageName;
+                page.PageType = pageType;
+            }
             page.HtmlContent = generated.Html;
             page.CssContent = generated.Css;
             page.JsContent = generated.Js;
@@ -211,7 +253,16 @@ public class AiConversationServiceImpl : AiConversationService
         }
 
         var response = ToGeneratedPageDto(page, generated, stopwatch.ElapsedMilliseconds);
-        await RecordGenerationAsync(site.Id, page.Id, "AI generated page", prompt, response);
+        await RecordGenerationAsync(
+            site.Id,
+            page.Id,
+            hasTemplate ? "Stitch template page" : "AI generated page",
+            prompt,
+            response,
+            hasTemplate ? "siteforge-stitch-template" : AiModelName(ResolveAiProvider(request.ProviderKey)),
+            hasTemplate
+                ? "Generated a GrapesJS page from a curated Stitch template."
+                : "Generated or updated a GrapesJS page with the configured AI provider.");
         return response;
     }
 
@@ -271,22 +322,36 @@ public class AiConversationServiceImpl : AiConversationService
             "進入 Editor 後可繼續替換品牌文案、圖片、CTA 與資料欄位。"
         };
 
-        await RecordGenerationAsync(site.Id, response.Pages.FirstOrDefault()?.PageId, "Stitch template website", prompt, response);
+        await RecordGenerationAsync(
+            site.Id,
+            response.Pages.FirstOrDefault()?.PageId,
+            "Stitch template website",
+            prompt,
+            response,
+            "siteforge-stitch-template",
+            $"Generated a GrapesJS website from the Stitch template \"{siteTemplate.Label}\".");
         return response;
     }
 
-    private async Task RecordGenerationAsync(Guid siteId, Guid? pageId, string title, string prompt, object result)
+    private async Task RecordGenerationAsync(
+        Guid siteId,
+        Guid? pageId,
+        string title,
+        string prompt,
+        object result,
+        string model,
+        string summary)
     {
         var conversation = await _conversations.AddAsync(new AiConversation
         {
             SiteId = siteId,
             PageId = pageId,
             Title = title,
-            Model = "siteforge-local-generator",
+            Model = model,
             MessageCount = 2,
             LastActivityAt = DateTime.UtcNow,
             IsCompleted = true,
-            Summary = "Generated structured GrapesJS-ready website content."
+            Summary = summary
         });
 
         await _messages.AddAsync(new AiMessage
@@ -308,6 +373,8 @@ public class AiConversationServiceImpl : AiConversationService
             ClientTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds()
         });
     }
+
+    private static string AiModelName(AiProviderSettings provider) => $"{provider.Key}:{provider.ModelName}";
 
     private async Task<string> CreateUniqueSiteSlugAsync(string name)
     {
@@ -333,6 +400,342 @@ public class AiConversationServiceImpl : AiConversationService
         return slug;
     }
 
+    private async Task<GeneratedPageDocument> GenerateAiPageDocumentAsync(
+        string siteName,
+        string pageName,
+        string pageType,
+        string prompt,
+        AiGeneratePageRequest request,
+        Page? existingPage)
+    {
+        var provider = ResolveAiProvider(request.ProviderKey);
+
+        var currentHtml = FirstNonEmpty(request.CurrentHtmlContent, existingPage?.HtmlContent, string.Empty);
+        var currentCss = FirstNonEmpty(request.CurrentCssContent, existingPage?.CssContent, string.Empty);
+        var isEditingExistingPage = existingPage is not null && !string.IsNullOrWhiteSpace(currentHtml);
+
+        var systemPrompt = BuildAiSystemPrompt(isEditingExistingPage, request.ContentLength);
+        var userPrompt = BuildAiUserPrompt(
+            siteName,
+            pageName,
+            pageType,
+            prompt,
+            request.Style,
+            request.ContentLength,
+            currentHtml,
+            currentCss,
+            isEditingExistingPage);
+
+        _logger.LogInformation("Calling {Provider} for {Mode} page generation. Model={Model}, PageType={PageType}, ContentLength={ContentLength}",
+            provider.Key,
+            isEditingExistingPage ? "incremental" : "new",
+            provider.ModelName,
+            pageType,
+            request.ContentLength);
+
+        var raw = await CompletePagePromptAsync(provider, systemPrompt, userPrompt);
+
+        var (html, css, suggestions) = ParseAiHtmlCssResponse(raw);
+        if (string.IsNullOrWhiteSpace(html))
+        {
+            _logger.LogError("{Provider} returned no usable HTML. Response preview: {Preview}", provider.Key, Truncate(raw, 800));
+            throw new InvalidOperationException("AI did not return usable HTML. Please try a more specific prompt.");
+        }
+
+        var js = FirstNonEmpty(request.CurrentJsContent, existingPage?.JsContent, string.Empty);
+        var metaTitle = isEditingExistingPage
+            ? existingPage?.MetaTitle ?? $"{pageName} | {siteName}"
+            : $"{pageName} | {siteName}";
+        var metaDescription = isEditingExistingPage
+            ? existingPage?.MetaDescription ?? StripTags(prompt)
+            : StripTags(prompt);
+
+        return new GeneratedPageDocument(
+            SanitizeGeneratedHtml(html),
+            css,
+            js,
+            metaTitle,
+            Truncate(metaDescription, 150),
+            string.IsNullOrWhiteSpace(suggestions)
+                ? new List<string> { $"已由 {provider.Label} 根據 prompt 生成頁面內容。", "可在 GrapesJS 內繼續拖曳、調整樣式與替換圖片。" }
+                : new List<string> { suggestions });
+    }
+
+    private AiProviderSettings ResolveAiProvider(string? providerKey)
+    {
+        var provider = AiProviderSettings.From(_configuration, providerKey);
+        if (!provider.IsConfigured)
+        {
+            throw new InvalidOperationException(
+                $"Real AI page generation is not configured for provider \"{provider.Key}\". Set AI:Providers:{provider.Key}:ApiKey and the provider endpoint/model settings.");
+        }
+
+        return provider;
+    }
+
+    private async Task<string> CompletePagePromptAsync(AiProviderSettings provider, string systemPrompt, string userPrompt)
+    {
+        return provider.IsAzureOpenAi
+            ? await CompleteWithAzureOpenAiAsync(provider, systemPrompt, userPrompt)
+            : await CompleteWithOpenAiCompatibleAsync(provider, systemPrompt, userPrompt);
+    }
+
+    private static async Task<string> CompleteWithAzureOpenAiAsync(AiProviderSettings provider, string systemPrompt, string userPrompt)
+    {
+        var client = new AzureOpenAIClient(
+            new Uri(provider.Endpoint),
+            new AzureKeyCredential(provider.ApiKey));
+        var chatClient = client.GetChatClient(provider.DeploymentName);
+        var options = new ChatCompletionOptions
+        {
+            MaxOutputTokenCount = provider.MaxTokens,
+            Temperature = (float)provider.Temperature,
+            PresencePenalty = (float)provider.PresencePenalty,
+            FrequencyPenalty = (float)provider.FrequencyPenalty
+        };
+
+        var raw = new StringBuilder();
+        await foreach (var update in chatClient.CompleteChatStreamingAsync(
+            new ChatMessage[] { new SystemChatMessage(systemPrompt), new UserChatMessage(userPrompt) },
+            options))
+        {
+            foreach (var part in update.ContentUpdate)
+            {
+                raw.Append(part.Text);
+            }
+        }
+
+        return raw.ToString();
+    }
+
+    private async Task<string> CompleteWithOpenAiCompatibleAsync(AiProviderSettings provider, string systemPrompt, string userPrompt)
+    {
+        var client = _httpClientFactory.CreateClient("siteforge-ai");
+        client.Timeout = TimeSpan.FromMinutes(5);
+
+        using var message = new HttpRequestMessage(HttpMethod.Post, provider.ChatCompletionsUri);
+        message.Headers.Authorization = new AuthenticationHeaderValue("Bearer", provider.ApiKey);
+        if (provider.BaseUrl.Contains("api.kimi.com", StringComparison.OrdinalIgnoreCase))
+        {
+            message.Headers.UserAgent.ParseAdd("KimiCLI/1.30.0");
+        }
+
+        var payload = new Dictionary<string, object?>
+        {
+            ["model"] = provider.ModelName,
+            ["messages"] = new[]
+            {
+                new Dictionary<string, string> { ["role"] = "system", ["content"] = systemPrompt },
+                new Dictionary<string, string> { ["role"] = "user", ["content"] = userPrompt }
+            },
+            ["temperature"] = provider.Temperature,
+            ["presence_penalty"] = provider.PresencePenalty,
+            ["frequency_penalty"] = provider.FrequencyPenalty,
+            ["stream"] = false
+        };
+        payload[provider.MaxTokensField] = provider.MaxTokens;
+        MergeExtraBody(payload, provider.ExtraBodyJson);
+
+        message.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+
+        using var response = await client.SendAsync(message);
+        var body = await response.Content.ReadAsStringAsync();
+        if (!response.IsSuccessStatusCode)
+        {
+            _logger.LogError("{Provider} request failed. Status={Status}. Body={Body}",
+                provider.Key,
+                (int)response.StatusCode,
+                Truncate(body, 800));
+            throw new InvalidOperationException($"{provider.Label} request failed with HTTP {(int)response.StatusCode}.");
+        }
+
+        return ExtractOpenAiCompatibleContent(body, provider.Label);
+    }
+
+    private static string ExtractOpenAiCompatibleContent(string body, string providerLabel)
+    {
+        using var json = JsonDocument.Parse(body);
+        var root = json.RootElement;
+        if (!root.TryGetProperty("choices", out var choices) || choices.GetArrayLength() == 0)
+        {
+            throw new InvalidOperationException($"{providerLabel} returned no choices.");
+        }
+
+        var message = choices[0].GetProperty("message");
+        if (!message.TryGetProperty("content", out var content))
+        {
+            throw new InvalidOperationException($"{providerLabel} returned no message content.");
+        }
+
+        if (content.ValueKind == JsonValueKind.String)
+        {
+            return content.GetString() ?? string.Empty;
+        }
+
+        if (content.ValueKind != JsonValueKind.Array)
+        {
+            return content.ToString();
+        }
+
+        var output = new StringBuilder();
+        foreach (var part in content.EnumerateArray())
+        {
+            if (part.TryGetProperty("text", out var text))
+            {
+                output.Append(text.GetString());
+            }
+        }
+
+        return output.ToString();
+    }
+
+    private static void MergeExtraBody(Dictionary<string, object?> payload, string extraBodyJson)
+    {
+        if (string.IsNullOrWhiteSpace(extraBodyJson)) return;
+
+        using var document = JsonDocument.Parse(extraBodyJson);
+        if (document.RootElement.ValueKind != JsonValueKind.Object) return;
+
+        foreach (var property in document.RootElement.EnumerateObject())
+        {
+            payload[property.Name] = JsonSerializer.Deserialize<object>(property.Value.GetRawText());
+        }
+    }
+
+    private static string BuildAiSystemPrompt(bool isEditingExistingPage, string? contentLength)
+    {
+        var lengthRule = (contentLength ?? "medium").ToLowerInvariant() switch
+        {
+            "concise" => "Keep the page concise: 3 to 5 strong sections, tight copy, no filler.",
+            "long" => "Create a richer page: 6 to 8 complete sections with detailed but useful copy.",
+            "extra_long" => "Create a comprehensive page: 8+ sections with detailed content, FAQs, proof, and CTAs.",
+            _ => "Create a complete medium-length page: 5 to 7 polished sections."
+        };
+
+        var modeRule = isEditingExistingPage
+            ? """
+              You are editing an existing GrapesJS page. Preserve the existing structure, brand, navigation, hero, typography rhythm, and core content.
+              Apply only the user's requested change. If they ask to add photos, add photo/gallery sections into the current page instead of replacing the whole page.
+              Do not rewrite the whole design unless the user explicitly asks for a full redesign.
+              """
+            : """
+              You are creating a new production-ready GrapesJS page from the user's prompt.
+              The page must be genuinely based on the prompt, industry, offer, tone, audience, and requested sections.
+              Avoid generic SaaS filler unless the prompt asks for it.
+              """;
+
+        return $$"""
+        You are a senior web designer and frontend engineer specializing in GrapesJS-editable HTML.
+
+        {{modeRule}}
+
+        {{lengthRule}}
+
+        Requirements:
+        - Return only two fenced code blocks: one ```html and one ```css.
+        - HTML must be body content only. Do not include <!doctype>, <html>, <head>, or <body>.
+        - Use semantic sections, real headings, useful copy, clear CTAs, and editable structure.
+        - Use stable class names and CSS you provide. Tailwind utility classes are allowed, but do not depend on Tailwind only.
+        - Use real image URLs when images are requested. Prefer source.unsplash.com query URLs that match the prompt.
+        - Do not include JavaScript.
+        - Do not include markdown outside the two code blocks except a short Suggestions paragraph after them.
+        - No placeholder text like lorem ipsum, [image], TODO, or generic "your content here".
+        """;
+    }
+
+    private static string BuildAiUserPrompt(
+        string siteName,
+        string pageName,
+        string pageType,
+        string prompt,
+        string? style,
+        string? contentLength,
+        string currentHtml,
+        string currentCss,
+        bool isEditingExistingPage)
+    {
+        var currentPageSection = isEditingExistingPage
+            ? $$"""
+
+              Existing page HTML:
+              ```html
+              {{Truncate(currentHtml, 14000)}}
+              ```
+
+              Existing page CSS:
+              ```css
+              {{Truncate(currentCss, 7000)}}
+              ```
+              """
+            : string.Empty;
+
+        return $$"""
+        Site name: {{siteName}}
+        Page name: {{pageName}}
+        Page type: {{pageType}}
+        Visual style: {{style ?? "studio"}}
+        Content length: {{contentLength ?? "medium"}}
+
+        User request:
+        {{prompt}}
+        {{currentPageSection}}
+
+        Generate the final HTML/CSS now.
+        """;
+    }
+
+    private static (string Html, string Css, string Suggestions) ParseAiHtmlCssResponse(string output)
+    {
+        var html = ExtractCodeBlock(output, "html");
+        var css = ExtractCodeBlock(output, "css");
+
+        if (string.IsNullOrWhiteSpace(html))
+        {
+            var anyBlock = Regex.Matches(output, @"```[a-zA-Z]*\s*([\s\S]*?)```")
+                .Select(match => match.Groups[1].Value.Trim())
+                .FirstOrDefault(content => Regex.IsMatch(content, @"<(main|section|div|article|header)\b", RegexOptions.IgnoreCase));
+            html = anyBlock ?? string.Empty;
+        }
+
+        if (string.IsNullOrWhiteSpace(html) && Regex.IsMatch(output, @"<(main|section|div|article|header)\b", RegexOptions.IgnoreCase))
+        {
+            var cssIndex = output.IndexOf("```css", StringComparison.OrdinalIgnoreCase);
+            html = cssIndex > 0 ? output[..cssIndex] : output;
+            html = Regex.Replace(html, @"```[a-zA-Z]*", string.Empty).Replace("```", string.Empty).Trim();
+        }
+
+        var suggestions = Regex.Replace(output, @"```[\s\S]*?```", string.Empty).Trim();
+        return (html.Trim(), css.Trim(), Truncate(suggestions, 600));
+    }
+
+    private static string ExtractCodeBlock(string value, string language)
+    {
+        var match = Regex.Match(value, $@"```{language}\s*([\s\S]*?)```", RegexOptions.IgnoreCase);
+        if (match.Success) return match.Groups[1].Value.Trim();
+
+        var start = value.IndexOf($"```{language}", StringComparison.OrdinalIgnoreCase);
+        if (start < 0) return string.Empty;
+
+        var contentStart = start + language.Length + 3;
+        var remaining = value[contentStart..];
+        var end = remaining.IndexOf("```", StringComparison.Ordinal);
+        return (end >= 0 ? remaining[..end] : remaining).Trim();
+    }
+
+    private static string SanitizeGeneratedHtml(string html)
+    {
+        var cleaned = Regex.Replace(html, @"</?(html|head|body)[^>]*>", string.Empty, RegexOptions.IgnoreCase);
+        cleaned = Regex.Replace(cleaned, @"<!doctype[^>]*>", string.Empty, RegexOptions.IgnoreCase);
+        cleaned = Regex.Replace(cleaned, @"<script[\s\S]*?</script>", string.Empty, RegexOptions.IgnoreCase);
+        return cleaned.Trim();
+    }
+
+    private static string Truncate(string? value, int maxLength)
+    {
+        if (string.IsNullOrEmpty(value)) return string.Empty;
+        return value.Length <= maxLength ? value : value[..maxLength];
+    }
+
     private static AiGeneratedPageDto ToGeneratedPageDto(Page page, GeneratedPageDocument generated, long elapsedMs) => new()
     {
         PageId = page.Id,
@@ -348,6 +751,192 @@ public class AiConversationServiceImpl : AiConversationService
         AiSuggestions = generated.Suggestions,
         GenerationTimeMs = elapsedMs
     };
+
+    private static GeneratedPageDocument GenerateIncrementalPageEditDocument(
+        string siteName,
+        Page page,
+        string prompt,
+        AiGeneratePageRequest request)
+    {
+        var sourceHtml = FirstNonEmpty(request.CurrentHtmlContent, page.HtmlContent, "<main></main>");
+        var sourceCss = FirstNonEmpty(request.CurrentCssContent, page.CssContent, string.Empty);
+        var sourceJs = FirstNonEmpty(request.CurrentJsContent, page.JsContent, string.Empty);
+        var cleanPrompt = StripTags(prompt);
+        var escapedPrompt = WebUtility.HtmlEncode(cleanPrompt);
+        var additionHtml = BuildIncrementalAdditionHtml(page.PageType, cleanPrompt);
+        var mergedHtml = InsertBeforeClosingContainer(sourceHtml, additionHtml);
+        var mergedCss = MergeCss(sourceCss, IncrementalEditCss());
+
+        return new GeneratedPageDocument(
+            mergedHtml,
+            mergedCss,
+            sourceJs,
+            page.MetaTitle ?? $"{page.Title} | {siteName}",
+            page.MetaDescription ?? $"Updated from request: {escapedPrompt}",
+            new List<string>
+            {
+                "已保留原本頁面結構，只把新內容加入目前頁面。",
+                "如果只要增加圖片，AI 會新增圖片區塊，不再重建整頁。",
+                "請檢查新增區塊的位置，再依需要拖曳或調整樣式。"
+            });
+    }
+
+    private static string BuildIncrementalAdditionHtml(string pageType, string prompt)
+    {
+        var wantsImages = Regex.IsMatch(prompt, "(照片|圖片|相片|photo|image|picture|gallery|visual)", RegexOptions.IgnoreCase);
+        var title = wantsImages ? "更多品牌照片" : "新增內容";
+        var subtitle = string.IsNullOrWhiteSpace(prompt)
+            ? "延伸目前頁面的內容與視覺素材。"
+            : WebUtility.HtmlEncode(prompt);
+        var images = GalleryImagesFor(pageType, prompt);
+
+        if (!wantsImages)
+        {
+            return $$"""
+
+            <section class="sf-ai-incremental-section">
+              <div class="sf-ai-incremental-inner">
+                <p class="sf-ai-incremental-kicker">AI update</p>
+                <h2>{{title}}</h2>
+                <p>{{subtitle}}</p>
+              </div>
+            </section>
+            """;
+        }
+
+        return $$"""
+
+        <section class="sf-ai-incremental-section sf-ai-photo-section">
+          <div class="sf-ai-incremental-inner">
+            <p class="sf-ai-incremental-kicker">AI photo update</p>
+            <h2>{{title}}</h2>
+            <p>{{subtitle}}</p>
+            <div class="sf-ai-photo-grid">
+              <figure>
+                <img src="{{images[0]}}" alt="Brand visual 1" loading="lazy" />
+              </figure>
+              <figure>
+                <img src="{{images[1]}}" alt="Brand visual 2" loading="lazy" />
+              </figure>
+              <figure>
+                <img src="{{images[2]}}" alt="Brand visual 3" loading="lazy" />
+              </figure>
+            </div>
+          </div>
+        </section>
+        """;
+    }
+
+    private static string InsertBeforeClosingContainer(string html, string addition)
+    {
+        if (string.IsNullOrWhiteSpace(html)) return $"<main>{addition}</main>";
+
+        foreach (var tag in new[] { "</main>", "</body>" })
+        {
+            var index = html.LastIndexOf(tag, StringComparison.OrdinalIgnoreCase);
+            if (index >= 0) return html.Insert(index, addition);
+        }
+
+        return html + addition;
+    }
+
+    private static string MergeCss(string currentCss, string additionCss)
+    {
+        if (currentCss.Contains(".sf-ai-incremental-section", StringComparison.OrdinalIgnoreCase)) return currentCss;
+        return string.IsNullOrWhiteSpace(currentCss)
+            ? additionCss
+            : $"{currentCss.TrimEnd()}\n\n{additionCss}";
+    }
+
+    private static string FirstNonEmpty(params string?[] values)
+    {
+        foreach (var value in values)
+        {
+            if (!string.IsNullOrWhiteSpace(value)) return value;
+        }
+
+        return string.Empty;
+    }
+
+    private static string[] GalleryImagesFor(string pageType, string prompt)
+    {
+        var query = (pageType, prompt.ToLowerInvariant()) switch
+        {
+            (_, var value) when value.Contains("美妝") || value.Contains("保養") || value.Contains("skincare") || value.Contains("beauty") =>
+                "skincare product serum cosmetics",
+            ("product", _) => "premium product photography",
+            ("about", _) => "brand lifestyle photography",
+            ("services", _) => "professional consultation studio",
+            _ => "brand product lifestyle"
+        };
+
+        var escaped = Uri.EscapeDataString(query);
+        return new[]
+        {
+            $"https://source.unsplash.com/900x700/?{escaped}&sig=11",
+            $"https://source.unsplash.com/900x700/?{escaped}&sig=22",
+            $"https://source.unsplash.com/900x700/?{escaped}&sig=33"
+        };
+    }
+
+    private static string IncrementalEditCss() => """
+        .sf-ai-incremental-section {
+          padding: 72px 24px;
+          background: #fff;
+        }
+        .sf-ai-incremental-inner {
+          max-width: 1120px;
+          margin: 0 auto;
+        }
+        .sf-ai-incremental-kicker {
+          margin: 0 0 10px;
+          color: #8358ed;
+          font-size: 12px;
+          font-weight: 800;
+          letter-spacing: 0;
+          text-transform: uppercase;
+        }
+        .sf-ai-incremental-section h2 {
+          margin: 0;
+          color: #111827;
+          font-size: clamp(28px, 4vw, 44px);
+          line-height: 1.1;
+          font-weight: 900;
+          letter-spacing: 0;
+        }
+        .sf-ai-incremental-section p {
+          max-width: 760px;
+          margin: 16px 0 0;
+          color: #4b5563;
+          font-size: 18px;
+          line-height: 1.7;
+        }
+        .sf-ai-photo-grid {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 18px;
+          margin-top: 32px;
+        }
+        .sf-ai-photo-grid figure {
+          min-height: 260px;
+          margin: 0;
+          overflow: hidden;
+          border-radius: 8px;
+          background: #f3f4f6;
+        }
+        .sf-ai-photo-grid img {
+          display: block;
+          width: 100%;
+          height: 100%;
+          min-height: 260px;
+          object-fit: cover;
+        }
+        @media (max-width: 760px) {
+          .sf-ai-photo-grid {
+            grid-template-columns: 1fr;
+          }
+        }
+        """;
 
     private static GeneratedPageDocument GeneratePageDocument(
         string siteName,
@@ -742,6 +1331,143 @@ public class AiConversationServiceImpl : AiConversationService
         string MetaTitle,
         string MetaDescription,
         List<string> Suggestions);
+
+    private sealed record AiProviderSettings(
+        string Key,
+        string Label,
+        string Type,
+        string Endpoint,
+        string BaseUrl,
+        string ApiKey,
+        string DeploymentName,
+        string Model,
+        string ChatCompletionsPath,
+        string MaxTokensField,
+        string ExtraBodyJson,
+        int MaxTokens,
+        double Temperature,
+        double PresencePenalty,
+        double FrequencyPenalty)
+    {
+        public bool IsAzureOpenAi => Type.Equals("azure-openai", StringComparison.OrdinalIgnoreCase);
+
+        public string ModelName => IsAzureOpenAi ? DeploymentName : Model;
+
+        public Uri ChatCompletionsUri => new(CombineUrl(BaseUrl, ChatCompletionsPath));
+
+        public bool IsConfigured =>
+            IsAzureOpenAi
+                ? !string.IsNullOrWhiteSpace(Endpoint) &&
+                  !string.IsNullOrWhiteSpace(ApiKey) &&
+                  !string.IsNullOrWhiteSpace(DeploymentName)
+                : !string.IsNullOrWhiteSpace(BaseUrl) &&
+                  !string.IsNullOrWhiteSpace(ApiKey) &&
+                  !string.IsNullOrWhiteSpace(Model);
+
+        public static AiProviderSettings From(IConfiguration configuration, string? requestedKey)
+        {
+            var defaultKey = configuration["AI:DefaultProvider"] ?? "azure";
+            var key = string.IsNullOrWhiteSpace(requestedKey) ? defaultKey : requestedKey.Trim();
+            var section = configuration.GetSection($"AI:Providers:{key}");
+
+            if (section.Exists())
+            {
+                var type = section["Type"] ?? "openai-compatible";
+                var provider = new AiProviderSettings(
+                    key,
+                    section["Label"] ?? ProviderLabelFor(key, type),
+                    type,
+                    section["Endpoint"] ?? string.Empty,
+                    section["BaseUrl"] ?? string.Empty,
+                    section["ApiKey"] ?? string.Empty,
+                    section["DeploymentName"] ?? string.Empty,
+                    section["Model"] ?? string.Empty,
+                    section["ChatCompletionsPath"] ?? "/chat/completions",
+                    section["MaxTokensField"] ?? "max_tokens",
+                    section.GetSection("ExtraBodyJson").Exists()
+                        ? JsonSerializer.Serialize(section.GetSection("ExtraBodyJson").Get<Dictionary<string, object?>>() ?? new Dictionary<string, object?>())
+                        : string.Empty,
+                    ReadInt(section["MaxTokens"], 4096),
+                    ReadDouble(section["Temperature"], 0.72),
+                    ReadDouble(section["PresencePenalty"], 0.4),
+                    ReadDouble(section["FrequencyPenalty"], 0.2));
+
+                if (!provider.IsConfigured && key.Equals("azure", StringComparison.OrdinalIgnoreCase))
+                {
+                    var legacy = FromLegacyAzureOpenAi(configuration, key);
+                    return legacy.IsConfigured ? legacy : provider;
+                }
+
+                return provider;
+            }
+
+            if (key.Equals("azure", StringComparison.OrdinalIgnoreCase))
+            {
+                return FromLegacyAzureOpenAi(configuration, key);
+            }
+
+            return new AiProviderSettings(
+                key,
+                ProviderLabelFor(key, "openai-compatible"),
+                "openai-compatible",
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                string.Empty,
+                "/chat/completions",
+                "max_tokens",
+                string.Empty,
+                4096,
+                0.72,
+                0.4,
+                0.2);
+        }
+
+        private static AiProviderSettings FromLegacyAzureOpenAi(IConfiguration configuration, string key)
+        {
+            var section = configuration.GetSection("AzureOpenAI");
+            return new AiProviderSettings(
+                key,
+                "Azure OpenAI",
+                "azure-openai",
+                section["Endpoint"] ?? string.Empty,
+                string.Empty,
+                section["ApiKey"] ?? string.Empty,
+                section["DeploymentName"] ?? string.Empty,
+                string.Empty,
+                "/chat/completions",
+                "max_tokens",
+                string.Empty,
+                ReadInt(section["MaxTokens"], 4096),
+                ReadDouble(section["Temperature"], 0.72),
+                ReadDouble(section["PresencePenalty"], 0.4),
+                ReadDouble(section["FrequencyPenalty"], 0.2));
+        }
+
+        private static string ProviderLabelFor(string key, string type) =>
+            key.ToLowerInvariant() switch
+            {
+                "azure" => "Azure OpenAI",
+                "deepseek" => "DeepSeek",
+                "kimi" => "Kimi",
+                "kimi-code" => "Kimi Code",
+                _ => type.Equals("azure-openai", StringComparison.OrdinalIgnoreCase) ? "Azure OpenAI" : key
+            };
+
+        private static string CombineUrl(string baseUrl, string path)
+        {
+            var normalizedBase = baseUrl.TrimEnd('/');
+            var normalizedPath = string.IsNullOrWhiteSpace(path) ? "/chat/completions" : path;
+            return $"{normalizedBase}/{normalizedPath.TrimStart('/')}";
+        }
+
+        private static int ReadInt(string? value, int fallback) =>
+            int.TryParse(value, out var parsed) ? parsed : fallback;
+
+        private static double ReadDouble(string? value, double fallback) =>
+            double.TryParse(value, out var parsed) ? parsed : fallback;
+    }
 
     private sealed record StitchTemplateDefinition(
         string Key,

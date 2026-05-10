@@ -105,6 +105,7 @@ builder.Services.AddScoped<ISqlSugarClient>(sp => sp.GetRequiredService<AppDbCon
 builder.Services.AddSingleton<JwtHelper>();
 builder.Services.AddSingleton<PasswordHelper>();
 builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient();
 
 builder.Services.AddScoped<RUserRepository, UserRepository>();
 builder.Services.AddScoped<RSiteRepository, SiteRepository>();

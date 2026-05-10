@@ -49,6 +49,7 @@ public class AiGenerateSiteRequest
     public string Prompt { get; set; } = string.Empty;
     public string? Description { get; set; }
     public string? TemplateKey { get; set; }
+    public string? ProviderKey { get; set; }
     public string Style { get; set; } = "studio";
     public string ContentLength { get; set; } = "medium";
     public List<string>? PageTypes { get; set; }
@@ -63,8 +64,12 @@ public class AiGeneratePageRequest
     public string Prompt { get; set; } = string.Empty;
     public string? Slug { get; set; }
     public string? TemplateKey { get; set; }
+    public string? ProviderKey { get; set; }
     public string Style { get; set; } = "studio";
     public string ContentLength { get; set; } = "medium";
+    public string? CurrentHtmlContent { get; set; }
+    public string? CurrentCssContent { get; set; }
+    public string? CurrentJsContent { get; set; }
 }
 
 public class AiTemplateDto

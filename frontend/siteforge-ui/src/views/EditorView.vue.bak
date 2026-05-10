@@ -1,0 +1,462 @@
+<template>
+  <div class="studio-editor" :class="`theme-${theme}`">
+    <!-- Canvas Toolbar (floating over canvas) -->
+    <div class="canvas-toolbar">
+      <button @click="backToWorkspace" class="ct-btn" type="button" :title="t('editor.workspace')">
+        <span class="material-symbols-outlined">arrow_back</span>
+      </button>
+
+      <div class="ct-divider"></div>
+
+      <div class="ct-device-group">
+        <button :class="{ active: device === 'Desktop' }" @click="setDevice('Desktop')" type="button" :title="t('editor.desktop')">
+          <span class="material-symbols-outlined">desktop_windows</span>
+        </button>
+        <button :class="{ active: device === 'Tablet' }" @click="setDevice('Tablet')" type="button" :title="t('editor.tablet')">
+          <span class="material-symbols-outlined">tablet_mac</span>
+        </button>
+        <button :class="{ active: device === 'Mobile portrait' }" @click="setDevice('Mobile portrait')" type="button" :title="t('editor.mobile')">
+          <span class="material-symbols-outlined">phone_iphone</span>
+        </button>
+      </div>
+
+      <div class="ct-divider"></div>
+
+      <button class="ct-btn" @click="undo" type="button" :title="t('editor.undo')" :disabled="!editorReady">
+        <span class="material-symbols-outlined">undo</span>
+      </button>
+      <button class="ct-btn" @click="redo" type="button" :title="t('editor.redo')" :disabled="!editorReady">
+        <span class="material-symbols-outlined">redo</span>
+      </button>
+
+      <div class="ct-spacer"></div>
+
+      <button class="ct-btn ct-preview-btn" @click="togglePreview" type="button" :title="t('editor.preview')">
+        <span class="material-symbols-outlined">{{ previewMode ? 'edit' : 'visibility' }}</span>
+      </button>
+
+      <div class="ct-divider"></div>
+
+      <div class="ct-save-group">
+        <button class="ct-btn ct-unsaved-dot" v-if="hasUnsavedChanges" type="button" :title="t('editor.unsavedChanges')">
+          <span class="material-symbols-outlined">circle</span>
+        </button>
+        <button class="ct-btn ct-save-btn" @click="savePage" :disabled="saving || !editorReady" type="button">
+          {{ saving ? t('editor.saving') : t('editor.save') }}
+        </button>
+        <button class="ct-btn ct-publish-btn" @click="publishSite" :disabled="publishing" type="button">
+          {{ publishing ? t('editor.publishing') : t('editor.publish') }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Workbench -->
+    <main
+      ref="workbenchEl"
+      class="studio-workbench"
+      :class="{ resizing: resizingPane }"
+      :style="workbenchGridStyle"
+    >
+      <!-- Icon Rail (64px) -->
+      <aside class="editor-rail">
+        <button :class="{ active: isLeftPanelOpen && activePanel === 'blocks' }" @click="toggleLeftPanel('blocks')" type="button" :title="t('editor.blocks')">
+          <span class="material-symbols-outlined">add_box</span>
+        </button>
+        <button :class="{ active: isLeftPanelOpen && activePanel === 'project' }" @click="toggleLeftPanel('project')" type="button" :title="t('editor.pages')">
+          <span class="material-symbols-outlined">account_tree</span>
+        </button>
+        <button :class="{ active: isLeftPanelOpen && activePanel === 'global' }" @click="toggleLeftPanel('global')" type="button" :title="t('editor.globalStyles')">
+          <span class="material-symbols-outlined">palette</span>
+        </button>
+        <button :class="{ active: isLeftPanelOpen && activePanel === 'assets' }" @click="toggleLeftPanel('assets')" type="button" :title="t('editor.assets')">
+          <span class="material-symbols-outlined">perm_media</span>
+        </button>
+        <button :class="{ active: isLeftPanelOpen && activePanel === 'data' }" @click="toggleLeftPanel('data')" type="button" :title="t('editor.dataSources')">
+          <span class="material-symbols-outlined">dataset</span>
+        </button>
+        <button :class="{ active: isLeftPanelOpen && activePanel === 'ai' }" @click="toggleLeftPanel('ai')" type="button" :title="t('editor.aiAssistant')">
+          <span class="material-symbols-outlined">auto_awesome</span>
+        </button>
+        <button class="rail-bottom" @click="showCode = true" type="button" :title="t('editor.code')">
+          <span class="material-symbols-outlined">code</span>
+        </button>
+      </aside>
+
+      <!-- Left Panel (expandable, 280px default) -->
+      <aside ref="leftPanelEl" class="studio-left-panel" :class="{ collapsed: !isLeftPanelOpen }" :aria-hidden="!isLeftPanelOpen">
+        <section v-show="activePanel === 'project'" class="studio-panel project-panel" :style="projectSplitStyle">
+          <div class="project-pane">
+            <header class="panel-title-row">
+              <h2>{{ t('editor.projectTree') }}</h2>
+              <button @click="createPage" class="panel-icon-button" type="button" :aria-label="t('workspace.createPage')">
+                <span class="material-symbols-outlined">add</span>
+              </button>
+            </header>
+            <div class="project-tree">
+              <div class="tree-root">
+                <span class="tree-caret">▾</span>
+                <span class="tree-site-icon"></span>
+                <span>{{ site?.name || t('editor.website') }}</span>
+              </div>
+              <button
+                v-for="item in treePages"
+                :key="item.id"
+                class="tree-node"
+                :class="{ active: item.id === pageId }"
+                @click="openPage(item.id)"
+                type="button"
+              >
+                <span class="tree-line"></span>
+                <span class="tree-file-icon" :class="{ home: item.isHome }"></span>
+                <span class="tree-label">
+                  <strong>{{ item.title }}</strong>
+                  <small>/{{ item.slug }}</small>
+                </span>
+                <em v-if="item.isHome">{{ t('common.home') }}</em>
+              </button>
+            </div>
+          </div>
+
+          <button
+            class="stack-resizer project-layer-resizer"
+            :class="{ active: resizingPane === 'project-layers' }"
+            type="button"
+            role="separator"
+            aria-orientation="horizontal"
+            :aria-valuemin="MIN_PROJECT_TREE"
+            :aria-valuemax="Math.round(projectTreeMax)"
+            :aria-valuenow="Math.round(projectSplit.projectTree)"
+            :aria-label="t('editor.adjustProjectLayers')"
+            :title="t('editor.adjustProjectLayers')"
+            @pointerdown="startProjectSplitResize"
+            @keydown="resizeProjectSplitByKeyboard"
+          >
+            <span class="stack-resizer-track" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </span>
+          </button>
+
+          <div class="layers-pane">
+            <header class="panel-title-row">
+              <h2>{{ t('editor.layers') }}</h2>
+            </header>
+            <div id="layers-panel" class="gjs-panel-host layers-host"></div>
+          </div>
+        </section>
+
+        <section v-show="activePanel === 'blocks'" class="studio-panel">
+          <header class="panel-title-row">
+            <h2>{{ t('editor.blocks') }}</h2>
+            <button class="panel-icon-button" type="button" @click="closeLeftPanel" :aria-label="t('editor.closePanel')">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </header>
+          <div class="segmented">
+            <button class="active" type="button">{{ t('editor.regular') }}</button>
+            <button type="button">{{ t('editor.symbols') }}</button>
+          </div>
+          <div class="panel-search-wrap">
+            <span class="material-symbols-outlined panel-search-icon">search</span>
+            <input v-model="blockSearch" class="panel-search" type="search" :placeholder="t('editor.search')" />
+          </div>
+          <div class="block-section-title">{{ t('editor.basic') }}</div>
+          <div id="blocks-panel" class="gjs-panel-host blocks-host"></div>
+          <button class="add-blocks-button" type="button">{{ t('editor.addMoreBlocks') }}</button>
+        </section>
+
+        <section v-show="activePanel === 'assets'" class="studio-panel">
+          <header class="panel-title-row">
+            <h2>{{ t('editor.assets') }}</h2>
+            <button class="panel-icon-button" type="button" @click="closeLeftPanel" :aria-label="t('editor.closePanel')">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </header>
+          <div class="asset-controls">
+            <div class="panel-search-wrap">
+              <span class="material-symbols-outlined panel-search-icon">search</span>
+              <input v-model="assetSearch" class="panel-search" type="search" :placeholder="t('editor.search')" />
+            </div>
+            <button class="filter-chip" type="button">{{ t('editor.projectAssets') }}</button>
+          </div>
+          <button class="upload-button" @click="registerAssetUrl" type="button">{{ t('editor.registerUrl') }}</button>
+          <input v-model="assetUrl" class="panel-search asset-url-input" type="url" placeholder="https://example.com/image.jpg" />
+          <div class="asset-grid">
+            <button
+              v-for="asset in filteredAssets"
+              :key="asset.publicUrl || asset"
+              class="asset-tile"
+              type="button"
+              @click="selectAsset(asset.publicUrl || asset)"
+            >
+              <img :src="asset.publicUrl || asset" :alt="asset.altText || asset.fileName || t('editor.assetPreview')" />
+              <span>{{ asset.fileName || filenameFromUrl(asset.publicUrl || asset) }}</span>
+            </button>
+          </div>
+          <button class="panel-action" @click="openAssetManager" type="button">{{ t('editor.openAssetManager') }}</button>
+        </section>
+
+        <section v-show="activePanel === 'global'" class="studio-panel">
+          <header class="panel-title-row">
+            <h2>{{ t('editor.globalStyles') }}</h2>
+            <button class="panel-icon-button" type="button" @click="closeLeftPanel" :aria-label="t('editor.closePanel')">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </header>
+          <div class="style-group open">
+            <button type="button">{{ t('editor.colors') }} <span>⌃</span></button>
+            <label v-for="token in colorTokens" :key="token.name" class="token-row">
+              <span>{{ token.name }}</span>
+              <input v-model="token.value" type="color" @input="applyGlobalTokens" />
+              <code>{{ token.value }}</code>
+            </label>
+          </div>
+          <div class="style-group open">
+            <button type="button">{{ t('editor.body') }} <span>⌃</span></button>
+            <label class="field-row">
+              <span>{{ t('editor.fontFamily') }}</span>
+              <select v-model="fontFamily" @change="applyGlobalTokens">
+                <option>Inter</option>
+                <option>Arial</option>
+                <option>Georgia</option>
+                <option>system-ui</option>
+              </select>
+            </label>
+            <label class="field-row">
+              <span>{{ t('editor.lineHeight') }}</span>
+              <input v-model="lineHeight" type="number" step="0.05" min="1" @input="applyGlobalTokens" />
+            </label>
+          </div>
+        </section>
+
+        <section v-show="activePanel === 'data'" class="studio-panel">
+          <header class="panel-title-row">
+            <h2>{{ t('editor.dataSources') }}</h2>
+            <button class="panel-icon-button" type="button">
+              <span class="material-symbols-outlined">add</span>
+            </button>
+          </header>
+          <div class="data-empty">
+            <span class="data-icon"></span>
+            <h3>{{ t('editor.createTable') }}</h3>
+            <button @click="createSampleTable" class="panel-action" type="button">{{ t('editor.createSampleTable') }}</button>
+          </div>
+          <div v-if="sampleTable.length" class="data-table">
+            <div v-for="row in sampleTable" :key="row.key">
+              <span>{{ row.key }}</span>
+              <strong>{{ row.value }}</strong>
+            </div>
+          </div>
+        </section>
+
+        <section v-show="activePanel === 'ai'" class="studio-panel ai-panel">
+          <header class="panel-title-row">
+            <h2>{{ t('editor.aiAssistant') }}</h2>
+            <button class="panel-icon-button" type="button" @click="closeLeftPanel" :aria-label="t('editor.closePanel')">
+              <span class="material-symbols-outlined">close</span>
+            </button>
+          </header>
+          <div class="ai-suggestions">
+            <button v-for="suggestion in aiSuggestions" :key="suggestion" type="button" @click="aiPrompt = suggestion">
+              {{ suggestion }}
+            </button>
+          </div>
+          <div class="ai-generate-controls">
+            <label>
+              {{ t('editor.template') }}
+              <select v-model="aiTemplateKey" @change="applyEditorTemplate">
+                <option value="">{{ t('editor.aiPromptOnly') }}</option>
+                <option v-for="template in pageTemplates" :key="template.key" :value="template.key">
+                  {{ template.label }}
+                </option>
+              </select>
+            </label>
+            <label>
+              {{ t('editor.pageType') }}
+              <select v-model="aiPageType">
+                <option value="home">{{ t('pageType.home') }}</option>
+                <option value="about">{{ t('pageType.about') }}</option>
+                <option value="services">{{ t('pageType.services') }}</option>
+                <option value="product">{{ t('pageType.product') }}</option>
+                <option value="portfolio">{{ t('pageType.portfolio') }}</option>
+                <option value="blog">{{ t('pageType.blog') }}</option>
+                <option value="contact">{{ t('pageType.contact') }}</option>
+                <option value="anti-counterfeit">{{ t('pageType.antiCounterfeit') }}</option>
+                <option value="scan-result">{{ t('pageType.scanResult') }}</option>
+                <option value="lottery">{{ t('pageType.lottery') }}</option>
+                <option value="points-redemption">{{ t('pageType.pointsRedemption') }}</option>
+                <option value="traceability">{{ t('pageType.traceability') }}</option>
+                <option value="dpp">{{ t('pageType.dpp') }}</option>
+              </select>
+            </label>
+            <label>
+              {{ t('editor.style') }}
+              <select v-model="aiStyle">
+                <option value="studio">Studio</option>
+                <option value="tech">Tech</option>
+                <option value="premium">Premium</option>
+                <option value="eco">Eco</option>
+                <option value="fashion">Fashion</option>
+              </select>
+            </label>
+          </div>
+          <div class="ai-input-row">
+            <textarea v-model="aiPrompt" :placeholder="t('editor.askAnything')"></textarea>
+            <button type="button" @click="generateCurrentPage" :disabled="generatingCurrentPage || !editorReady" class="ai-send-btn">
+              <span class="material-symbols-outlined">arrow_upward</span>
+            </button>
+          </div>
+          <button class="panel-action ai-apply-button" type="button" @click="generateCurrentPage" :disabled="generatingCurrentPage || !editorReady">
+            {{ generatingCurrentPage ? t('editor.generatingCurrentPage') : t('editor.generateCurrentPage') }}
+          </button>
+        </section>
+      </aside>
+
+      <!-- Left Resizer -->
+      <button
+        class="pane-resizer left-resizer"
+        :class="{ active: resizingPane === 'left' }"
+        type="button"
+        role="separator"
+        aria-orientation="vertical"
+        :aria-hidden="!isLeftPanelOpen"
+        :tabindex="isLeftPanelOpen ? 0 : -1"
+        :aria-valuemin="MIN_LEFT_PANEL"
+        :aria-valuemax="Math.round(leftPaneMax)"
+        :aria-valuenow="Math.round(paneLayout.left)"
+        :aria-label="t('editor.adjustLeftCanvas')"
+        :title="t('editor.adjustLeftCanvas')"
+        @pointerdown="startPaneResize('left', $event)"
+        @keydown="resizePaneByKeyboard('left', $event)"
+      >
+        <span class="pane-resizer-track" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
+
+      <!-- Canvas Area -->
+      <section class="canvas-stage">
+        <div class="canvas-meta">
+          <span>{{ site?.name || 'SiteForge' }}</span>
+          <strong>{{ page?.title || t('editor.pageEditor') }}</strong>
+          <em v-if="hasUnsavedChanges">{{ t('editor.unsavedChanges') }}</em>
+        </div>
+        <div v-if="loading || editorError" class="editor-state">
+          <strong>{{ editorError || t('editor.loadingEditor') }}</strong>
+        </div>
+        <div id="gjs" class="editor-canvas"></div>
+      </section>
+
+      <!-- Right Resizer -->
+      <button
+        class="pane-resizer right-resizer"
+        :class="{ active: resizingPane === 'right' }"
+        type="button"
+        role="separator"
+        aria-orientation="vertical"
+        :aria-valuemin="MIN_RIGHT_PANEL"
+        :aria-valuemax="Math.round(rightPaneMax)"
+        :aria-valuenow="Math.round(paneLayout.right)"
+        :aria-label="t('editor.adjustCanvasRight')"
+        :title="t('editor.adjustCanvasRight')"
+        @pointerdown="startPaneResize('right', $event)"
+        @keydown="resizePaneByKeyboard('right', $event)"
+      >
+        <span class="pane-resizer-track" aria-hidden="true">
+          <span></span>
+          <span></span>
+          <span></span>
+        </span>
+      </button>
+
+      <!-- Right Panel (320px) -->
+      <aside class="studio-right-panel">
+        <div class="right-tabs">
+          <button :class="{ active: rightTab === 'styles' }" @click="rightTab = 'styles'" type="button">{{ t('editor.styles') }}</button>
+          <button :class="{ active: rightTab === 'properties' }" @click="rightTab = 'properties'" type="button">{{ t('editor.properties') }}</button>
+        </div>
+
+        <section v-show="rightTab === 'styles'" class="right-content">
+          <div class="selection-card">
+            <header>
+              <span>{{ t('editor.selection') }}</span>
+              <strong>{{ selectedComponentName || t('editor.none') }}</strong>
+            </header>
+            <p v-if="!selectedComponentName">{{ t('editor.selectionHelp') }}</p>
+          </div>
+          <div id="selectors-panel" class="gjs-panel-host compact"></div>
+          <div id="styles-panel" class="gjs-panel-host"></div>
+        </section>
+
+        <section v-show="rightTab === 'properties'" class="right-content">
+          <div class="selection-card">
+            <header>
+              <span>{{ t('editor.page') }}</span>
+              <strong>{{ page?.slug ? `/${page.slug}` : t('common.draft') }}</strong>
+            </header>
+            <p>{{ page?.metaDescription || t('editor.propertiesHelp') }}</p>
+          </div>
+          <div id="traits-panel" class="gjs-panel-host"></div>
+          <div class="property-summary">
+            <label>
+              {{ t('editor.pageTitle') }}
+              <input :value="page?.title || ''" readonly />
+            </label>
+            <label>
+              {{ t('editor.slug') }}
+              <input :value="page?.slug || ''" readonly />
+            </label>
+          </div>
+        </section>
+      </aside>
+    </main>
+
+    <!-- Floating AI Prompt Bar -->
+    <div v-if="!activePanel || activePanel !== 'ai'" class="floating-ai-bar">
+      <div class="floating-ai-input">
+        <input
+          v-model="aiPrompt"
+          type="text"
+          :placeholder="t('editor.askAnything')"
+          @keydown.enter="generateCurrentPage"
+        />
+        <button @click="generateCurrentPage" :disabled="generatingCurrentPage || !editorReady" class="floating-ai-send">
+          <span class="material-symbols-outlined">auto_awesome</span>
+        </button>
+      </div>
+      <div class="floating-ai-suggestions">
+        <button v-for="suggestion in aiSuggestions" :key="suggestion" type="button" @click="aiPrompt = suggestion" class="floating-ai-chip">
+          {{ suggestion }}
+        </button>
+      </div>
+    </div>
+
+    <!-- Code Dialog -->
+    <div v-if="showCode" class="code-overlay" @click.self="showCode = false">
+      <section class="code-dialog">
+        <header>
+          <div>
+            <p class="sf-kicker">{{ t('editor.export') }}</p>
+            <h2>{{ t('editor.currentPageCode') }}</h2>
+          </div>
+          <button @click="showCode = false" type="button">
+            <span class="material-symbols-outlined">close</span>
+          </button>
+        </header>
+        <div class="code-grid">
+          <label>
+            HTML
+            <textarea readonly :value="currentHtml"></textarea>
+          </label>
+          <label>
+            CSS
+            <textarea readonly :value="currentCss"></textarea>
+          </label>
+        </div>
+      </section>
+    </div>
+  </div>
+</template>
