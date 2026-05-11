@@ -7,6 +7,8 @@ export default defineConfig({
   plugins: [vue()],
   server: {
     port: 5173,
+    host: true,
+    allowedHosts: ['.tunn.dev', '.tunnelto.dev'],
     proxy: {
       '/api': {
         target: apiTarget,
