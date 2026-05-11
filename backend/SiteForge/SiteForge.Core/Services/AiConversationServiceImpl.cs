@@ -480,32 +480,41 @@ public class AiConversationServiceImpl : AiConversationService
             : await CompleteWithOpenAiCompatibleAsync(provider, systemPrompt, userPrompt);
     }
 
-    private static async Task<string> CompleteWithAzureOpenAiAsync(AiProviderSettings provider, string systemPrompt, string userPrompt)
+    private async Task<string> CompleteWithAzureOpenAiAsync(AiProviderSettings provider, string systemPrompt, string userPrompt)
     {
-        var client = new AzureOpenAIClient(
-            new Uri(provider.Endpoint),
-            new AzureKeyCredential(provider.ApiKey));
-        var chatClient = client.GetChatClient(provider.DeploymentName);
-        var options = new ChatCompletionOptions
+        var client = _httpClientFactory.CreateClient("siteforge-ai-azure");
+        client.Timeout = TimeSpan.FromMinutes(5);
+
+        using var message = new HttpRequestMessage(HttpMethod.Post, provider.AzureChatCompletionsUri);
+        message.Headers.Add("api-key", provider.ApiKey);
+
+        var payload = new Dictionary<string, object?>
         {
-            MaxOutputTokenCount = provider.MaxTokens,
-            Temperature = (float)provider.Temperature,
-            PresencePenalty = (float)provider.PresencePenalty,
-            FrequencyPenalty = (float)provider.FrequencyPenalty
+            ["messages"] = new[]
+            {
+                new Dictionary<string, string> { ["role"] = "system", ["content"] = systemPrompt },
+                new Dictionary<string, string> { ["role"] = "user", ["content"] = userPrompt }
+            },
+            ["max_tokens"] = provider.MaxTokens,
+            ["temperature"] = provider.Temperature,
+            ["presence_penalty"] = provider.PresencePenalty,
+            ["frequency_penalty"] = provider.FrequencyPenalty,
+            ["stream"] = false
         };
 
-        var raw = new StringBuilder();
-        await foreach (var update in chatClient.CompleteChatStreamingAsync(
-            new ChatMessage[] { new SystemChatMessage(systemPrompt), new UserChatMessage(userPrompt) },
-            options))
+        message.Content = new StringContent(JsonSerializer.Serialize(payload), Encoding.UTF8, "application/json");
+
+        using var response = await client.SendAsync(message);
+        var body = await response.Content.ReadAsStringAsync();
+        if (!response.IsSuccessStatusCode)
         {
-            foreach (var part in update.ContentUpdate)
-            {
-                raw.Append(part.Text);
-            }
+            _logger.LogError("Azure OpenAI request failed. Status={Status}. Body={Body}",
+                (int)response.StatusCode,
+                Truncate(body, 800));
+            throw new InvalidOperationException($"Azure OpenAI request failed with HTTP {(int)response.StatusCode}.");
         }
 
-        return raw.ToString();
+        return ExtractOpenAiCompatibleContent(body, provider.Label);
     }
 
     private async Task<string> CompleteWithOpenAiCompatibleAsync(AiProviderSettings provider, string systemPrompt, string userPrompt)
@@ -1337,6 +1346,7 @@ public class AiConversationServiceImpl : AiConversationService
         string Label,
         string Type,
         string Endpoint,
+        string ApiVersion,
         string BaseUrl,
         string ApiKey,
         string DeploymentName,
@@ -1354,6 +1364,9 @@ public class AiConversationServiceImpl : AiConversationService
         public string ModelName => IsAzureOpenAi ? DeploymentName : Model;
 
         public Uri ChatCompletionsUri => new(CombineUrl(BaseUrl, ChatCompletionsPath));
+
+        public Uri AzureChatCompletionsUri => new(
+            $"{Endpoint.TrimEnd('/')}/openai/deployments/{Uri.EscapeDataString(DeploymentName)}/chat/completions?api-version={Uri.EscapeDataString(ApiVersion)}");
 
         public bool IsConfigured =>
             IsAzureOpenAi
@@ -1378,6 +1391,7 @@ public class AiConversationServiceImpl : AiConversationService
                     section["Label"] ?? ProviderLabelFor(key, type),
                     type,
                     section["Endpoint"] ?? string.Empty,
+                    section["ApiVersion"] ?? "2024-02-15-preview",
                     section["BaseUrl"] ?? string.Empty,
                     section["ApiKey"] ?? string.Empty,
                     section["DeploymentName"] ?? string.Empty,
@@ -1411,6 +1425,7 @@ public class AiConversationServiceImpl : AiConversationService
                 ProviderLabelFor(key, "openai-compatible"),
                 "openai-compatible",
                 string.Empty,
+                "2024-02-15-preview",
                 string.Empty,
                 string.Empty,
                 string.Empty,
@@ -1432,6 +1447,7 @@ public class AiConversationServiceImpl : AiConversationService
                 "Azure OpenAI",
                 "azure-openai",
                 section["Endpoint"] ?? string.Empty,
+                section["ApiVersion"] ?? "2024-02-15-preview",
                 string.Empty,
                 section["ApiKey"] ?? string.Empty,
                 section["DeploymentName"] ?? string.Empty,
