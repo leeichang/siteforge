@@ -1,924 +1,903 @@
 <template>
-  <div class="workspace-shell" :class="`theme-${theme}`">
-    <header class="workspace-header">
-      <div class="header-left">
-        <button class="header-back" @click="router.push('/')" type="button">←</button>
-        <div class="site-title">
-          <p class="sf-kicker">{{ t('workspace.kicker') }}</p>
-          <h1>{{ site?.name || t('workspace.loadingSite') }}</h1>
-        </div>
-      </div>
-      <div class="header-actions">
-        <button class="theme-toggle language-toggle" @click="localeStore.toggleLocale()" type="button" :title="t('common.language')">
-          {{ locale === 'en' ? '繁' : 'EN' }}
-        </button>
-        <button class="theme-toggle" @click="themeStore.toggle()" type="button" :title="theme === 'dark' ? t('common.switchToLight') : t('common.switchToDark')">
-          {{ theme === 'dark' ? '☀️' : '🌙' }}
-        </button>
-        <a v-if="site?.publishedUrl" :href="site.publishedUrl" target="_blank" class="sf-button">{{ t('workspace.viewPublic') }}</a>
-        <button class="sf-button primary" @click="publishSite" :disabled="publishing">
-          {{ publishing ? t('workspace.publishing') : t('workspace.publishSite') }}
-        </button>
-      </div>
+  <div class="sf-workspace" :class="`theme-${theme}`">
+    <!-- Breadcrumb -->
+    <nav class="sf-ws-breadcrumb">
+      <span class="sf-ws-breadcrumb-item">Sites</span>
+      <span class="material-symbols-outlined sf-ws-breadcrumb-sep">chevron_right</span>
+      <span class="sf-ws-breadcrumb-current">{{ site?.name || 'Loading...' }}</span>
+    </nav>
+
+    <!-- Header -->
+    <header class="sf-ws-header">
+      <h1 class="sf-ws-title">Page Management</h1>
+      <button class="sf-ws-new-btn" @click="showCreatePage = true" type="button">
+        <span class="material-symbols-outlined">add</span>
+        New Page
+      </button>
     </header>
 
-    <main class="workspace-main">
-      <section class="workspace-content">
-        <section class="workspace-hero">
-          <div>
-            <p class="sf-kicker">{{ t('workspace.flowKicker') }}</p>
-            <h2>{{ t('workspace.heroTitle') }}</h2>
-            <p>{{ t('workspace.heroBody') }}</p>
-            <div class="site-meta-row">
-              <span class="sf-pill" :class="site?.status === 'published' ? 'success' : 'warning'">
-                {{ site?.status === 'published' ? t('common.published') : t('common.draft') }}
+    <!-- Tabs -->
+    <div class="sf-ws-tabs">
+      <button
+        :class="{ active: activeTab === 'pages' }"
+        @click="activeTab = 'pages'"
+        type="button"
+      >
+        Pages
+      </button>
+      <button
+        :class="{ active: activeTab === 'templates' }"
+        @click="activeTab = 'templates'"
+        type="button"
+      >
+        Templates
+      </button>
+      <button
+        :class="{ active: activeTab === 'theme' }"
+        @click="activeTab = 'theme'"
+        type="button"
+      >
+        Theme
+      </button>
+    </div>
+
+    <!-- Pages Tab -->
+    <div v-show="activeTab === 'pages'" class="sf-ws-tab-content">
+      <div v-if="loading" class="sf-ws-loading">Loading pages...</div>
+
+      <div v-else-if="pages.length > 0" class="sf-ws-grid">
+        <div
+          v-for="page in pages"
+          :key="page.id"
+          class="sf-ws-card"
+          @click="openEditor(page.id)"
+        >
+          <div class="sf-ws-card-header">
+            <div class="sf-ws-card-icon" :class="page.isHome ? 'sf-ws-card-icon-home' : ''">
+              <span class="material-symbols-outlined">{{ page.isHome ? 'home' : 'description' }}</span>
+            </div>
+            <div class="sf-ws-card-info">
+              <h3 class="sf-ws-card-title">{{ page.title }}</h3>
+              <p class="sf-ws-card-type">{{ page.isHome ? 'Home Page' : 'Standard Page' }}</p>
+            </div>
+            <button
+              class="sf-ws-card-menu"
+              @click.stop="showPageMenu(page)"
+              type="button"
+            >
+              <span class="material-symbols-outlined">more_vert</span>
+            </button>
+          </div>
+
+          <div class="sf-ws-card-footer">
+            <span class="sf-ws-card-time">
+              <span class="material-symbols-outlined">schedule</span>
+              {{ formatDate(page.updatedAt) }}
+            </span>
+            <div class="sf-ws-card-status">
+              <span :class="page.isPublished ? 'sf-ws-status-published' : 'sf-ws-status-draft'">
+                {{ page.isPublished ? 'Published' : 'Draft' }}
               </span>
-              <strong>{{ site?.slug ? `/${site.slug}` : t('common.notLoaded') }}</strong>
-              <small>{{ site?.description || t('workspace.noSiteDescription') }}</small>
+              <label class="sf-ws-toggle">
+                <input
+                  type="checkbox"
+                  :checked="page.isPublished"
+                  @click.stop="togglePagePublish(page)"
+                />
+                <span class="sf-ws-toggle-track"></span>
+              </label>
             </div>
           </div>
-          <div class="health-grid">
-            <div>
-              <span>{{ t('workspace.pages') }}</span>
-              <strong>{{ pages.length }}</strong>
-            </div>
-            <div>
-              <span>{{ t('workspace.publishedPages') }}</span>
-              <strong>{{ publishedPages }}</strong>
-            </div>
-            <div>
-              <span>{{ t('workspace.homePage') }}</span>
-              <strong>{{ homePageTitle }}</strong>
+        </div>
+      </div>
+
+      <div v-else class="sf-ws-empty">
+        <span class="material-symbols-outlined">folder_open</span>
+        <h3>No pages yet</h3>
+        <p>Create your first page to get started</p>
+        <button class="sf-ws-new-btn" @click="showCreatePage = true" type="button">
+          <span class="material-symbols-outlined">add</span>
+          New Page
+        </button>
+      </div>
+    </div>
+
+    <!-- Templates Tab -->
+    <div v-show="activeTab === 'templates'" class="sf-ws-tab-content">
+      <div class="sf-ws-section-header">
+        <h2>Available Templates</h2>
+        <p>Pre-built sections to rapidly assemble your pages</p>
+      </div>
+      <div class="sf-ws-templates-grid">
+        <div class="sf-ws-template-card" v-for="i in 6" :key="i">
+          <div class="sf-ws-template-thumb">
+            <div class="sf-ws-template-placeholder">
+              <span class="material-symbols-outlined">view_quilt</span>
             </div>
           </div>
-        </section>
-
-        <section class="pages-panel">
-          <div class="content-header">
-            <div>
-              <h2>{{ t('workspace.pages') }}</h2>
-              <p>{{ t('workspace.pagesDescription') }}</p>
-            </div>
-            <div class="content-actions">
-              <button class="sf-button" @click="showAiPage = true">{{ t('workspace.aiGeneratePage') }}</button>
-              <button class="sf-button primary" @click="showCreatePage = true">{{ t('workspace.addPage') }}</button>
-            </div>
+          <div class="sf-ws-template-info">
+            <h4>Template {{ i }}</h4>
+            <p>Section layout</p>
           </div>
+          <button class="sf-ws-template-add" type="button">
+            <span class="material-symbols-outlined">add</span>
+          </button>
+        </div>
+      </div>
+    </div>
 
-          <div v-if="loading" class="muted-panel">{{ t('workspace.loadingPages') }}</div>
+    <!-- Theme Tab -->
+    <div v-show="activeTab === 'theme'" class="sf-ws-tab-content">
+      <div class="sf-ws-section-header">
+        <h2>Site Theme</h2>
+        <p>Customize colors, typography, and global styles</p>
+      </div>
+      <div class="sf-ws-theme-placeholder">
+        <span class="material-symbols-outlined">palette</span>
+        <p>Theme settings coming soon</p>
+      </div>
+    </div>
 
-          <div v-else class="page-table">
-            <div class="page-row page-row-head">
-              <span>{{ t('workspace.title') }}</span>
-              <span>{{ t('workspace.path') }}</span>
-              <span>{{ t('workspace.status') }}</span>
-              <span></span>
-            </div>
-            <div v-for="page in pages" :key="page.id" class="page-row">
-              <div>
-                <strong>{{ page.title }}</strong>
-                <small v-if="page.isHome">{{ t('common.homePage') }}</small>
-              </div>
-              <span class="page-slug">/{{ page.slug }}</span>
-              <span class="sf-pill" :class="page.isPublished ? 'success' : 'warning'">
-                {{ page.isPublished ? t('common.published') : t('common.draft') }}
-              </span>
-              <div class="row-actions">
-                <button class="sf-button primary" @click="openEditor(page.id)">{{ t('common.edit') }}</button>
-                <button class="sf-button danger" @click="deletePage(page.id)" :disabled="page.isHome">{{ t('common.delete') }}</button>
-              </div>
-            </div>
-          </div>
-        </section>
-      </section>
-    </main>
-
-    <div v-if="showCreatePage" class="sf-modal-overlay" @click.self="showCreatePage = false">
-      <div class="sf-modal page-modal">
-        <p class="sf-kicker">{{ t('workspace.newPage') }}</p>
-        <h3>{{ t('workspace.addPage') }}</h3>
+    <!-- Create Page Modal -->
+    <div v-if="showCreatePage" class="sf-ws-overlay" @click.self="showCreatePage = false">
+      <div class="sf-ws-modal">
+        <h2>Create New Page</h2>
         <form @submit.prevent="createPage">
           <label>
-            {{ t('workspace.pageTitle') }}
-            <input v-model="newPage.title" class="sf-input" required :placeholder="t('workspace.pageTitlePlaceholder')" />
+            Page Title
+            <input v-model="newPage.title" class="sf-ws-input" required placeholder="e.g. About Us" />
           </label>
           <label>
             URL Slug
-            <input v-model="newPage.slug" class="sf-input" :placeholder="t('workspace.slugPlaceholder')" />
+            <input v-model="newPage.slug" class="sf-ws-input" placeholder="about-us" />
           </label>
-          <div class="modal-actions">
-            <button type="button" class="sf-button" @click="showCreatePage = false">{{ t('common.cancel') }}</button>
-            <button class="sf-button primary" :disabled="creatingPage">{{ creatingPage ? t('workspace.creating') : t('workspace.createPage') }}</button>
+          <div class="sf-ws-modal-actions">
+            <button type="button" class="sf-ws-btn" @click="showCreatePage = false">Cancel</button>
+            <button class="sf-ws-btn sf-ws-btn-primary" :disabled="creatingPage">
+              {{ creatingPage ? 'Creating...' : 'Create Page' }}
+            </button>
           </div>
         </form>
       </div>
     </div>
 
-    <div v-if="showAiPage" class="sf-modal-overlay" @click.self="showAiPage = false">
-      <div class="sf-modal ai-page-modal">
-        <p class="sf-kicker">{{ t('workspace.aiPageGenerator') }}</p>
-        <h3>{{ t('workspace.generateNewPage') }}</h3>
-        <form @submit.prevent="generatePage">
-          <div class="ai-page-grid">
-            <label>
-              {{ t('workspace.pageName') }}
-              <input v-model="aiPage.pageName" class="sf-input" required :placeholder="t('workspace.pageNamePlaceholder')" />
-            </label>
-            <label>
-              {{ t('workspace.pageType') }}
-              <select v-model="aiPage.pageType" class="sf-input">
-                <option value="home">{{ t('pageType.home') }}</option>
-                <option value="about">{{ t('pageType.about') }}</option>
-                <option value="services">{{ t('pageType.services') }}</option>
-                <option value="product">{{ t('pageType.product') }}</option>
-                <option value="portfolio">{{ t('pageType.portfolio') }}</option>
-                <option value="blog">{{ t('pageType.blog') }}</option>
-                <option value="contact">{{ t('pageType.contact') }}</option>
-                <option value="anti-counterfeit">{{ t('pageType.antiCounterfeit') }}</option>
-                <option value="scan-result">{{ t('pageType.scanResult') }}</option>
-                <option value="lottery">{{ t('pageType.lottery') }}</option>
-                <option value="points-redemption">{{ t('pageType.pointsRedemption') }}</option>
-                <option value="traceability">{{ t('pageType.traceability') }}</option>
-                <option value="dpp">{{ t('pageType.dpp') }}</option>
-              </select>
-            </label>
-          </div>
-          <div class="template-field">
-            <span class="field-label">{{ t('workspace.pageTemplate') }}</span>
-            <div class="template-picker page-template-picker">
-              <button
-                type="button"
-                class="template-card blank"
-                :class="{ selected: aiPage.templateKey === '' }"
-                @click="selectPageTemplate('')"
-              >
-                <div class="template-preview blank-preview">
-                  <span>AI</span>
-                </div>
-                <strong>{{ t('workspace.customAiPage') }}</strong>
-                <small>{{ t('workspace.customAiPageHint') }}</small>
-              </button>
-              <button
-                v-for="template in pageTemplates"
-                :key="template.key"
-                type="button"
-                class="template-card"
-                :class="{ selected: aiPage.templateKey === template.key }"
-                @click="selectPageTemplate(template.key)"
-              >
-                <div
-                  class="template-preview"
-                  :class="[templatePreviewClass(template.key), { 'has-image': template.thumbnailUrl }]"
-                >
-                  <img
-                    v-if="template.thumbnailUrl"
-                    class="template-preview-image"
-                    :src="template.thumbnailUrl"
-                    :alt="`${template.label} preview`"
-                    loading="lazy"
-                  />
-                  <template v-else>
-                    <span></span>
-                    <span></span>
-                    <span></span>
-                  </template>
-                </div>
-                <strong>{{ template.label }}</strong>
-                <small>{{ template.category }} / {{ template.pageTypes?.[0] || 'page' }}</small>
-              </button>
-            </div>
-          </div>
-          <label>
-            {{ t('workspace.generationPrompt') }}
-            <textarea
-              v-model="aiPage.prompt"
-              class="sf-input"
-              :required="!aiPage.templateKey"
-              :placeholder="t('workspace.generationPlaceholder')"
-            ></textarea>
-          </label>
-          <div class="ai-page-grid">
-            <label>
-              {{ t('workspace.style') }}
-              <select v-model="aiPage.style" class="sf-input">
-                <option value="studio">Studio</option>
-                <option value="tech">Tech</option>
-                <option value="premium">Premium</option>
-                <option value="eco">Eco</option>
-                <option value="fashion">Fashion</option>
-              </select>
-            </label>
-            <label>
-              {{ t('workspace.contentLength') }}
-              <select v-model="aiPage.contentLength" class="sf-input">
-                <option value="concise">{{ t('workspace.concise') }}</option>
-                <option value="medium">{{ t('workspace.medium') }}</option>
-                <option value="long">{{ t('workspace.long') }}</option>
-              </select>
-            </label>
-          </div>
-          <div class="modal-actions">
-            <button type="button" class="sf-button" @click="showAiPage = false">{{ t('common.cancel') }}</button>
-            <button class="sf-button primary" :disabled="generatingPage">
-              {{ generatingPage ? t('workspace.generating') : t('workspace.generateAndOpen') }}
-            </button>
-          </div>
-        </form>
+    <!-- Page Menu Dropdown -->
+    <div v-if="pageMenuOpen" class="sf-ws-menu-overlay" @click.self="pageMenuOpen = false">
+      <div class="sf-ws-menu" :style="menuPosition">
+        <button @click="editPage(selectedPage)" type="button">
+          <span class="material-symbols-outlined">edit</span>
+          Edit
+        </button>
+        <button @click="duplicatePage(selectedPage)" type="button">
+          <span class="material-symbols-outlined">content_copy</span>
+          Duplicate
+        </button>
+        <button
+          @click="deletePage(selectedPage.id)"
+          type="button"
+          :disabled="selectedPage?.isHome"
+          class="sf-ws-menu-danger"
+        >
+          <span class="material-symbols-outlined">delete</span>
+          Delete
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted, ref } from 'vue'
+import { ref, computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useThemeStore } from '../stores/theme'
-import { useLocaleStore } from '../stores/locale'
-import api, { errorMessage, unwrap } from '../api/client'
+import api, { unwrap } from '../api/client.js'
 
 const route = useRoute()
 const router = useRouter()
-const themeStore = useThemeStore()
-const localeStore = useLocaleStore()
-const theme = computed(() => themeStore.theme)
-const locale = computed(() => localeStore.locale)
-const t = localeStore.t
-const siteId = route.params.siteId
 
+const siteId = computed(() => route.params.siteId)
+
+// Theme
+const theme = ref(localStorage.getItem('sf-theme') || 'dark')
+
+// Data
 const site = ref(null)
 const pages = ref([])
-const templates = ref([])
-const loading = ref(false)
-const publishing = ref(false)
-const creatingPage = ref(false)
-const generatingPage = ref(false)
+const loading = ref(true)
+
+// UI State
+const activeTab = ref('pages')
 const showCreatePage = ref(false)
-const showAiPage = ref(false)
-const newPage = ref({ title: '', slug: '' })
-const aiPage = ref({
-  pageName: '',
-  pageType: 'services',
-  prompt: '',
-  templateKey: '',
-  style: 'studio',
-  contentLength: 'medium'
+const creatingPage = ref(false)
+const pageMenuOpen = ref(false)
+const selectedPage = ref(null)
+const menuPosition = ref({ top: '0px', left: '0px' })
+
+const newPage = ref({
+  title: '',
+  slug: ''
 })
 
-const publishedPages = computed(() => pages.value.filter((page) => page.isPublished).length)
-const homePageTitle = computed(() => pages.value.find((page) => page.isHome)?.title || t('common.notLoaded'))
-const pageTemplates = computed(() => templates.value.filter((template) => template.kind === 'page'))
+// Computed
+const publishedPages = computed(() => pages.value.filter(p => p.isPublished).length)
 
-onMounted(loadWorkspace)
+// Fetch
+async function fetchSite() {
+  try {
+    const response = await api.get(`/Sites/${siteId.value}`)
+    site.value = unwrap(response)
+  } catch (err) {
+    console.error('Failed to load site:', err)
+  }
+}
 
-async function loadWorkspace() {
+async function fetchPages() {
   loading.value = true
   try {
-    const [siteResponse, pagesResponse, templatesResponse] = await Promise.all([
-      api.get(`/Sites/${siteId}`),
-      api.get(`/Pages/site/${siteId}`),
-      api.get('/AiConversations/templates?kind=page')
-    ])
-    site.value = unwrap(siteResponse)
-    pages.value = (unwrap(pagesResponse) || []).sort((a, b) => a.displayOrder - b.displayOrder)
-    templates.value = unwrap(templatesResponse) || []
-  } catch (e) {
-    alert(errorMessage(e, t('common.operationFailed')))
+    const response = await api.get(`/Pages/site/${siteId.value}`)
+    pages.value = unwrap(response) || []
+  } catch (err) {
+    console.error('Failed to load pages:', err)
   } finally {
     loading.value = false
   }
 }
 
+// Actions
 async function createPage() {
+  if (!newPage.value.title) return
+
   creatingPage.value = true
   try {
-    const response = await api.post(`/Pages/site/${siteId}`, {
+    const response = await api.post(`/Pages/site/${siteId.value}`, {
       title: newPage.value.title,
-      slug: newPage.value.slug,
-      pageType: 'custom',
-      isHome: false
+      slug: newPage.value.slug || '',
+      isHome: pages.value.length === 0
     })
-    const page = unwrap(response)
-    showCreatePage.value = false
+    const created = unwrap(response)
+    pages.value.push(created)
     newPage.value = { title: '', slug: '' }
-    await loadWorkspace()
-    if (page?.id) openEditor(page.id)
-  } catch (e) {
-    alert(errorMessage(e, t('common.operationFailed')))
+    showCreatePage.value = false
+
+    // Open editor for new page
+    router.push(`/editor/${siteId.value}/${created.id}`)
+  } catch (err) {
+    console.error('Failed to create page:', err)
+    alert('Failed to create page')
   } finally {
     creatingPage.value = false
   }
 }
 
-async function generatePage() {
-  generatingPage.value = true
-  try {
-    const response = await api.post('/AiConversations/generate-page', {
-      siteId,
-      ...aiPage.value
-    })
-    const generated = unwrap(response)
-    showAiPage.value = false
-    aiPage.value = {
-      pageName: '',
-      pageType: 'services',
-      prompt: '',
-      templateKey: '',
-      style: 'studio',
-      contentLength: 'medium'
-    }
-    await loadWorkspace()
-    if (generated?.pageId) openEditor(generated.pageId)
-  } catch (e) {
-    alert(errorMessage(e, t('common.operationFailed')))
-  } finally {
-    generatingPage.value = false
-  }
-}
-
-function applySelectedPageTemplate() {
-  const template = pageTemplates.value.find((item) => item.key === aiPage.value.templateKey)
-  if (!template) return
-
-  aiPage.value.pageName = template.label
-  aiPage.value.pageType = template.pageTypes?.[0] || aiPage.value.pageType
-  if (!aiPage.value.prompt) {
-    aiPage.value.prompt = template.description
-  }
-}
-
-function selectPageTemplate(templateKey) {
-  aiPage.value.templateKey = templateKey
-  if (templateKey) {
-    applySelectedPageTemplate()
-  }
-}
-
-function templatePreviewClass(key) {
-  return `preview-${key.replace(/[^a-z0-9]+/gi, '-')}`
-}
-
 async function deletePage(pageId) {
-  if (!confirm(`${t('common.delete')}?`)) return
+  if (!confirm('Are you sure you want to delete this page?')) return
+
   try {
     await api.delete(`/Pages/${pageId}`)
-    await loadWorkspace()
-  } catch (e) {
-    alert(errorMessage(e, t('common.operationFailed')))
+    pages.value = pages.value.filter(p => p.id !== pageId)
+    pageMenuOpen.value = false
+  } catch (err) {
+    console.error('Failed to delete page:', err)
+    alert('Failed to delete page')
   }
 }
 
-async function publishSite() {
-  publishing.value = true
+async function togglePagePublish(page) {
   try {
-    await api.post(`/Sites/${siteId}/publish`, { taskType: 'full_publish', targetUrl: '' })
-    await loadWorkspace()
-    alert(t('editor.publishSuccess'))
-  } catch (e) {
-    alert(errorMessage(e, t('common.operationFailed')))
-  } finally {
-    publishing.value = false
+    const updated = { ...page, isPublished: !page.isPublished }
+    await api.put(`/Pages/${page.id}`, updated)
+    page.isPublished = !page.isPublished
+  } catch (err) {
+    console.error('Failed to update page:', err)
+    alert('Failed to update page status')
   }
 }
 
 function openEditor(pageId) {
-  router.push(`/editor/${siteId}/${pageId}`)
+  router.push(`/editor/${siteId.value}/${pageId}`)
 }
+
+function editPage(page) {
+  pageMenuOpen.value = false
+  openEditor(page.id)
+}
+
+function duplicatePage(page) {
+  pageMenuOpen.value = false
+  // TODO: Implement duplicate
+  alert('Duplicate feature coming soon')
+}
+
+function showPageMenu(page) {
+  selectedPage.value = page
+  pageMenuOpen.value = true
+  // Position would be calculated based on click event in real implementation
+}
+
+function formatDate(dateString) {
+  if (!dateString) return 'Never'
+  const date = new Date(dateString)
+  const now = new Date()
+  const diff = now - date
+  const hours = Math.floor(diff / (1000 * 60 * 60))
+  const days = Math.floor(hours / 24)
+
+  if (hours < 1) return 'Just now'
+  if (hours < 24) return `${hours} hour${hours > 1 ? 's' : ''} ago`
+  if (days < 7) return `${days} day${days > 1 ? 's' : ''} ago`
+  return date.toLocaleDateString()
+}
+
+// Lifecycle
+onMounted(() => {
+  fetchSite()
+  fetchPages()
+})
 </script>
 
 <style scoped>
-.workspace-shell {
-  --workspace-page-bg: var(--sf-page, var(--sf-bg));
-  --workspace-line: var(--sf-line, rgba(120, 124, 140, 0.28));
-  --workspace-line-soft: color-mix(in srgb, var(--workspace-line) 72%, transparent);
-  --workspace-line-strong: var(--sf-line-strong, rgba(120, 124, 140, 0.42));
-  --workspace-header-line: var(--sf-header-line, var(--workspace-line-strong));
-  --workspace-header-bg: var(--sf-header-bg, color-mix(in srgb, var(--workspace-page-bg) 86%, var(--sf-surface) 14%));
-  --workspace-card-border: var(--sf-card-border, var(--workspace-line));
-  --workspace-card-bg: var(--sf-card-bg, var(--sf-surface));
-  --workspace-primary-soft: var(--sf-primary-soft, color-mix(in srgb, var(--sf-primary) 10%, transparent));
-  --workspace-accent-soft: var(--sf-accent-soft, color-mix(in srgb, var(--sf-accent, var(--sf-primary)) 8%, transparent));
-  --workspace-shadow: var(--sf-shadow-soft, 0 18px 46px rgba(20, 24, 32, 0.08));
-  min-height: 100vh;
-  background: var(--workspace-page-bg);
-  color: var(--sf-ink);
-  transition: background 280ms ease, color 280ms ease;
+.sf-workspace {
+  padding: 24px 32px;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: calc(100vh - 56px);
 }
 
-/* ── Header ── */
-.workspace-header {
-  min-height: 78px;
+/* Breadcrumb */
+.sf-ws-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 16px;
+  font-size: 13px;
+  color: var(--sf-on-surface-variant);
+}
+
+.sf-ws-breadcrumb-item {
+  cursor: pointer;
+}
+
+.sf-ws-breadcrumb-item:hover {
+  color: var(--sf-primary);
+}
+
+.sf-ws-breadcrumb-sep {
+  font-size: 16px;
+  color: var(--sf-outline);
+}
+
+.sf-ws-breadcrumb-current {
+  color: var(--sf-primary);
+  font-weight: 500;
+}
+
+/* Header */
+.sf-ws-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 18px;
-  padding: 16px 28px;
-  border-bottom: 1px solid var(--workspace-header-line);
-  background: var(--workspace-header-bg);
-  box-shadow: inset 0 -1px 0 color-mix(in srgb, var(--workspace-header-line) 52%, transparent);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  transition: border-color 280ms ease, background 280ms ease;
+  margin-bottom: 24px;
 }
 
-.header-left {
+.sf-ws-title {
+  font-size: 28px;
+  font-weight: 600;
+  color: var(--sf-on-surface);
+  margin: 0;
+}
+
+.sf-ws-new-btn {
   display: flex;
   align-items: center;
-  gap: 14px;
-}
-
-.header-back {
-  width: 40px;
-  height: 40px;
-  display: grid;
-  place-items: center;
-  border: 1px solid var(--sf-line);
-  border-radius: var(--sf-radius-sm);
-  background: var(--sf-surface);
-  color: var(--sf-ink);
-  cursor: pointer;
-  font-size: 18px;
-  transition: border-color 160ms ease, background 160ms ease;
-}
-
-.header-back:hover {
-  border-color: var(--sf-line-strong);
-  background: var(--sf-surface-hover);
-}
-
-.site-title h1 {
-  margin-top: 3px;
-  font-size: 25px;
-}
-
-.header-actions {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.sf-button,
-.theme-toggle {
-  min-height: 38px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
   gap: 8px;
-  border: 1px solid var(--sf-line);
-  border-radius: 8px;
-  padding: 0 14px;
-  background: var(--sf-surface);
-  color: var(--sf-ink);
-  cursor: pointer;
-  font-size: 14px;
-  font-weight: 850;
-  line-height: 1;
-  text-decoration: none;
-  white-space: nowrap;
-  transition: transform 160ms ease, border-color 160ms ease, background 160ms ease, color 160ms ease;
-}
-
-.sf-button:hover,
-.theme-toggle:hover {
-  border-color: var(--sf-primary);
-  background: var(--sf-surface-hover);
-}
-
-.sf-button:active,
-.theme-toggle:active {
-  transform: translateY(1px);
-}
-
-.sf-button.primary {
-  border-color: var(--sf-primary);
+  padding: 10px 20px;
   background: var(--sf-primary);
   color: var(--sf-on-primary);
-}
-
-.sf-button.danger {
-  border-color: color-mix(in srgb, var(--sf-error) 45%, var(--sf-line));
-  color: var(--sf-error);
-}
-
-.sf-button:disabled {
-  cursor: not-allowed;
-  opacity: 0.48;
-  transform: none;
-}
-
-/* ── Main layout ── */
-.workspace-main {
-  min-height: calc(100vh - 78px);
-}
-
-/* ── Content area ── */
-.workspace-content {
-  display: grid;
-  gap: 22px;
-  padding: 28px;
-  max-width: 1280px;
-  width: 100%;
-  margin: 0 auto;
-}
-
-.workspace-hero,
-.pages-panel {
-  border: 1px solid var(--workspace-card-border);
+  border: none;
   border-radius: 10px;
-  background: var(--workspace-card-bg);
-  box-shadow: var(--workspace-shadow);
-  transition: border-color 280ms ease, background 280ms ease, box-shadow 280ms ease;
-}
-
-.workspace-hero {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(360px, 0.72fr);
-  gap: 24px;
-  padding: 24px;
-  background: var(--sf-surface);
-  background-image: linear-gradient(135deg, var(--workspace-primary-soft), var(--workspace-accent-soft));
-}
-
-.workspace-hero h2 {
-  max-width: 760px;
-  margin: 7px 0 10px;
-  font-size: clamp(24px, 3vw, 36px);
-  line-height: 1.12;
-  color: var(--sf-ink);
-}
-
-.workspace-hero p:not(.sf-kicker) {
-  max-width: 680px;
-  color: var(--sf-muted);
-}
-
-.site-meta-row {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
-  margin-top: 18px;
-  color: var(--sf-muted);
-}
-
-.site-meta-row strong {
-  color: var(--sf-ink);
-  overflow-wrap: anywhere;
-}
-
-.site-meta-row small {
-  max-width: 560px;
-  line-height: 1.4;
-}
-
-.health-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 0;
-  overflow: hidden;
-  border: 1px solid var(--workspace-line);
-  border-radius: 8px;
-  background: var(--sf-surface);
-}
-
-.health-grid div {
-  min-width: 0;
-  border-left: 1px solid var(--workspace-line-soft);
-  padding: 15px;
-  transition: border-color 280ms ease, background 280ms ease;
-}
-
-.health-grid div:first-child {
-  border-left: 0;
-}
-
-.health-grid span {
-  display: block;
-  color: var(--sf-muted);
-  font-size: 13px;
-  font-weight: 750;
-}
-
-.health-grid strong {
-  display: block;
-  margin-top: 5px;
-  overflow-wrap: anywhere;
-  font-size: 22px;
-  line-height: 1.1;
-  color: var(--sf-ink);
-}
-
-/* ── Pages table ── */
-.pages-panel {
-  padding: 22px;
-}
-
-.content-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-end;
-  gap: 18px;
-  margin-bottom: 0;
-  padding-bottom: 18px;
-  border-bottom: 1px solid var(--workspace-line);
-}
-
-.content-header h2 {
-  font-size: 24px;
-  color: var(--sf-ink);
-}
-
-.content-header p,
-.muted-panel {
-  color: var(--sf-muted);
-}
-
-.content-actions {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-.page-table {
-  border: 1px solid var(--workspace-line);
-  border-radius: 8px;
-  margin-top: 18px;
-  overflow: hidden;
-  background: var(--sf-surface);
-  transition: border-color 280ms ease, background 280ms ease;
-}
-
-.page-row {
-  display: grid;
-  grid-template-columns: minmax(180px, 1.3fr) minmax(140px, 1fr) 120px 190px;
-  gap: 16px;
-  align-items: center;
-  padding: 15px 18px;
-  border-top: 1px solid var(--workspace-line);
-  transition: border-color 280ms ease;
-}
-
-.page-row:first-child {
-  border-top: 0;
-}
-
-.page-row-head {
-  background: var(--sf-surface-2);
-  color: var(--sf-muted);
-  font-size: 13px;
-  font-weight: 850;
-}
-
-.page-row strong {
-  display: block;
-  color: var(--sf-ink);
-}
-
-.page-row small {
-  display: inline-block;
-  margin-top: 4px;
-  color: var(--sf-primary);
-  font-weight: 800;
-}
-
-.page-slug {
-  color: var(--sf-muted);
-  overflow-wrap: anywhere;
-}
-
-.row-actions {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-}
-
-@media (min-width: 841px) {
-  .workspace-hero > .health-grid {
-    align-self: stretch;
-  }
-
-  .page-row > * {
-    min-width: 0;
-  }
-
-  .page-row > * + * {
-    border-left: 1px solid var(--workspace-line-soft);
-    padding-left: 16px;
-  }
-}
-
-/* ── Modal ── */
-.page-modal h3,
-.ai-page-modal h3 {
-  margin: 6px 0 18px;
-  font-size: 26px;
-  color: var(--sf-ink);
-}
-
-.page-modal form,
-.ai-page-modal form {
-  display: grid;
-  gap: 15px;
-}
-
-.page-modal label,
-.ai-page-modal label {
-  font-weight: 750;
-  color: var(--sf-ink);
-}
-
-.page-modal input,
-.ai-page-modal input,
-.ai-page-modal select,
-.ai-page-modal textarea {
-  margin-top: 7px;
-}
-
-.ai-page-modal {
-  width: min(920px, 100%);
-  max-height: min(86vh, 860px);
-  overflow: auto;
-}
-
-.ai-page-modal textarea {
-  min-height: 140px;
-  resize: vertical;
-}
-
-.ai-page-grid {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 12px;
-}
-
-.template-field {
-  display: grid;
-  gap: 8px;
-}
-
-.field-label {
-  font-weight: 750;
-  color: var(--sf-ink);
-}
-
-.template-picker {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-  gap: 12px;
-}
-
-.template-card {
-  min-height: 186px;
-  border: 1px solid var(--sf-line);
-  border-radius: 10px;
-  background: var(--sf-surface);
-  color: var(--sf-ink);
+  font-size: 14px;
+  font-weight: 600;
   cursor: pointer;
-  padding: 10px;
-  text-align: left;
-  transition: border-color 160ms ease, background 160ms ease, transform 160ms ease;
+  transition: all 0.15s;
 }
 
-.template-card:hover,
-.template-card.selected {
-  border-color: var(--sf-primary);
-  background: var(--sf-surface-hover);
+.sf-ws-new-btn:hover {
+  filter: brightness(1.1);
 }
 
-.template-card.selected {
-  box-shadow: inset 0 0 0 1px var(--sf-primary);
+/* Tabs */
+.sf-ws-tabs {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--sf-outline-variant);
 }
 
-.template-card strong {
-  display: block;
-  margin-top: 10px;
+.sf-ws-tabs button {
+  padding: 12px 20px;
+  border: none;
+  background: transparent;
+  color: var(--sf-on-surface-variant);
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  margin-bottom: -1px;
+  transition: all 0.15s;
+}
+
+.sf-ws-tabs button.active {
+  color: var(--sf-primary);
+  border-bottom-color: var(--sf-primary);
+}
+
+.sf-ws-tabs button:hover:not(.active) {
+  color: var(--sf-on-surface);
+}
+
+/* Tab Content */
+.sf-ws-tab-content {
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Grid */
+.sf-ws-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+/* Card */
+.sf-ws-card {
+  background: var(--sf-surface);
+  border: 1px solid var(--sf-outline-variant);
+  border-radius: 12px;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.sf-ws-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border-color: var(--sf-outline);
+}
+
+.sf-ws-card-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.sf-ws-card-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--sf-surface-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sf-on-surface-variant);
+  flex-shrink: 0;
+}
+
+.sf-ws-card-icon-home {
+  background: var(--sf-primary-container);
+  color: var(--sf-primary);
+}
+
+.sf-ws-card-icon .material-symbols-outlined {
+  font-size: 20px;
+}
+
+.sf-ws-card-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.sf-ws-card-title {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--sf-on-surface);
+  margin: 0 0 4px;
+}
+
+.sf-ws-card-type {
+  font-size: 12px;
+  color: var(--sf-on-surface-variant);
+  margin: 0;
+}
+
+.sf-ws-card-menu {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: var(--sf-on-surface-variant);
+  border-radius: 6px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: all 0.15s;
+}
+
+.sf-ws-card:hover .sf-ws-card-menu {
+  opacity: 1;
+}
+
+.sf-ws-card-menu:hover {
+  background: var(--sf-surface-variant);
+  color: var(--sf-on-surface);
+}
+
+/* Card Footer */
+.sf-ws-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 12px;
+  border-top: 1px solid var(--sf-outline-variant);
+}
+
+.sf-ws-card-time {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--sf-on-surface-variant);
+}
+
+.sf-ws-card-time .material-symbols-outlined {
   font-size: 14px;
 }
 
-.template-card small {
-  display: block;
-  margin-top: 4px;
-  color: var(--sf-muted);
+.sf-ws-card-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sf-ws-status-published {
   font-size: 12px;
-  line-height: 1.35;
+  color: var(--sf-primary);
+  font-weight: 500;
 }
 
-.template-preview {
+.sf-ws-status-draft {
+  font-size: 12px;
+  color: var(--sf-on-surface-variant);
+  font-weight: 500;
+}
+
+/* Toggle */
+.sf-ws-toggle {
   position: relative;
-  height: 94px;
+  display: inline-block;
+  width: 36px;
+  height: 20px;
+  cursor: pointer;
+}
+
+.sf-ws-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.sf-ws-toggle-track {
+  position: absolute;
+  inset: 0;
+  background: var(--sf-surface-variant);
+  border-radius: 10px;
+  transition: all 0.2s;
+}
+
+.sf-ws-toggle-track::before {
+  content: '';
+  position: absolute;
+  width: 16px;
+  height: 16px;
+  left: 2px;
+  top: 2px;
+  background: white;
+  border-radius: 50%;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+}
+
+.sf-ws-toggle input:checked + .sf-ws-toggle-track {
+  background: var(--sf-primary);
+}
+
+.sf-ws-toggle input:checked + .sf-ws-toggle-track::before {
+  transform: translateX(16px);
+}
+
+/* Empty State */
+.sf-ws-empty {
+  text-align: center;
+  padding: 64px 24px;
+  color: var(--sf-on-surface-variant);
+}
+
+.sf-ws-empty .material-symbols-outlined {
+  font-size: 48px;
+  margin-bottom: 16px;
+  color: var(--sf-outline);
+}
+
+.sf-ws-empty h3 {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--sf-on-surface);
+  margin: 0 0 8px;
+}
+
+.sf-ws-empty p {
+  font-size: 14px;
+  margin: 0 0 24px;
+}
+
+/* Section Header */
+.sf-ws-section-header {
+  margin-bottom: 24px;
+}
+
+.sf-ws-section-header h2 {
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--sf-on-surface);
+  margin: 0 0 4px;
+}
+
+.sf-ws-section-header p {
+  font-size: 14px;
+  color: var(--sf-on-surface-variant);
+  margin: 0;
+}
+
+/* Templates */
+.sf-ws-templates-grid {
   display: grid;
-  grid-template-rows: 24px 1fr 18px;
-  gap: 7px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.sf-ws-template-card {
+  background: var(--sf-surface);
+  border: 1px solid var(--sf-outline-variant);
+  border-radius: 12px;
   overflow: hidden;
-  border: 1px solid var(--sf-line);
+  transition: all 0.2s;
+}
+
+.sf-ws-template-card:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.sf-ws-template-thumb {
+  height: 120px;
+  background: var(--sf-surface-variant);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.sf-ws-template-placeholder {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+  background: var(--sf-surface-container-high);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--sf-outline);
+}
+
+.sf-ws-template-placeholder .material-symbols-outlined {
+  font-size: 24px;
+}
+
+.sf-ws-template-info {
+  padding: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.sf-ws-template-info h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--sf-on-surface);
+  margin: 0;
+}
+
+.sf-ws-template-info p {
+  font-size: 12px;
+  color: var(--sf-on-surface-variant);
+  margin: 4px 0 0;
+}
+
+.sf-ws-template-add {
+  width: 32px;
+  height: 32px;
+  border: none;
+  background: var(--sf-surface-variant);
+  color: var(--sf-on-surface-variant);
   border-radius: 8px;
-  padding: 8px;
-  background: linear-gradient(135deg, #2a2440, #15161b);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
 }
 
-.template-preview.has-image {
-  display: block;
-  padding: 0;
-  background: #101116;
+.sf-ws-template-add:hover {
+  background: var(--sf-primary-container);
+  color: var(--sf-primary);
 }
 
-.template-preview-image {
+/* Theme Placeholder */
+.sf-ws-theme-placeholder {
+  text-align: center;
+  padding: 64px;
+  color: var(--sf-on-surface-variant);
+}
+
+.sf-ws-theme-placeholder .material-symbols-outlined {
+  font-size: 48px;
+  margin-bottom: 16px;
+  color: var(--sf-outline);
+}
+
+/* Modal */
+.sf-ws-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+}
+
+.sf-ws-modal {
+  background: var(--sf-surface-container);
+  border-radius: 16px;
+  padding: 24px;
   width: 100%;
-  height: 100%;
+  max-width: 440px;
+  border: 1px solid var(--sf-outline-variant);
+  box-shadow: 0 24px 48px rgba(0, 0, 0, 0.2);
+}
+
+.sf-ws-modal h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--sf-on-surface);
+  margin: 0 0 20px;
+}
+
+.sf-ws-modal label {
   display: block;
-  object-fit: cover;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--sf-on-surface-variant);
+  margin-bottom: 16px;
 }
 
-.template-preview span {
-  display: block;
-  border-radius: 5px;
-  background: rgba(255,255,255,.72);
+.sf-ws-input {
+  width: 100%;
+  padding: 10px 14px;
+  margin-top: 6px;
+  background: var(--sf-surface-variant);
+  border: 1px solid var(--sf-outline-variant);
+  border-radius: 10px;
+  color: var(--sf-on-surface);
+  font-size: 14px;
+  outline: none;
+  transition: all 0.15s;
 }
 
-.template-preview span:nth-child(2) {
-  width: 70%;
+.sf-ws-input:focus {
+  border-color: var(--sf-primary);
 }
 
-.template-preview span:nth-child(3) {
-  width: 48%;
-}
-
-.blank-preview {
-  grid-template-rows: 1fr;
-  place-items: center;
-  background: var(--sf-surface-2);
-  color: var(--sf-muted);
-  font-weight: 900;
-}
-
-.preview-page-anti-counterfeit {
-  background: linear-gradient(135deg, #101828, #3a7bd5);
-}
-
-.preview-page-scan-result {
-  background: linear-gradient(135deg, #f8fbff, #2374ab);
-}
-
-.preview-page-lottery {
-  background: linear-gradient(135deg, #fff2cc, #ef476f);
-}
-
-.preview-page-points-redemption {
-  background: linear-gradient(135deg, #ecfdf3, #12b76a);
-}
-
-.preview-page-traceability {
-  background: linear-gradient(135deg, #172554, #84cc16);
-}
-
-.preview-page-dpp {
-  background: linear-gradient(135deg, #f9fafb, #111827);
-}
-
-.modal-actions {
+.sf-ws-modal-actions {
   display: flex;
   justify-content: flex-end;
+  gap: 12px;
+  margin-top: 24px;
+}
+
+.sf-ws-btn {
+  padding: 10px 18px;
+  border: 1px solid var(--sf-outline-variant);
+  background: transparent;
+  color: var(--sf-on-surface);
+  border-radius: 10px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.sf-ws-btn:hover {
+  background: var(--sf-surface-variant);
+}
+
+.sf-ws-btn-primary {
+  background: var(--sf-primary);
+  color: var(--sf-on-primary);
+  border-color: var(--sf-primary);
+}
+
+.sf-ws-btn-primary:hover {
+  filter: brightness(1.1);
+}
+
+/* Menu */
+.sf-ws-menu-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 2000;
+}
+
+.sf-ws-menu {
+  position: absolute;
+  background: var(--sf-surface-container);
+  border: 1px solid var(--sf-outline-variant);
+  border-radius: 10px;
+  padding: 4px;
+  min-width: 160px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+}
+
+.sf-ws-menu button {
+  display: flex;
+  align-items: center;
   gap: 10px;
-  margin-top: 4px;
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  color: var(--sf-on-surface);
+  font-size: 13px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.15s;
 }
 
-/* ── Responsive ── */
-@media (max-width: 1100px) {
-  .workspace-hero {
-    grid-template-columns: 1fr;
-  }
+.sf-ws-menu button:hover {
+  background: var(--sf-surface-variant);
 }
 
-@media (max-width: 840px) {
-  .workspace-header {
-    flex-direction: column;
-    align-items: stretch;
-  }
-  .workspace-content {
-    padding: 18px;
-  }
-  .health-grid {
-    grid-template-columns: 1fr;
-  }
-  .health-grid div {
-    border-left: 0;
-    border-top: 1px solid var(--workspace-line-soft);
-  }
-  .health-grid div:first-child {
-    border-top: 0;
-  }
-  .page-row {
-    grid-template-columns: 1fr;
-  }
-  .row-actions,
-  .content-actions,
-  .content-header,
-  .header-actions,
-  .modal-actions {
-    align-items: stretch;
-    flex-direction: column;
-  }
-  .ai-page-grid {
-    grid-template-columns: 1fr;
-  }
+.sf-ws-menu button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.sf-ws-menu-danger {
+  color: var(--sf-error) !important;
+}
+
+.sf-ws-menu-danger:hover {
+  background: var(--sf-error-container) !important;
+}
+
+/* Loading */
+.sf-ws-loading {
+  text-align: center;
+  padding: 64px;
+  color: var(--sf-on-surface-variant);
+  font-size: 14px;
 }
 </style>
