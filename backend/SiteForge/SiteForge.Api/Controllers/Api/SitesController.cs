@@ -41,8 +41,11 @@ public class SitesController : ApiControllerBase
     }
 
     [HttpDelete("{id:guid}")]
-    public async Task<ActionResult<ApiResponse<bool>>> Delete(Guid id) =>
-        OkResponse(await _sites.DeleteAsync(CurrentUserId, id), "Site deleted.");
+    public async Task<ActionResult<ApiResponse<bool>>> Delete(Guid id)
+    {
+        var deleted = await _sites.DeleteAsync(CurrentUserId, id);
+        return deleted ? OkResponse(true, "Site deleted.") : NotFoundResponse<bool>();
+    }
 
     [HttpPost("{id:guid}/publish")]
     public async Task<ActionResult<ApiResponse<PublishTaskDto>>> Publish(Guid id, PublishRequest request)

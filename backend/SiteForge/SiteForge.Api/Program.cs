@@ -161,6 +161,30 @@ app.UseStaticFiles();
 
 app.MapControllers();
 
+app.MapGet("/published/{**path}", (string? path, IWebHostEnvironment environment) =>
+{
+    var webRoot = environment.WebRootPath ?? Path.Combine(environment.ContentRootPath, "wwwroot");
+    var publishedRoot = Path.GetFullPath(Path.Combine(webRoot, "published"));
+    var relativePath = string.IsNullOrWhiteSpace(path) ? "index.html" : path.Trim('/');
+    if (string.IsNullOrWhiteSpace(relativePath))
+    {
+        relativePath = "index.html";
+    }
+
+    if (!Path.HasExtension(relativePath))
+    {
+        relativePath = Path.Combine(relativePath, "index.html");
+    }
+
+    var filePath = Path.GetFullPath(Path.Combine(publishedRoot, relativePath));
+    if (!filePath.StartsWith(publishedRoot, StringComparison.Ordinal) || !System.IO.File.Exists(filePath))
+    {
+        return Results.NotFound();
+    }
+
+    return Results.File(filePath, "text/html; charset=utf-8");
+});
+
 app.MapFallbackToFile("index.html");
 
 using (var scope = app.Services.CreateScope())

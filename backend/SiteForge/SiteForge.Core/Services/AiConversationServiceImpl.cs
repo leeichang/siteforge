@@ -1277,8 +1277,8 @@ public class AiConversationServiceImpl : AiConversationService
     {
         var source = StitchTemplateCatalog.Load(templatePage.FileName);
         var escapedTemplateKey = WebUtility.HtmlEncode(template.Key);
-        var html = ReplaceBrandTokens(source.Body, template.DefaultBrandName, siteName);
-        var head = ReplaceBrandTokens(source.Head, template.DefaultBrandName, siteName);
+        var html = EnsureMaterialSymbolDataIcons(source.Body);
+        var head = source.Head;
         var bodyClass = string.IsNullOrWhiteSpace(source.BodyClass) ? string.Empty : $" {source.BodyClass}";
 
         html = $$"""
@@ -1332,6 +1332,23 @@ public class AiConversationServiceImpl : AiConversationService
 
         return output;
     }
+
+    private static string EnsureMaterialSymbolDataIcons(string html) =>
+        Regex.Replace(
+            html,
+            @"<span(?<attrs>[^>]*class=[""'][^""']*\bmaterial-symbols-outlined\b[^""']*[""'][^>]*)>(?<icon>[^<]{1,80})</span>",
+            match =>
+            {
+                var attrs = match.Groups["attrs"].Value;
+                if (attrs.Contains("data-icon=", StringComparison.OrdinalIgnoreCase))
+                {
+                    return match.Value;
+                }
+
+                var icon = WebUtility.HtmlEncode(match.Groups["icon"].Value.Trim());
+                return $"<span{attrs} data-icon=\"{icon}\">{match.Groups["icon"].Value}</span>";
+            },
+            RegexOptions.IgnoreCase);
 
     private sealed record GeneratedPageDocument(
         string Html,
@@ -1619,6 +1636,7 @@ public class AiConversationServiceImpl : AiConversationService
         private static string NormalizeHead(string head)
         {
             if (string.IsNullOrWhiteSpace(head)) return string.Empty;
+            head = GuardTailwindConfigScript(head);
 
             var configMatch = Regex.Match(
                 head,
@@ -1634,6 +1652,7 @@ public class AiConversationServiceImpl : AiConversationService
                 return head;
             }
 
+            var configScript = configMatch.Value;
             var withoutConfig = head.Remove(configMatch.Index, configMatch.Length).Trim();
             var nextCdnMatch = Regex.Match(
                 withoutConfig,
@@ -1641,9 +1660,16 @@ public class AiConversationServiceImpl : AiConversationService
                 RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
             return nextCdnMatch.Success
-                ? withoutConfig.Insert(nextCdnMatch.Index, $"{configMatch.Value}\n")
-                : $"{configMatch.Value}\n{withoutConfig}";
+                ? withoutConfig.Insert(nextCdnMatch.Index, $"{configScript}\n")
+                : $"{configScript}\n{withoutConfig}";
         }
+
+        private static string GuardTailwindConfigScript(string script) =>
+            Regex.Replace(
+                script,
+                @"(?<![\w.])tailwind\.config\s*=",
+                "window.tailwind = window.tailwind || {}; tailwind.config =",
+                RegexOptions.IgnoreCase);
 
         private static string MatchInner(string html, string tag)
         {

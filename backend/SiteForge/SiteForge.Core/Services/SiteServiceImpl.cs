@@ -5,6 +5,7 @@ using SiteForge.Core.Interfaces.Services;
 using SiteForge.Core.Utilities;
 using System.Net;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace SiteForge.Core.Services;
 
@@ -79,7 +80,30 @@ public class SiteServiceImpl : SiteService
     public async Task<bool> DeleteAsync(Guid userId, Guid id)
     {
         var site = await _sites.GetByIdAsync(id);
-        return site is not null && site.UserId == userId && await _sites.DeleteAsync(id);
+        if (site is null || site.UserId != userId) return false;
+
+        foreach (var page in await _pages.GetBySiteIdAsync(id))
+        {
+            await _pages.DeleteAsync(page.Id);
+        }
+
+        foreach (var domain in await _domains.GetBySiteIdAsync(id))
+        {
+            await _domains.DeleteAsync(domain.Id);
+        }
+
+        foreach (var task in await _publishTasks.GetBySiteIdAsync(id))
+        {
+            await _publishTasks.DeleteAsync(task.Id);
+        }
+
+        var deleted = await _sites.DeleteAsync(id);
+        if (deleted)
+        {
+            DeletePublishedFolder(site);
+        }
+
+        return deleted;
     }
 
     public async Task<PublishTaskDto?> PublishAsync(Guid userId, Guid siteId, PublishRequest request)
@@ -155,6 +179,25 @@ public class SiteServiceImpl : SiteService
         return slug;
     }
 
+    private static void DeletePublishedFolder(Site site)
+    {
+        var publishFolder = Mappers.Slugify(site.Slug ?? site.Name);
+        if (string.IsNullOrWhiteSpace(publishFolder)) return;
+
+        var publishRoot = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "published", publishFolder);
+        try
+        {
+            if (Directory.Exists(publishRoot))
+            {
+                Directory.Delete(publishRoot, recursive: true);
+            }
+        }
+        catch
+        {
+            // Deleting the project should not fail just because an old preview file is locked.
+        }
+    }
+
     private static string RenderPage(Site site, Page page, List<Page> pages)
     {
         var title = WebUtility.HtmlEncode(page.MetaTitle ?? page.Title);
@@ -162,24 +205,37 @@ public class SiteServiceImpl : SiteService
         var body = string.IsNullOrWhiteSpace(page.HtmlContent) ? RenderEmptyPage(page) : page.HtmlContent;
         var css = page.CssContent ?? string.Empty;
         var (templateHead, js) = SplitTemplateHead(page.JsContent ?? string.Empty);
+        templateHead = NormalizeTemplateHead(templateHead);
         var headerScript = site.CustomHeaderScript ?? string.Empty;
         var footerScript = site.CustomFooterScript ?? string.Empty;
         var isStitchTemplate = !string.IsNullOrWhiteSpace(templateHead) || body.Contains("siteforge-stitch-template", StringComparison.OrdinalIgnoreCase);
+        if (isStitchTemplate)
+        {
+            body = EnsureMaterialSymbolDataIcons(body);
+        }
+
+        var bodyClass = isStitchTemplate ? ExtractStitchBodyClass(body) : string.Empty;
         var nav = isStitchTemplate ? string.Empty : RenderNavigation(site, pages);
-        var tailwindScript = templateHead.Contains("cdn.tailwindcss.com", StringComparison.OrdinalIgnoreCase)
+        var tailwindScript = isStitchTemplate || templateHead.Contains("cdn.tailwindcss.com", StringComparison.OrdinalIgnoreCase)
             ? string.Empty
             : """<script src="https://cdn.tailwindcss.com"></script>""";
+        var stitchFallbackStyle = isStitchTemplate
+            ? $"<style data-siteforge-stitch-fallback>{LoadStitchFallbackCss()}</style>"
+            : string.Empty;
+        var stitchIconFallbackScript = isStitchTemplate ? StitchIconFallbackScript : string.Empty;
 
         return $$"""
         <!doctype html>
-        <html lang="zh-Hant">
+        <html class="light" lang="zh-Hant">
         <head>
           <meta charset="utf-8">
           <meta name="viewport" content="width=device-width, initial-scale=1">
           <title>{{title}}</title>
           <meta name="description" content="{{description}}">
+          {{stitchFallbackStyle}}
           {{templateHead}}
           {{tailwindScript}}
+          {{stitchIconFallbackScript}}
           {{headerScript}}
           <style>
             body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
@@ -187,7 +243,7 @@ public class SiteServiceImpl : SiteService
             {{css}}
           </style>
         </head>
-        <body>
+        <body class="{{bodyClass}}">
           {{nav}}
           {{body}}
           {{footerScript}}
@@ -212,6 +268,117 @@ public class SiteServiceImpl : SiteService
         var remaining = (js[..startIndex] + js[(endIndex + end.Length)..]).Trim();
         return (head, remaining);
     }
+
+    private static string NormalizeTemplateHead(string head)
+    {
+        if (string.IsNullOrWhiteSpace(head)) return string.Empty;
+        head = GuardTailwindConfigScript(head);
+
+        var configMatch = Regex.Match(
+            head,
+            @"<script\s+id=[""']tailwind-config[""'][^>]*>.*?</script>",
+            RegexOptions.IgnoreCase | RegexOptions.Singleline);
+        var cdnMatch = Regex.Match(
+            head,
+            @"<script[^>]+src=[""']https://cdn\.tailwindcss\.com[^""']*[""'][^>]*>\s*</script>",
+            RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+        if (!configMatch.Success || !cdnMatch.Success || configMatch.Index < cdnMatch.Index)
+        {
+            return head;
+        }
+
+        var configScript = configMatch.Value;
+        var withoutConfig = head.Remove(configMatch.Index, configMatch.Length).Trim();
+        var nextCdnMatch = Regex.Match(
+            withoutConfig,
+            @"<script[^>]+src=[""']https://cdn\.tailwindcss\.com[^""']*[""'][^>]*>\s*</script>",
+            RegexOptions.IgnoreCase | RegexOptions.Singleline);
+
+        return nextCdnMatch.Success
+            ? withoutConfig.Insert(nextCdnMatch.Index, $"{configScript}\n")
+            : $"{configScript}\n{withoutConfig}";
+    }
+
+    private static string GuardTailwindConfigScript(string script) =>
+        Regex.Replace(
+            script,
+            @"(?<![\w.])tailwind\.config\s*=",
+            "window.tailwind = window.tailwind || {}; tailwind.config =",
+            RegexOptions.IgnoreCase);
+
+    private static string LoadStitchFallbackCss()
+    {
+        var fileName = Path.Combine("Templates", "Stitch", "siteforge-stitch-fallback.css");
+        var current = Directory.GetCurrentDirectory();
+        var candidates = new[]
+        {
+            Path.Combine(current, fileName),
+            Path.Combine(current, "backend", "SiteForge", "SiteForge.Api", fileName),
+            Path.Combine(AppContext.BaseDirectory, fileName)
+        };
+        var path = candidates.FirstOrDefault(File.Exists);
+        return File.Exists(path) ? File.ReadAllText(path, Encoding.UTF8) : string.Empty;
+    }
+
+    private static string StitchIconFallbackScript => """
+        <script>
+        (() => {
+          const applyFallback = () => document.documentElement.classList.add('siteforge-icon-fallback');
+          const checkSymbols = () => {
+            try {
+              if (!document.fonts || !document.fonts.check('24px "Material Symbols Outlined"')) {
+                applyFallback();
+              }
+            } catch {
+              applyFallback();
+            }
+          };
+
+          if (!document.fonts || !document.fonts.ready) {
+            applyFallback();
+            return;
+          }
+
+          document.fonts.ready.then(checkSymbols).catch(applyFallback);
+          setTimeout(checkSymbols, 300);
+          setTimeout(checkSymbols, 1800);
+        })();
+        </script>
+        """;
+
+    private static string ExtractStitchBodyClass(string body)
+    {
+        var match = Regex.Match(
+            body,
+            @"class=[""'](?<class>[^""']*\bsiteforge-stitch-template\b[^""']*)[""']",
+            RegexOptions.IgnoreCase);
+
+        if (!match.Success) return string.Empty;
+
+        var classes = match.Groups["class"].Value
+            .Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
+            .Where(name => !name.Equals("siteforge-stitch-template", StringComparison.OrdinalIgnoreCase));
+
+        return WebUtility.HtmlEncode(string.Join(' ', classes));
+    }
+
+    private static string EnsureMaterialSymbolDataIcons(string body) =>
+        Regex.Replace(
+            body,
+            @"<span(?<attrs>[^>]*class=[""'][^""']*\bmaterial-symbols-outlined\b[^""']*[""'][^>]*)>(?<icon>[^<]{1,80})</span>",
+            match =>
+            {
+                var attrs = match.Groups["attrs"].Value;
+                if (attrs.Contains("data-icon=", StringComparison.OrdinalIgnoreCase))
+                {
+                    return match.Value;
+                }
+
+                var icon = WebUtility.HtmlEncode(match.Groups["icon"].Value.Trim());
+                return $"<span{attrs} data-icon=\"{icon}\">{match.Groups["icon"].Value}</span>";
+            },
+            RegexOptions.IgnoreCase);
 
     private static string RenderNavigation(Site site, List<Page> pages)
     {

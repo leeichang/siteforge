@@ -1,5 +1,5 @@
 <template>
-  <div class="sf-dashboard">
+  <div class="sf-dashboard" @click="activeMenuId = null">
     <!-- Page Header (simplified — the TopAppBar is in App.vue) -->
     <header class="sf-dash-header">
       <div class="sf-dash-header-left">
@@ -51,9 +51,23 @@
           <div class="sf-dash-card-body">
             <div class="sf-dash-card-header">
               <h3 class="sf-title-md sf-dash-card-title">{{ filteredSites[0].name }}</h3>
-              <button class="sf-dash-card-menu" @click.stop="showSiteMenu(filteredSites[0])">
+              <button
+                class="sf-dash-card-menu"
+                :aria-label="t('dashboard.projectActions')"
+                @click.stop="toggleSiteMenu(filteredSites[0].id)"
+              >
                 <span class="material-symbols-outlined" style="font-size: 20px;">more_vert</span>
               </button>
+              <div v-if="activeMenuId === filteredSites[0].id" class="sf-dash-card-actions" @click.stop>
+                <button
+                  class="sf-dash-action danger"
+                  :disabled="deletingSiteId === filteredSites[0].id"
+                  @click="confirmDeleteSite(filteredSites[0])"
+                >
+                  <span class="material-symbols-outlined">delete</span>
+                  {{ deletingSiteId === filteredSites[0].id ? t('dashboard.deletingProject') : t('dashboard.deleteProject') }}
+                </button>
+              </div>
             </div>
             <p class="sf-body-md sf-dash-card-desc">{{ filteredSites[0].description || t('common.noDescription') }}</p>
             <div class="sf-dash-card-meta">
@@ -94,9 +108,23 @@
           <div class="sf-dash-card-body">
             <div class="sf-dash-card-header">
               <h3 class="sf-title-md sf-dash-card-title">{{ site.name }}</h3>
-              <button class="sf-dash-card-menu" @click.stop="showSiteMenu(site)">
+              <button
+                class="sf-dash-card-menu"
+                :aria-label="t('dashboard.projectActions')"
+                @click.stop="toggleSiteMenu(site.id)"
+              >
                 <span class="material-symbols-outlined" style="font-size: 20px;">more_vert</span>
               </button>
+              <div v-if="activeMenuId === site.id" class="sf-dash-card-actions" @click.stop>
+                <button
+                  class="sf-dash-action danger"
+                  :disabled="deletingSiteId === site.id"
+                  @click="confirmDeleteSite(site)"
+                >
+                  <span class="material-symbols-outlined">delete</span>
+                  {{ deletingSiteId === site.id ? t('dashboard.deletingProject') : t('dashboard.deleteProject') }}
+                </button>
+              </div>
             </div>
             <div class="sf-dash-card-meta">
               <span class="sf-label-sm">
@@ -232,6 +260,8 @@ const creatingSite = ref(false)
 const createError = ref('')
 const search = ref('')
 const showCreate = ref(false)
+const activeMenuId = ref(null)
+const deletingSiteId = ref(null)
 const newSite = ref({ name: '', description: '' })
 const selectedTemplate = ref('')
 
@@ -279,14 +309,9 @@ const loadTemplates = async () => {
   }
 }
 
-const toggleStatus = async (site) => {
-  const newStatus = site.status === 'published' ? 'draft' : 'published'
-  try {
-    await api.patch(`/Sites/${site.id}`, { status: newStatus })
-    site.status = newStatus
-  } catch (e) {
-    console.error('Failed to toggle status:', e)
-  }
+const toggleStatus = async () => {
+  // Publishing is handled from the workspace. Keep the dashboard badge as a label
+  // so it does not call unsupported status endpoints.
 }
 
 const createSite = async () => {
@@ -326,11 +351,33 @@ const createSite = async () => {
 }
 
 const openSite = (id) => {
+  activeMenuId.value = null
   router.push(`/sites/${id}`)
 }
 
-const showSiteMenu = (site) => {
-  console.log('Site menu:', site.name)
+const toggleSiteMenu = (siteId) => {
+  activeMenuId.value = activeMenuId.value === siteId ? null : siteId
+}
+
+const confirmDeleteSite = async (site) => {
+  if (!site?.id || deletingSiteId.value) return
+
+  const confirmed = confirm(t('dashboard.deleteProjectConfirm', { name: site.name }))
+  if (!confirmed) return
+
+  deletingSiteId.value = site.id
+  try {
+    const res = await api.delete(`/Sites/${site.id}`)
+    const deleted = res.data?.data ?? res.data
+    if (deleted === false) throw new Error(t('dashboard.deleteProjectFailed'))
+    sites.value = sites.value.filter((item) => item.id !== site.id)
+    activeMenuId.value = null
+  } catch (e) {
+    console.error('Failed to delete site:', e)
+    alert(`${t('dashboard.deleteProjectFailed')}: ${e.response?.data?.message || e.message}`)
+  } finally {
+    deletingSiteId.value = null
+  }
 }
 
 const templatePreviewClass = (key) => `preview-${key.replace(/[^a-z0-9]+/gi, '-')}`
@@ -562,6 +609,7 @@ onMounted(() => {
   justify-content: space-between;
   align-items: flex-start;
   margin-bottom: 8px;
+  position: relative;
 }
 
 .sf-dash-card-title {
@@ -574,7 +622,7 @@ onMounted(() => {
 }
 
 .sf-dash-card-menu {
-  opacity: 0;
+  opacity: 1;
   transition: opacity 0.2s;
   background: none;
   border: none;
@@ -587,12 +635,54 @@ onMounted(() => {
   justify-content: center;
 }
 
-.sf-dash-card:hover .sf-dash-card-menu {
-  opacity: 1;
-}
-
 .sf-dash-card-menu:hover {
   background: var(--sf-chrome-btn-hover-bg);
+}
+
+.sf-dash-card-actions {
+  position: absolute;
+  top: 34px;
+  right: 0;
+  z-index: 10;
+  min-width: 150px;
+  padding: 6px;
+  border: 1px solid var(--sf-outline-variant);
+  border-radius: 12px;
+  background: var(--sf-surface-container);
+  box-shadow: 0 14px 34px var(--sf-card-shadow);
+}
+
+.sf-dash-action {
+  width: 100%;
+  border: none;
+  border-radius: 8px;
+  background: transparent;
+  color: var(--sf-ink);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 10px;
+  text-align: left;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.sf-dash-action .material-symbols-outlined {
+  font-size: 18px;
+}
+
+.sf-dash-action:hover {
+  background: var(--sf-chrome-btn-hover-bg);
+}
+
+.sf-dash-action.danger {
+  color: var(--sf-error);
+}
+
+.sf-dash-action:disabled {
+  cursor: wait;
+  opacity: 0.55;
 }
 
 .sf-dash-card-desc {

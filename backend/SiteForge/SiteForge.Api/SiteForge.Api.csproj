@@ -17,5 +17,6 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Templates\Stitch\**\*.html" CopyToOutputDirectory="PreserveNewest" />
+    <None Update="Templates\Stitch\**\*.css" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

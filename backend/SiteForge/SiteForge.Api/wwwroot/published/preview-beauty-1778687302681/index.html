@@ -1,0 +1,912 @@
+﻿<!doctype html>
+<html class="light" lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Home | AETHERIS 瑰麗美學</title>
+  <meta name="description" content="Use the curated Stitch beauty template exactly as designed.">
+  <meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "error-container": "#ffdad6",
+                      "surface-container": "#efeeec",
+                      "on-primary": "#ffffff",
+                      "tertiary-container": "#e5c1b3",
+                      "inverse-on-surface": "#f1f1ef",
+                      "on-secondary-fixed-variant": "#3f4945",
+                      "on-tertiary-container": "#684e43",
+                      "outline": "#7f756d",
+                      "secondary": "#56615c",
+                      "surface-container-low": "#f4f3f1",
+                      "primary-container": "#d9c5b2",
+                      "on-tertiary-fixed-variant": "#5a4137",
+                      "surface-container-lowest": "#ffffff",
+                      "secondary-fixed": "#dae5df",
+                      "on-secondary": "#ffffff",
+                      "primary-fixed": "#f4dfcb",
+                      "on-tertiary-fixed": "#2a170e",
+                      "surface-tint": "#6b5c4c",
+                      "primary-fixed-dim": "#d7c3b0",
+                      "tertiary": "#74584d",
+                      "secondary-container": "#d7e2dc",
+                      "on-secondary-fixed": "#141e1a",
+                      "on-primary-fixed-variant": "#524436",
+                      "on-error": "#ffffff",
+                      "secondary-fixed-dim": "#bec9c3",
+                      "surface-variant": "#e3e20",
+                      "on-tertiary": "#ffffff",
+                      "inverse-primary": "#d7c3b0",
+                      "primary": "#6b5c4c",
+                      "tertiary-fixed": "#ffdbcd",
+                      "inverse-surface": "#2f3130",
+                      "error": "#ba1a1a",
+                      "on-background": "#1a1c1b",
+                      "surface-container-high": "#e9e8e6",
+                      "on-primary-container": "#605142",
+                      "on-secondary-container": "#5a6560",
+                      "surface": "#faf9f7",
+                      "surface-dim": "#dadad8",
+                      "surface-bright": "#faf9f7",
+                      "on-surface-variant": "#4d453e",
+                      "on-primary-fixed": "#241a0e",
+                      "tertiary-fixed-dim": "#e3bfb1",
+                      "on-error-container": "#93000a",
+                      "outline-variant": "#d0c4bb",
+                      "surface-container-highest": "#e3e2e0",
+                      "background": "#faf9f7",
+                      "on-surface": "#1a1c1b"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "sm": "8px",
+                      "md": "16px",
+                      "gutter": "24px",
+                      "unit": "4px",
+                      "xxl": "80px",
+                      "container-max": "1200px",
+                      "xs": "4px",
+                      "xl": "48px",
+                      "lg": "24px"
+              },
+              "fontFamily": {
+                      "h2": ["Playfair Display"],
+                      "label-sm": ["Inter"],
+                      "body-md": ["Inter"],
+                      "body-lg": ["Inter"],
+                      "display-lg": ["Playfair Display"],
+                      "h1": ["Playfair Display"],
+                      "h3": ["Playfair Display"]
+              },
+              "fontSize": {
+                      "h2": ["28px", {"lineHeight": "1.4", "letterSpacing": "0em", "fontWeight": "500"}],
+                      "label-sm": ["13px", {"lineHeight": "1.2", "letterSpacing": "0.08em", "fontWeight": "600"}],
+                      "body-md": ["16px", {"lineHeight": "1.6", "letterSpacing": "0.01em", "fontWeight": "400"}],
+                      "body-lg": ["18px", {"lineHeight": "1.7", "letterSpacing": "0.01em", "fontWeight": "400"}],
+                      "display-lg": ["48px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                      "h1": ["36px", {"lineHeight": "1.3", "letterSpacing": "0em", "fontWeight": "500"}],
+                      "h3": ["22px", {"lineHeight": "1.4", "letterSpacing": "0.02em", "fontWeight": "500"}]
+              }
+            },
+          },
+        }
+      </script>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&amp;family=Inter:wght@400;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #faf9f7;
+            color: #1a1c1b;
+        }
+        .font-h1, .font-h2, .font-h3, .font-display-lg { font-family: 'Playfair Display', serif; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+        }
+    </style>
+
+<style>
+    body {
+      min-height: max(884px, 100dvh);
+    }
+  </style>
+  
+  <style data-siteforge-stitch-fallback>/* SiteForge Stitch fallback CSS.
+   Keeps imported Stitch pages presentable when CDN assets are slow or blocked. */
+:root {
+  --sf-stitch-background: #faf9f7;
+  --sf-stitch-surface: #faf9f7;
+  --sf-stitch-surface-low: #f4f3f1;
+  --sf-stitch-surface-container: #efeeec;
+  --sf-stitch-surface-high: #e9e8e6;
+  --sf-stitch-surface-highest: #e3e2e0;
+  --sf-stitch-primary: #6b5c4c;
+  --sf-stitch-primary-container: #d9c5b2;
+  --sf-stitch-primary-fixed: #f4dfcb;
+  --sf-stitch-secondary: #56615c;
+  --sf-stitch-secondary-container: #d7e2dc;
+  --sf-stitch-tertiary: #74584d;
+  --sf-stitch-tertiary-container: #e5c1b3;
+  --sf-stitch-on-surface: #1a1c1b;
+  --sf-stitch-on-surface-variant: #4d453e;
+  --sf-stitch-outline: #7f756d;
+  --sf-stitch-outline-variant: #d0c4bb;
+  --sf-stitch-on-primary: #fff;
+  --sf-stitch-max: 1200px;
+}
+
+.siteforge-stitch-template,
+.siteforge-stitch-template * {
+  box-sizing: border-box;
+}
+
+.siteforge-stitch-template {
+  min-height: 100vh;
+  background: var(--sf-stitch-background);
+  color: var(--sf-stitch-on-surface);
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+}
+
+.siteforge-stitch-template img {
+  max-width: 100%;
+  display: block;
+}
+
+.siteforge-stitch-template a {
+  color: inherit;
+  text-decoration: none;
+}
+
+[class~="font-h1"],
+[class~="font-h2"],
+[class~="font-h3"],
+[class~="font-display-lg"] {
+  font-family: "Playfair Display", Georgia, serif;
+}
+
+[class~="font-body-md"],
+[class~="font-body-lg"],
+[class~="font-label-sm"] {
+  font-family: Inter, ui-sans-serif, system-ui, sans-serif;
+}
+
+[class~="text-label-sm"] { font-size: 13px; line-height: 1.2; font-weight: 600; }
+[class~="text-body-md"] { font-size: 16px; line-height: 1.6; }
+[class~="text-body-lg"] { font-size: 18px; line-height: 1.7; }
+[class~="text-h1"] { font-size: 36px; line-height: 1.3; font-weight: 500; }
+[class~="text-h2"] { font-size: 28px; line-height: 1.4; font-weight: 500; }
+[class~="text-h3"] { font-size: 22px; line-height: 1.4; font-weight: 500; }
+[class~="text-display-lg"] { font-size: 48px; line-height: 1.2; font-weight: 600; }
+[class~="text-sm"] { font-size: 14px; line-height: 1.45; }
+[class~="text-3xl"] { font-size: 30px; line-height: 1.2; }
+[class~="text-4xl"] { font-size: 36px; line-height: 1.2; }
+[class~="text-[10px]"] { font-size: 10px; }
+[class~="text-[11px]"] { font-size: 11px; }
+[class~="text-[12px]"] { font-size: 12px; }
+[class~="text-[16px]"] { font-size: 16px; }
+[class~="text-[18px]"] { font-size: 18px; }
+[class~="text-[40px]"] { font-size: 40px; }
+[class~="text-[64px]"] { font-size: 64px; }
+[class~="text-[200px]"] { font-size: 200px; }
+
+[class~="font-bold"] { font-weight: 700; }
+[class~="font-medium"] { font-weight: 500; }
+[class~="italic"] { font-style: italic; }
+[class~="uppercase"] { text-transform: uppercase; }
+[class~="tracking-widest"] { letter-spacing: .1em; }
+[class~="tracking-[0.2em]"] { letter-spacing: .2em; }
+[class~="tracking-[0.3em]"] { letter-spacing: .3em; }
+[class~="leading-relaxed"] { line-height: 1.625; }
+[class~="leading-tight"] { line-height: 1.25; }
+[class~="text-center"] { text-align: center; }
+
+[class~="block"] { display: block; }
+[class~="inline-block"] { display: inline-block; }
+[class~="hidden"] { display: none; }
+[class~="flex"] { display: flex; }
+[class~="grid"] { display: grid; }
+[class~="flex-col"] { flex-direction: column; }
+[class~="flex-wrap"] { flex-wrap: wrap; }
+[class~="flex-nowrap"] { flex-wrap: nowrap; }
+[class~="items-center"] { align-items: center; }
+[class~="items-start"] { align-items: flex-start; }
+[class~="items-end"] { align-items: flex-end; }
+[class~="justify-center"] { justify-content: center; }
+[class~="justify-between"] { justify-content: space-between; }
+[class~="flex-1"] { flex: 1 1 0%; }
+[class~="flex-grow"] { flex-grow: 1; }
+[class~="shrink-0"] { flex-shrink: 0; }
+[class~="order-1"] { order: 1; }
+[class~="order-2"] { order: 2; }
+[class~="grid-cols-1"] { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+[class~="grid-cols-2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+[class~="grid-cols-3"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+[class~="col-span-1"] { grid-column: span 1 / span 1; }
+[class~="auto-rows-[280px]"] { grid-auto-rows: 280px; }
+
+[class~="relative"] { position: relative; }
+[class~="absolute"] { position: absolute; }
+[class~="sticky"] { position: sticky; }
+[class~="inset-0"] { inset: 0; }
+[class~="top-0"] { top: 0; }
+[class~="top-md"] { top: 16px; }
+[class~="left-md"] { left: 16px; }
+[class~="-bottom-xl"] { bottom: -48px; }
+[class~="-bottom-10"] { bottom: -40px; }
+[class~="-right-xl"] { right: -48px; }
+[class~="-right-10"] { right: -40px; }
+[class~="z-0"] { z-index: 0; }
+[class~="z-10"] { z-index: 10; }
+[class~="z-50"] { z-index: 50; }
+
+[class~="container"],
+[class~="max-w-container-max"] {
+  max-width: var(--sf-stitch-max);
+}
+[class~="container"] {
+  width: 100%;
+}
+[class~="mx-auto"] { margin-left: auto; margin-right: auto; }
+[class~="w-full"] { width: 100%; }
+[class~="w-1/2"] { width: 50%; }
+[class~="w-8"] { width: 32px; }
+[class~="w-12"] { width: 48px; }
+[class~="w-16"] { width: 64px; }
+[class~="w-20"] { width: 80px; }
+[class~="w-24"] { width: 96px; }
+[class~="w-64"] { width: 256px; }
+[class~="h-full"] { height: 100%; }
+[class~="h-8"] { height: 32px; }
+[class~="h-12"] { height: 48px; }
+[class~="h-16"] { height: 64px; }
+[class~="h-20"] { height: 80px; }
+[class~="h-24"] { height: 96px; }
+[class~="h-48"] { height: 192px; }
+[class~="h-80"] { height: 320px; }
+[class~="h-[500px]"] { height: 500px; }
+[class~="h-[618px]"] { height: 618px; }
+[class~="h-[751px]"] { height: 751px; }
+[class~="max-w-xs"] { max-width: 320px; }
+[class~="max-w-md"] { max-width: 448px; }
+[class~="max-w-lg"] { max-width: 512px; }
+[class~="max-w-2xl"] { max-width: 672px; }
+[class~="max-w-3xl"] { max-width: 768px; }
+[class~="max-w-[600px]"] { max-width: 600px; }
+[class~="min-w-[320px]"] { min-width: 320px; }
+
+[class~="aspect-square"] { aspect-ratio: 1 / 1; }
+[class~="aspect-[16/9]"] { aspect-ratio: 16 / 9; }
+[class~="aspect-[3/4]"] { aspect-ratio: 3 / 4; }
+[class~="aspect-[4/5]"] { aspect-ratio: 4 / 5; }
+[class~="object-cover"] { object-fit: cover; }
+[class~="overflow-hidden"] { overflow: hidden; }
+[class~="overflow-x-auto"] { overflow-x: auto; }
+
+[class~="gap-xs"] { gap: 4px; }
+[class~="gap-sm"] { gap: 8px; }
+[class~="gap-md"] { gap: 16px; }
+[class~="gap-lg"] { gap: 24px; }
+[class~="gap-gutter"] { gap: 24px; }
+[class~="gap-xl"] { gap: 48px; }
+[class~="gap-xxl"] { gap: 80px; }
+[class~="space-y-xs"] > :not([hidden]) ~ :not([hidden]) { margin-top: 4px; }
+[class~="space-y-sm"] > :not([hidden]) ~ :not([hidden]) { margin-top: 8px; }
+[class~="space-y-md"] > :not([hidden]) ~ :not([hidden]) { margin-top: 16px; }
+[class~="space-y-lg"] > :not([hidden]) ~ :not([hidden]) { margin-top: 24px; }
+
+[class~="p-md"] { padding: 16px; }
+[class~="p-lg"] { padding: 24px; }
+[class~="p-xl"] { padding: 48px; }
+[class~="p-xxl"] { padding: 80px; }
+[class~="px-0"] { padding-left: 0; padding-right: 0; }
+[class~="px-2"] { padding-left: 8px; padding-right: 8px; }
+[class~="px-md"] { padding-left: 16px; padding-right: 16px; }
+[class~="px-lg"] { padding-left: 24px; padding-right: 24px; }
+[class~="px-xl"] { padding-left: 48px; padding-right: 48px; }
+[class~="py-xs"] { padding-top: 4px; padding-bottom: 4px; }
+[class~="py-sm"] { padding-top: 8px; padding-bottom: 8px; }
+[class~="py-2"] { padding-top: 8px; padding-bottom: 8px; }
+[class~="py-md"] { padding-top: 16px; padding-bottom: 16px; }
+[class~="py-lg"] { padding-top: 24px; padding-bottom: 24px; }
+[class~="py-xl"] { padding-top: 48px; padding-bottom: 48px; }
+[class~="py-xxl"] { padding-top: 80px; padding-bottom: 80px; }
+[class~="pt-xxl"] { padding-top: 80px; }
+[class~="pb-1"] { padding-bottom: 4px; }
+[class~="pb-md"] { padding-bottom: 16px; }
+[class~="pb-xl"] { padding-bottom: 48px; }
+
+[class~="mt-1"] { margin-top: 4px; }
+[class~="mt-sm"] { margin-top: 8px; }
+[class~="mt-md"] { margin-top: 16px; }
+[class~="mt-lg"] { margin-top: 24px; }
+[class~="mt-xl"] { margin-top: 48px; }
+[class~="mt-xxl"] { margin-top: 80px; }
+[class~="mt-auto"] { margin-top: auto; }
+[class~="mb-1"] { margin-bottom: 4px; }
+[class~="mb-xs"] { margin-bottom: 4px; }
+[class~="mb-sm"] { margin-bottom: 8px; }
+[class~="mb-md"] { margin-bottom: 16px; }
+[class~="mb-lg"] { margin-bottom: 24px; }
+[class~="mb-xl"] { margin-bottom: 48px; }
+[class~="mb-xxl"] { margin-bottom: 80px; }
+[class~="ml-xl"] { margin-left: 48px; }
+
+[class~="bg-background"] { background-color: var(--sf-stitch-background); }
+[class~="bg-surface"] { background-color: var(--sf-stitch-surface); }
+[class~="bg-surface-container-low"],
+[class~="bg-surface-container-lowest"] { background-color: var(--sf-stitch-surface-low); }
+[class~="bg-surface-container"] { background-color: var(--sf-stitch-surface-container); }
+[class~="bg-surface-container-high"] { background-color: var(--sf-stitch-surface-high); }
+[class~="bg-surface-container-highest"] { background-color: var(--sf-stitch-surface-highest); }
+[class~="bg-surface/95"] { background-color: rgba(250,249,247,.95); }
+[class~="bg-surface/50"] { background-color: rgba(250,249,247,.5); }
+[class~="bg-primary"] { background-color: var(--sf-stitch-primary); }
+[class~="bg-primary/5"] { background-color: rgba(107,92,76,.05); }
+[class~="bg-primary-container"] { background-color: var(--sf-stitch-primary-container); }
+[class~="bg-primary-container/30"] { background-color: rgba(217,197,178,.3); }
+[class~="bg-primary-fixed"] { background-color: var(--sf-stitch-primary-fixed); }
+[class~="bg-primary-fixed/30"] { background-color: rgba(244,223,203,.3); }
+[class~="bg-secondary"] { background-color: var(--sf-stitch-secondary); }
+[class~="bg-secondary-container/30"] { background-color: rgba(215,226,220,.3); }
+[class~="bg-secondary-fixed"] { background-color: #dae5df; }
+[class~="bg-tertiary"] { background-color: var(--sf-stitch-tertiary); }
+[class~="bg-tertiary-container/20"] { background-color: rgba(229,193,179,.2); }
+[class~="bg-tertiary-container/30"] { background-color: rgba(229,193,179,.3); }
+[class~="bg-on-primary"] { background-color: #fff; }
+[class~="bg-white"] { background-color: #fff; }
+[class~="bg-white/10"] { background-color: rgba(255,255,255,.1); }
+[class~="bg-transparent"] { background-color: transparent; }
+[class~="bg-gradient-to-r"] { background-image: linear-gradient(to right, var(--tw-gradient-stops, rgba(250,249,247,.6), transparent)); }
+[class~="bg-gradient-to-b"] { background-image: linear-gradient(to bottom, var(--tw-gradient-stops, transparent, rgba(250,249,247,.8))); }
+[class~="bg-gradient-to-t"] { background-image: linear-gradient(to top, var(--tw-gradient-stops, rgba(26,28,27,.6), transparent)); }
+[class~="from-background/60"] { --tw-gradient-stops: rgba(250,249,247,.6), var(--tw-gradient-to, transparent); }
+[class~="from-on-surface/60"] { --tw-gradient-stops: rgba(26,28,27,.6), var(--tw-gradient-to, transparent); }
+[class~="from-transparent"] { --tw-gradient-stops: transparent, var(--tw-gradient-to, transparent); }
+[class~="via-transparent"] { --tw-gradient-to: transparent; }
+[class~="to-transparent"] { --tw-gradient-to: transparent; }
+[class~="to-surface/80"] { --tw-gradient-to: rgba(250,249,247,.8); }
+
+[class~="text-primary"] { color: var(--sf-stitch-primary); }
+[class~="text-secondary"] { color: var(--sf-stitch-secondary); }
+[class~="text-tertiary"] { color: var(--sf-stitch-tertiary); }
+[class~="text-on-surface"],
+[class~="text-on-background"] { color: var(--sf-stitch-on-surface); }
+[class~="text-on-surface-variant"] { color: var(--sf-stitch-on-surface-variant); }
+[class~="text-on-surface-variant/60"] { color: rgba(77,69,62,.6); }
+[class~="text-on-primary"] { color: var(--sf-stitch-on-primary); }
+[class~="text-on-primary-container"] { color: #605142; }
+[class~="text-on-primary-container/80"] { color: rgba(96,81,66,.8); }
+[class~="text-on-primary-fixed"] { color: #241a0e; }
+[class~="text-on-primary-fixed-variant"] { color: #524436; }
+[class~="text-on-secondary"],
+[class~="text-on-secondary-fixed"],
+[class~="text-on-secondary-fixed-variant"] { color: #141e1a; }
+[class~="text-on-tertiary"] { color: #fff; }
+[class~="text-on-tertiary-container"] { color: #684e43; }
+[class~="text-on-tertiary-container/80"] { color: rgba(104,78,67,.8); }
+[class~="text-outline"] { color: var(--sf-stitch-outline); }
+[class~="text-outline-variant"] { color: var(--sf-stitch-outline-variant); }
+[class~="text-white"] { color: #fff; }
+[class~="text-white/80"] { color: rgba(255,255,255,.8); }
+
+[class~="border"] { border-width: 1px; border-style: solid; }
+[class~="border-0"] { border-width: 0; }
+[class~="border-4"] { border-width: 4px; border-style: solid; }
+[class~="border-b"] { border-bottom-width: 1px; border-bottom-style: solid; }
+[class~="border-t"] { border-top-width: 1px; border-top-style: solid; }
+[class~="border-y"] { border-top-width: 1px; border-bottom-width: 1px; border-style: solid; }
+[class~="border-dashed"] { border-style: dashed; }
+[class~="border-outline"] { border-color: var(--sf-stitch-outline); }
+[class~="border-outline-variant"],
+[class~="border-outline-variant/10"],
+[class~="border-outline-variant/20"],
+[class~="border-outline-variant/30"],
+[class~="border-outline-variant/50"] { border-color: var(--sf-stitch-outline-variant); }
+[class~="border-primary"],
+[class~="border-primary/30"] { border-color: var(--sf-stitch-primary); }
+[class~="border-tertiary-container/30"] { border-color: rgba(229,193,179,.3); }
+[class~="border-white"],
+[class~="border-white/50"] { border-color: #fff; }
+[class~="rounded-lg"] { border-radius: 4px; }
+[class~="rounded-xl"] { border-radius: 8px; }
+[class~="rounded-full"] { border-radius: 9999px; }
+
+[class~="shadow-sm"] { box-shadow: 0 1px 2px rgba(0,0,0,.05); }
+[class~="shadow-lg"] { box-shadow: 0 10px 15px rgba(0,0,0,.1); }
+[class~="shadow-xl"] { box-shadow: 0 20px 25px rgba(0,0,0,.1); }
+[class~="shadow-primary/5"],
+[class~="shadow-[0_20px_40px_rgba(107,92,76,0.05)]"],
+.soft-shadow { box-shadow: 0 20px 40px rgba(107,92,76,.08); }
+.glass-card {
+  background: rgba(255,255,255,.6);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+[class~="backdrop-blur-md"] {
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+[class~="opacity-10"] { opacity: .1; }
+[class~="opacity-70"] { opacity: .7; }
+[class~="opacity-80"] { opacity: .8; }
+[class~="opacity-90"] { opacity: .9; }
+[class~="mix-blend-multiply"] { mix-blend-mode: multiply; }
+[class~="grayscale-[20%]"] { filter: grayscale(20%); }
+[class~="cursor-pointer"] { cursor: pointer; }
+[class~="outline-none"] { outline: 0; }
+[class~="appearance-none"] { appearance: none; }
+[class~="transition-all"],
+[class~="transition-colors"],
+[class~="transition-opacity"],
+[class~="transition-transform"] { transition-duration: .2s; transition-property: all; }
+
+.material-symbols-outlined {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2em;
+  height: 1.2em;
+  font-family: "Material Symbols Outlined", sans-serif;
+  font-size: 24px;
+  line-height: 1;
+  vertical-align: middle;
+  font-variation-settings: "FILL" 0, "wght" 300, "GRAD" 0, "opsz" 24;
+}
+
+.siteforge-icon-fallback .material-symbols-outlined[data-icon] {
+  font-size: 0;
+}
+
+.siteforge-icon-fallback .material-symbols-outlined[data-icon]::before {
+  content: attr(data-icon);
+  font-family: "Material Symbols Outlined", sans-serif;
+  font-size: 24px;
+  line-height: 1;
+}
+
+@supports not (font-variation-settings: normal) {
+  .siteforge-icon-fallback .material-symbols-outlined[data-icon]::before {
+    font-family: ui-sans-serif, system-ui, sans-serif;
+  }
+}
+
+.siteforge-icon-fallback .material-symbols-outlined[data-icon="menu"]::before { content: "\2630"; }
+.siteforge-icon-fallback .material-symbols-outlined[data-icon="search"]::before { content: "\2315"; }
+.siteforge-icon-fallback .material-symbols-outlined[data-icon="shopping_bag"]::before { content: "\25A1"; }
+.siteforge-icon-fallback .material-symbols-outlined[data-icon="check_circle"]::before { content: "\2713"; }
+.siteforge-icon-fallback .material-symbols-outlined[data-icon="format_quote"]::before { content: "\201C"; }
+.siteforge-icon-fallback .material-symbols-outlined[data-icon="science"]::before { content: "\2697"; }
+.siteforge-icon-fallback .material-symbols-outlined[data-icon="verified"]::before,
+.siteforge-icon-fallback .material-symbols-outlined[data-icon="verified_user"]::before,
+.siteforge-icon-fallback .material-symbols-outlined[data-icon="shield"]::before { content: "\25C7"; }
+.siteforge-icon-fallback .material-symbols-outlined[data-icon="spa"]::before,
+.siteforge-icon-fallback .material-symbols-outlined[data-icon="eco"]::before,
+.siteforge-icon-fallback .material-symbols-outlined[data-icon="local_florist"]::before { content: "\2726"; }
+.siteforge-icon-fallback .material-symbols-outlined[data-icon="pets"]::before { content: "\2022"; }
+.siteforge-icon-fallback .material-symbols-outlined[data-icon="share"]::before { content: "\2197"; }
+.siteforge-icon-fallback .material-symbols-outlined[data-icon="mail"]::before,
+.siteforge-icon-fallback .material-symbols-outlined[data-icon="email"]::before { content: "\2709"; }
+.siteforge-icon-fallback .material-symbols-outlined[data-icon="phone"]::before { content: "\260E"; }
+.siteforge-icon-fallback .material-symbols-outlined[data-icon="location_on"]::before { content: "\25CE"; }
+
+[class~="no-scrollbar"]::-webkit-scrollbar { display: none; }
+[class~="no-scrollbar"] { scrollbar-width: none; }
+
+.siteforge-stitch-template[data-siteforge-template-page="product"] .aetheris-hero,
+.siteforge-stitch-template[data-siteforge-template-page="product"] main > section:first-child {
+  height: 618px;
+  min-height: 618px;
+}
+
+.siteforge-stitch-template[data-siteforge-template-page="product"] .aetheris-hero-image,
+.siteforge-stitch-template[data-siteforge-template-page="product"] main > section:first-child > .absolute img {
+  object-position: center center;
+}
+
+.siteforge-stitch-template[data-siteforge-template-page="product"] .aetheris-story {
+  align-items: center;
+}
+
+.siteforge-stitch-template[data-siteforge-template-page="product"] .aetheris-founder-photo,
+.siteforge-stitch-template[data-siteforge-template-page="product"] main > section:nth-of-type(3) img[class~="aspect-square"] {
+  border-radius: 8px;
+}
+
+.siteforge-stitch-template[data-siteforge-template-page="product"] .aetheris-commitment-icon,
+.siteforge-stitch-template[data-siteforge-template-page="product"] main > section:nth-of-type(5) .group > div:first-child {
+  width: 64px;
+  height: 64px;
+  border-radius: 8px;
+}
+
+@media (min-width: 768px) {
+  [class~="md:flex"] { display: flex; }
+  [class~="md:block"] { display: block; }
+  [class~="md:flex-row"] { flex-direction: row; }
+  [class~="md:grid-cols-2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  [class~="md:grid-cols-3"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  [class~="md:grid-cols-4"] { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  [class~="md:grid-cols-12"] { grid-template-columns: repeat(12, minmax(0, 1fr)); }
+  [class~="md:col-span-1"] { grid-column: span 1 / span 1; }
+  [class~="md:col-span-2"] { grid-column: span 2 / span 2; }
+  [class~="md:col-span-4"] { grid-column: span 4 / span 4; }
+  [class~="md:col-span-5"] { grid-column: span 5 / span 5; }
+  [class~="md:col-span-7"] { grid-column: span 7 / span 7; }
+  [class~="md:col-span-8"] { grid-column: span 8 / span 8; }
+  [class~="md:order-1"] { order: 1; }
+  [class~="md:order-2"] { order: 2; }
+  [class~="md:w-1/2"] { width: 50%; }
+  [class~="md:w-1/3"] { width: 33.333333%; }
+  [class~="md:w-2/3"] { width: 66.666667%; }
+  [class~="md:h-full"] { height: 100%; }
+  [class~="md:h-[400px]"] { height: 400px; }
+  [class~="md:aspect-auto"] { aspect-ratio: auto; }
+  [class~="md:min-w-[400px]"] { min-width: 400px; }
+  [class~="md:mt-0"] { margin-top: 0; }
+  [class~="md:mt-xxl"] { margin-top: 80px; }
+  [class~="md:p-xxl"] { padding: 80px; }
+  [class~="md:pl-xxl"] { padding-left: 80px; }
+  [class~="md:px-xxl"] { padding-left: 80px; padding-right: 80px; }
+}
+
+@media (min-width: 1024px) {
+  [class~="lg:grid-cols-3"] { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+
+@media (max-width: 767px) {
+  .siteforge-stitch-template[data-siteforge-template-page="product"] .aetheris-hero,
+  .siteforge-stitch-template[data-siteforge-template-page="product"] main > section:first-child {
+    height: auto;
+    min-height: 520px;
+  }
+  [class~="h-[751px]"],
+  [class~="h-[618px]"],
+  [class~="h-[500px]"] { height: auto; min-height: 520px; }
+  [class~="text-display-lg"] { font-size: 38px; }
+  [class~="text-h1"] { font-size: 30px; }
+  [class~="px-lg"] { padding-left: 18px; padding-right: 18px; }
+}
+</style>
+  
+  <style>
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    a { color: inherit; }
+    .siteforge-stitch-template { min-height: 100vh; }
+.siteforge-stitch-template img { max-width: 100%; }
+  </style>
+</head>
+<body class="bg-background selection:bg-primary-fixed selection:text-on-primary-fixed">
+  
+  <div class="siteforge-stitch-template bg-background selection:bg-primary-fixed selection:text-on-primary-fixed" data-siteforge-template="site-beauty" data-siteforge-template-page="home">
+  <!-- TopAppBar -->
+<header class="docked full-width top-0 sticky z-50 backdrop-blur-md bg-surface/95 border-b border-outline-variant/30 shadow-sm transition-all duration-300">
+<div class="flex justify-between items-center w-full px-lg md:px-xxl py-md max-w-container-max mx-auto">
+<div class="flex items-center gap-md">
+<button class="text-primary active:opacity-70 transition-opacity">
+<span class="material-symbols-outlined" data-icon="menu">menu</span>
+</button>
+<nav class="hidden md:flex gap-lg">
+<a class="font-label-sm text-label-sm text-primary border-b border-primary pb-1 hover:text-primary transition-colors duration-300" href="#">首頁</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">所有產品</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">肌膚測試</a>
+<a class="font-label-sm text-label-sm text-on-surface-variant hover:text-primary transition-colors duration-300" href="#">護膚專欄</a>
+</nav>
+</div>
+<div class="font-h2 text-h2 tracking-[0.2em] font-medium text-primary">AETHERIS 瑰麗美學</div>
+<div class="flex items-center gap-md">
+<button class="text-primary active:opacity-70 transition-opacity">
+<span class="material-symbols-outlined" data-icon="search">search</span>
+</button>
+<button class="text-primary active:opacity-70 transition-opacity">
+<span class="material-symbols-outlined" data-icon="shopping_bag">shopping_bag</span>
+</button>
+</div>
+</div>
+</header>
+<main>
+<!-- Hero Section -->
+<section class="relative h-[751px] flex items-center overflow-hidden">
+<div class="absolute inset-0 z-0">
+<img class="w-full h-full object-cover" data-alt="A high-end, minimalist skincare product shot featuring a glass bottle resting on a smooth sand dune at sunset. The lighting is soft and golden, creating a sense of luxury and calm. The composition uses generous negative space to emphasize the editorial feel, with colors of warm sand, beige, and soft shadows." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBQ7PBjSQnf77X3xAARXWSvBaGLkDTvrsfsA4Tu01T6sXjC43NuO4Bu9k17ZSY59_lkz4HZ0u0DuGAusCR913phZBUvHy6wpejRwwz30aggV9c9SIWmHSWrL_LT0IHS45IAL92gzx5u8SuFBeseGUlZRAst6V3x24Bhbq7oGYnsZ9xalVvZR5NElxpp9c4jmNoFEClOUNegPwuDE7hKi4x93BrEiqpA9_T7UKEL8sc0XYtnVrC6le80LKeknr4wvc7cjr66Odc2gJU"/>
+<div class="absolute inset-0 bg-gradient-to-r from-background/60 via-transparent to-transparent"></div>
+</div>
+<div class="container max-w-container-max mx-auto px-lg md:px-xxl relative z-10">
+<div class="max-w-[600px]">
+<h1 class="font-display-lg text-display-lg text-on-surface mb-md">讓肌膚回到穩定發光的日常</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-xl leading-relaxed">
+                        以溫和配方、有效成分與透明資訊，為不同膚質打造可持續的美麗方案。
+                    </p>
+<div class="flex flex-wrap gap-md">
+<button class="bg-primary text-on-primary px-xl py-md font-label-sm text-label-sm tracking-widest hover:bg-primary/90 transition-all shadow-sm">
+                            探索明星商品
+                        </button>
+<button class="border border-primary text-primary px-xl py-md font-label-sm text-label-sm tracking-widest hover:bg-primary/5 transition-all">
+                            開始肌膚測驗
+                        </button>
+</div>
+</div>
+</div>
+</section>
+<!-- Star Products (Bento Style) -->
+<section class="py-xxl bg-surface">
+<div class="container max-w-container-max mx-auto px-lg md:px-xxl">
+<div class="flex justify-between items-end mb-xl">
+<div>
+<span class="font-label-sm text-label-sm text-primary tracking-widest uppercase">Best Sellers</span>
+<h2 class="font-h1 text-h1 text-on-surface mt-sm">明星商品系列</h2>
+</div>
+<a class="font-label-sm text-label-sm text-primary border-b border-primary/30 pb-1 hover:border-primary transition-all" href="#">查看全部產品</a>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-12 gap-gutter">
+<!-- Product 1 -->
+<div class="md:col-span-7 group">
+<div class="relative aspect-[16/9] overflow-hidden bg-surface-container-low mb-md">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A luxurious glass bottle of facial serum standing elegantly next to a delicate white flower. The background is a soft, textured linen surface in a light cream color. Sunlight filters through a window, casting gentle, artistic shadows across the scene. The overall mood is sophisticated, clean, and professional." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDUFA4E8lF7pPuxCWA71QJ8arIU8Kr6jJG7ODV6nMjGmU9jod4QMcKb-WJFuX-SF-rjeqWtAMhgZA_c72rapK5VAhSomWymP4URQHp7TOEyP3hv7Fw0l-f-8wHumNx4e76yduBApU2D_dQZQmfJbK9P2Q-Uprycdy94ZgW5O_lFoLsH8XXZWS6pncQilqqQNTgM9haNM_GiMX-vOIESGcbm56ZBQy3pjwkazoL50SFuJVkFb5_Mc5hEYu8QB9krBE3xO4AHxR0OjiM"/>
+<div class="absolute top-md left-md bg-primary text-on-primary px-md py-xs font-label-sm text-[10px] tracking-widest">NEW ARRIVAL</div>
+</div>
+<h3 class="font-h3 text-h3 text-on-surface">恆久亮采煥膚精華</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">深層修護，賦予肌膚彈潤光澤</p>
+<p class="mt-sm font-label-sm text-primary">TWD 2,800</p>
+</div>
+<!-- Product 2 -->
+<div class="md:col-span-5 flex flex-col justify-between">
+<div class="group mb-xl">
+<div class="relative aspect-square overflow-hidden bg-surface-container-low mb-md">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="A minimalist arrangement of a white cream jar on a smooth stone pedestal. The setting is an art gallery style space with neutral tones of sand and clay. Soft ambient lighting creates a peaceful and high-end aesthetic, focusing on the texture of the product and the purity of the ingredients." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBemE66qWUMfIS34A6uzN2JHuY4HiEnVcOCPFOqhd8KQ0lndXBAKkqgvP6ohKIl4RRRvCuoDHyowtpjfrXlqSvTZZEt2yrZKSVOtmV5Wg-gfLfauejIAxn-Bi7a2IU49ezR5YtdtS9ZGzivR__qIIv7-SB21t_EhlAg8dLNoTI7448n_0Sh6XfAl-oC6hgIhiVFQUYIqTiiSQfG0DDMjlZjwPGfuYDeo1jr34oHSerbWpD1Hid1SfAVWD0WGZCvgZeHpAF9oOoRrq4"/>
+</div>
+<h3 class="font-h3 text-h3 text-on-surface">極致鎖水保濕霜</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">24小時長效鎖水，強韌屏障</p>
+<p class="mt-sm font-label-sm text-primary">TWD 1,950</p>
+</div>
+<div class="group">
+<div class="relative aspect-square overflow-hidden bg-surface-container-low mb-md">
+<img class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" data-alt="Close up shot of clear, viscous droplets of skincare serum reflecting soft morning light. The background is a pristine, light mode laboratory setting with hints of organic botanical elements. The image communicates scientific precision, transparency, and high quality natural ingredients in a luxury skincare context." src="https://lh3.googleusercontent.com/aida-public/AB6AXuABZU4az5AXiMB-ZWQUhZLg6w5BQHnAdJ6aLF6LYnhhDWk6kbzsROJ2b2t8G4XnYcFob4vkXvGsSUh9bjlJEYenZOSotEfHW6k8lXpZAPsDrB9aw_EYQ98OHCFHCj6HeX5eK05xYIp6bU_frzpqY_n4U8QxpISajo4iMWSjGeIBrQoxjM-hgcG1lWvWUPJu1zljnlGGcyH4-UcIO8v5QXES3pg6_cEW2OZBOdNhjamAd5tqJzkvL8QNpkDbvXwgwvriv5tcsaOQtRY"/>
+</div>
+<h3 class="font-h3 text-h3 text-on-surface">植萃舒緩調理露</h3>
+<p class="font-body-md text-body-md text-on-surface-variant">平衡油脂，安撫敏感不安</p>
+<p class="mt-sm font-label-sm text-primary">TWD 1,480</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Benefit Categories (Grid) -->
+<section class="py-xxl bg-surface-container-low">
+<div class="container max-w-container-max mx-auto px-lg md:px-xxl text-center mb-xl">
+<span class="font-label-sm text-label-sm text-primary tracking-widest uppercase">Skin Concerns</span>
+<h2 class="font-h1 text-h1 text-on-surface mt-sm">專屬護膚對策</h2>
+</div>
+<div class="container max-w-container-max mx-auto px-lg md:px-xxl">
+<div class="grid grid-cols-2 md:grid-cols-4 gap-gutter">
+<a class="group relative aspect-[3/4] overflow-hidden flex items-end p-lg" href="#">
+<img class="absolute inset-0 w-full h-full object-cover grayscale-[20%] group-hover:scale-110 transition-transform duration-1000" data-alt="A serene image of water ripples in a minimalist porcelain bowl. The lighting is bright and clean, emphasizing the concept of deep hydration. The color palette consists of soft blues and whites, echoing a professional and calming skincare routine focused on moisture and purity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAqKfZR3Bi0l1_V8QVaY-q3FqQ3Xv2guJGzKwSXiTYbQnxFIYRyEhs6RfEINkeAg1BuXkJ-s57aT4nGVnShoRD520tBHvRqPE-AJV5UOKr0yEdKXs4deTUvUIRbT_jQ8MIcWsXTWgo68pqVUnjjKwAOK-jjl4WApF8H7sgddSOAfrM4-QfOPWBfvjgFtNTB2uiqyw_ggBi-8sdMoeGCT7nqrPuUj40PUn7s9sbjhQKgFV48KxytuFIASOlCxuBf_hkA7X252eqUIms"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/60 to-transparent"></div>
+<div class="relative z-10">
+<p class="font-label-sm text-white/80 mb-xs">HYDRATION</p>
+<h3 class="font-h3 text-h3 text-white">保濕補水</h3>
+</div>
+</a>
+<a class="group relative aspect-[3/4] overflow-hidden flex items-end p-lg" href="#">
+<img class="absolute inset-0 w-full h-full object-cover grayscale-[20%] group-hover:scale-110 transition-transform duration-1000" data-alt="A collection of fresh green herbs and botanical extracts in minimalist glass tubes. The background is a soft, off-white surface with natural shadows. The scene represents repairing and healing properties of skincare ingredients through a scientific and aesthetic lens." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBm2Rt3F-4EsycCpD8kl-cGENfoneTKDbOW4T_kcD3gAw1tyir1YSI-fTo16g-ecb2JitxJJ-vSslgfyVleoYGgASH6p1whV_aH-5GIWubhQkf4ts-EJAjbnyU6bSSAJPV82UcyxdJ36CDUMUcHs8S7aQvilo03KBmQ_LCRDMYfS7iMQGjUDqR6dwYn3ct_zUm5NShVyy479h_roWjbTO8w26VffGBb_HsJ7hj1yGtKLcAuxDxexPMy895aPuRg0uaE628U0g7s2x0"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/60 to-transparent"></div>
+<div class="relative z-10">
+<p class="font-label-sm text-white/80 mb-xs">REPAIR</p>
+<h3 class="font-h3 text-h3 text-white">深層修護</h3>
+</div>
+</a>
+<a class="group relative aspect-[3/4] overflow-hidden flex items-end p-lg" href="#">
+<img class="absolute inset-0 w-full h-full object-cover grayscale-[20%] group-hover:scale-110 transition-transform duration-1000" data-alt="Bright, high-key photography of light reflecting through a crystal prism onto a smooth white surface. The colors are prismatic and ethereal, symbolizing brightness and skin clarity. The aesthetic is extremely modern, minimalist, and luxury-oriented." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD4_aD4F1kv5xnARARdVoh3ah9R9RcaLkQsOY21M3YNORxdyIjyM3sLQOpIUwtO4WLFLV6mtSu8m2NDX-izD8lgQ7a5XojKescrRJs2dMATFPl-WCHHkv72kr1gFvdN1_0nrGqNiA9tucbobHbYlMxDLYZ5fPEYcKGbq98crVKoxk5ITE86ygr0ysbut10_WxeP87hCmgRUxfKW4hLffgohvJpRVMk6Xl7hADj6iAa5-_q7g0ZpyBxvzbYn5MuCyXhnxZMyLit0oRA"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/60 to-transparent"></div>
+<div class="relative z-10">
+<p class="font-label-sm text-white/80 mb-xs">BRIGHTENING</p>
+<h3 class="font-h3 text-h3 text-white">亮白無瑕</h3>
+</div>
+</a>
+<a class="group relative aspect-[3/4] overflow-hidden flex items-end p-lg" href="#">
+<img class="absolute inset-0 w-full h-full object-cover grayscale-[20%] group-hover:scale-110 transition-transform duration-1000" data-alt="A detailed macro shot of a single golden drop of oil falling onto a smooth liquid surface, creating perfect circular ripples. The tone is rich gold and warm cream, suggesting high-efficacy anti-aging care and premium ingredients in a calm, editorial style." src="https://lh3.googleusercontent.com/aida-public/AB6AXuByAPQDci1No92fmEib-poIN9ZmdS6qdxT8UvY3UD4QS1dIYtVIQcpUsEaVN0O_5qJGJ6PEsdMg5a6Lw4dtfniMfcTdX7QjI9NbMlSQmBNQpZNL2Y3kUTtK1yluFTAmvFNPRe07Az-NLa-oyVWAcJZXJO7H2bIKLU_IZluTm-d9AbhmqYtlNhGcbkwbvm7fg02EwAon1awHCs6BGouPHw7rO6o6wEeokBmXhMcAq0HF3aS8BZFkCtthCBW0TDiIRsRgNgZzBv8mth0"/>
+<div class="absolute inset-0 bg-gradient-to-t from-on-surface/60 to-transparent"></div>
+<div class="relative z-10">
+<p class="font-label-sm text-white/80 mb-xs">ANTI-AGING</p>
+<h3 class="font-h3 text-h3 text-white">抗老時光</h3>
+</div>
+</a>
+</div>
+</div>
+</section>
+<!-- Brand Philosophy -->
+<section class="py-xxl">
+<div class="container max-w-container-max mx-auto px-lg md:px-xxl">
+<div class="grid grid-cols-1 md:grid-cols-2 items-center gap-xl">
+<div class="relative">
+<div class="aspect-[4/5] bg-surface-container overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A professional laboratory setting presented with artistic elegance. Glass beakers and scientific instruments are arranged on a clean, marble surface. Soft sunlight and a palette of muted greens and whites suggest a philosophy of scientific formulas combined with organic safety and purity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAwvUatZnHDxeZEUpsMJHTckmWjaBWHQINEpNNDQjYqa7ySifSKOiAB_J90p67qQ-cRAPq_6n-Y53_C9pGop13bpO5UgvQ3RxIGeK0UzPHxEiWvg6G4boRaS6cJ6UOs1PwtdJ0zyB10i7gXr19oka7wy5vlfVBo3A2YXXgu44zEKaYlLF52wyyxDomCRHD10oDpDZwfzTR9y570-FOC4w2s2hG_7oYmUWDhjvxgCxkXyKJhUxIUZ1S5kWHJYlVVUotoAYORdUFyUuQ"/>
+</div>
+<div class="absolute -bottom-xl -right-xl hidden md:block w-64 h-80 bg-primary-container p-xl">
+<h4 class="font-h3 text-h3 text-on-primary-container mb-md">科學配方與純淨安全</h4>
+<p class="font-body-md text-body-md text-on-primary-container/80">我們堅持透明的成分標示，讓您能安心託付肌膚的每一刻。</p>
+</div>
+</div>
+<div class="md:pl-xxl mt-xl md:mt-0">
+<span class="font-label-sm text-label-sm text-primary tracking-widest uppercase">Philosophy</span>
+<h2 class="font-h1 text-h1 text-on-surface mt-sm mb-md">以誠實，定義美麗的新高度</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant mb-lg">
+                            在 AETHERIS，我們相信保養不應是繁瑣的負擔，而是一場身心靈的沈澱。我們與皮膚科權威共同研發，剔除不必要的化學添加，只保留肌膚真正需要的有效能量。
+                        </p>
+<div class="space-y-md">
+<div class="flex gap-md items-start">
+<span class="material-symbols-outlined text-primary" data-icon="verified">verified</span>
+<div>
+<h4 class="font-label-sm text-label-sm text-on-surface">100% 透明成份</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">我們公開所有原料來源，拒絕黑箱配方。</p>
+</div>
+</div>
+<div class="flex gap-md items-start">
+<span class="material-symbols-outlined text-primary" data-icon="eco">eco</span>
+<div>
+<h4 class="font-label-sm text-label-sm text-on-surface">永續包裝</h4>
+<p class="font-body-md text-body-md text-on-surface-variant">採用可回收玻璃與再生紙材，守護地球之美。</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Social Proof (Testimonials) -->
+<section class="py-xxl bg-surface-container-low overflow-hidden">
+<div class="container max-w-container-max mx-auto px-lg md:px-xxl text-center mb-xl">
+<span class="font-label-sm text-label-sm text-primary tracking-widest uppercase">Testimonials</span>
+<h2 class="font-h1 text-h1 text-on-surface mt-sm">她們的真實改變</h2>
+</div>
+<div class="flex flex-nowrap gap-gutter px-lg overflow-x-auto pb-xl no-scrollbar">
+<!-- Testimonial 1 -->
+<div class="min-w-[320px] md:min-w-[400px] glass-card p-xl shadow-sm">
+<div class="flex gap-xs text-primary mb-md">
+<span class="material-symbols-outlined text-[18px]" data-icon="star" data-weight="fill">star</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="star" data-weight="fill">star</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="star" data-weight="fill">star</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="star" data-weight="fill">star</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="star" data-weight="fill">star</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface italic mb-xl">「使用了煥膚精華兩週後，膚色明顯提亮，且沒有以前用其他品牌時的刺痛感。這就是我一直在找的溫和且有效的保養品。」</p>
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-primary-fixed overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="A portrait of a serene woman with radiant, clear skin. She is looking slightly away from the camera with a gentle smile. The lighting is soft and natural, emphasizing the health and glow of her complexion against a neutral, high-end studio background." src="https://lh3.googleusercontent.com/aida-public/AB6AXuABsxuY-BD0XjlSXV3jiRFVS_grhCgFcI23EYBQvPFRzsM3Lqbu5nEjcLdyBbNBZppKlLvur2lI-rPgEDnxr_fF_07YNOJNHreDusl6NfUjW2caywPf-m-iP7I3Rbnb4BhPtIokwqH758H8TS3iEnCVWZJtRGSdfr_yq-OVY8wcGNR_eAHEzKd2gGZoGtW1NykOeI-MhBLE3Grxztjfxr5VsM_LMBegHWjPcYFTxMsCge6WQuOyWqfpOojQ6kgEadzjn6eCGkEWxkk"/>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface">林小姐</p>
+<p class="text-[12px] text-on-surface-variant">資深行銷主管 / 敏感肌</p>
+</div>
+</div>
+</div>
+<!-- Testimonial 2 -->
+<div class="min-w-[320px] md:min-w-[400px] glass-card p-xl shadow-sm">
+<div class="flex gap-xs text-primary mb-md">
+<span class="material-symbols-outlined text-[18px]" data-icon="star" data-weight="fill">star</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="star" data-weight="fill">star</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="star" data-weight="fill">star</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="star" data-weight="fill">star</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="star" data-weight="fill">star</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface italic mb-xl">「保濕霜的質地非常高級，推開後瞬間吸收，不留油膩感，早起洗臉還能感覺到皮膚的飽水度。」</p>
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-primary-fixed overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Portrait of a sophisticated woman in her 30s with flawless skin. She exudes confidence and calm. The photography style is editorial, with a warm-toned, minimalist background and high-key lighting that highlights her natural beauty." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCwIb9wZqq9cnvDrkESCX5iPI4sXQgq6xZpV4e9GNTD62aqp0jYsBJsu1kQcM9kfNcNMSRvV3dyWYtByTVNSilQG6aFCoUNHUOQ228dg6Xyb6Zdv8SjJ0NoZZ-LBa0u7Mw9JxxENrT3WitvIpy8t72c3iRwVxlcjDlw7c51dJMrO0qn2FshRVwvYJFnuLFC_8f0OcNEB1RlCt-UjxcgxuMi1yHUQgEhM26tuMnOrFdThp0DpMFLSz5KIPdqv6hBWHdPtUC76T5YFwQ"/>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface">陳太太</p>
+<p class="text-[12px] text-on-surface-variant">全職主婦 / 乾性肌</p>
+</div>
+</div>
+</div>
+<!-- Testimonial 3 -->
+<div class="min-w-[320px] md:min-w-[400px] glass-card p-xl shadow-sm">
+<div class="flex gap-xs text-primary mb-md">
+<span class="material-symbols-outlined text-[18px]" data-icon="star" data-weight="fill">star</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="star" data-weight="fill">star</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="star" data-weight="fill">star</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="star" data-weight="fill">star</span>
+<span class="material-symbols-outlined text-[18px]" data-icon="star" data-weight="fill">star</span>
+</div>
+<p class="font-body-lg text-body-lg text-on-surface italic mb-xl">「身為護理人員，長期戴口罩讓臉部泛紅，使用調理露後穩定了很多，這是我的救星。」</p>
+<div class="flex items-center gap-md">
+<div class="w-12 h-12 rounded-full bg-primary-fixed overflow-hidden">
+<img class="w-full h-full object-cover" data-alt="Close-up portrait of a woman with a natural, dewy complexion. The lighting is soft and diffused, creating a serene and professional aesthetic. The focus is on the clarity of the skin, set against a background of soft beige and cream tones." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBBq2uCAiuwgjtH4psNVuOnbQU49S2AbLVM3yz9p91JYuaH_Lal6_I1fz5rc_2cEGzf0tGkhQ9ADTwLOx9ZdcoXkTNcQ232PStE_XrArwqsqm44D29ofvVSSPTgNoG84VNuD78xP80ERgU2KnVYYhB9pHw07rq_QNFXYRQHhWNqOyLpukGAobGC2mkrXOEK_PUZH5zivEsmqNfoGu1nddu7C6yu5SAJXZtRGyYr5_llmF5bkxJeH3xQQtBzfFHli4j4VEE1i9SnElc"/>
+</div>
+<div>
+<p class="font-label-sm text-label-sm text-on-surface">張小姐</p>
+<p class="text-[12px] text-on-surface-variant">護理師 / 混合肌</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- CTA Entrance -->
+<section class="py-xxl relative overflow-hidden">
+<div class="container max-w-container-max mx-auto px-lg md:px-xxl">
+<div class="grid grid-cols-1 md:grid-cols-2 gap-gutter">
+<div class="relative aspect-[16/9] md:aspect-auto md:h-[400px] bg-primary-fixed p-xl flex flex-col justify-center items-center text-center">
+<div class="absolute inset-0 opacity-10">
+<img class="w-full h-full object-cover" data-alt="An abstract macro image of clear bubbles and microscopic structures of skincare serum. The aesthetic is clean, scientific, and high-tech, with soft beige and transparent tones. It represents the skin test and scientific analysis process." src="https://lh3.googleusercontent.com/aida-public/AB6AXuABdE8YZAu5URtGjxJxWQQVPMU2pWx9DCMdKEkLdfRvflLKzfZwMFfgMwzvjXQV0dXIsDtnigA5QREEodSAqZapF-fsxq7RvSJAI_OK5vdTJXeiAK2KbNv0urmdjWqKn3Gp6ls_cfnRTgMbnaD7RxK_5cLfbgVdvrzDd2gK8QIF5yVlseGST341ks0lEuvSHF6EdOjZ1xUo4nCXAPUya42iAicGIjjKkiWGvMdGYY5r3l5EOOF93mtEuc-1Kz--EuLl1invOyLc6VM"/>
+</div>
+<h3 class="font-h2 text-h2 text-on-primary-fixed mb-md relative z-10">專屬肌膚測驗</h3>
+<p class="font-body-md text-body-md text-on-primary-fixed-variant mb-xl max-w-xs relative z-10">只需 3 分鐘，為您量身打造最適合的保養清單。</p>
+<button class="bg-primary text-on-primary px-xl py-md font-label-sm text-label-sm tracking-widest relative z-10 shadow-sm">立即測試</button>
+</div>
+<div class="relative aspect-[16/9] md:aspect-auto md:h-[400px] bg-secondary-fixed p-xl flex flex-col justify-center items-center text-center">
+<div class="absolute inset-0 opacity-10">
+<img class="w-full h-full object-cover" data-alt="A luxurious aesthetic clinic room with minimalist white furniture, a treatment bed, and soft warm lighting. The atmosphere is calm, professional, and tranquil. Large windows allow soft daylight to fill the space, suggesting a premium appointment experience." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD6PYjCdeOj2_nlftGCZKnbPXTyGIyXKQE4IDLSUXZC4XjlXJ4ZZwvVNJHI6oBf1kxkokFURNRil7IvI9dqKlWenZ2F79gl3SRTotBdB9tJrLK30LJB3nkKeZs5MwOWiKTKniOhCDmxj4FhayeRXMQkz5NXfQ_px75gyw7s2a4hCHifzgtINhJgjuVNqZDzDS2ztyccPx4d4i_lJb8wVdB_sr2MhKM7hEJp1o1WnoiMm5w7kGA6kyL02laE6p3LFkhiqShIWeEBqz8"/>
+</div>
+<h3 class="font-h2 text-h2 text-on-secondary-fixed mb-md relative z-10">預約諮詢體驗</h3>
+<p class="font-body-md text-body-md text-on-secondary-fixed-variant mb-xl max-w-xs relative z-10">由專業美容師帶領，親身感受 AETHERIS 的質地美學。</p>
+<button class="bg-secondary text-on-secondary px-xl py-md font-label-sm text-label-sm tracking-widest relative z-10 shadow-sm">線上預約</button>
+</div>
+</div>
+</div>
+</section>
+</main>
+<!-- Footer -->
+<footer class="w-full mt-xxl bg-surface-container border-t border-outline-variant/20">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-lg md:px-xxl py-xl max-w-container-max mx-auto">
+<div class="md:col-span-1">
+<div class="font-h3 text-h3 tracking-widest text-primary mb-md uppercase">AETHERIS</div>
+<p class="font-body-md text-body-md text-on-surface-variant mb-md">致力於打造溫和高效的保養美學，讓肌膚重拾原生光澤。</p>
+<div class="flex gap-md">
+<a class="text-primary hover:opacity-70 transition-all" href="#"><span class="material-symbols-outlined" data-icon="language">language</span></a>
+<a class="text-primary hover:opacity-70 transition-all" href="#"><span class="material-symbols-outlined" data-icon="share">share</span></a>
+</div>
+</div>
+<div>
+<h4 class="font-label-sm text-label-sm text-on-surface mb-md tracking-widest">探索產品</h4>
+<ul class="space-y-sm">
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">所有產品</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">肌膚測試</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">熱銷明星</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">新客優惠</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-sm text-label-sm text-on-surface mb-md tracking-widest">關於品牌</h4>
+<ul class="space-y-sm">
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">關於我們</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">護膚專欄</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">門市資訊</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">聯絡我們</a></li>
+</ul>
+</div>
+<div>
+<h4 class="font-label-sm text-label-sm text-on-surface mb-md tracking-widest">顧客服務</h4>
+<ul class="space-y-sm">
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">隱私權政策</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">運送與付款</a></li>
+<li><a class="font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors" href="#">常見問題</a></li>
+</ul>
+</div>
+</div>
+<div class="px-lg md:px-xxl py-md border-t border-outline-variant/10 text-center">
+<p class="font-label-sm text-label-sm text-on-surface-variant/60">© 2024 AETHERIS 瑰麗美學 版權所有。</p>
+</div>
+</footer>
+</div>
+  
+  <script>document.documentElement.dataset.siteforgeTemplate = "site-beauty";
+document.documentElement.dataset.siteforgeTemplatePage = "home";</script>
+</body>
+</html>

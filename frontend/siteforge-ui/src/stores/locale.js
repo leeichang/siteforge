@@ -76,6 +76,11 @@ const messages = {
     'dashboard.creating': 'Creating...',
     'dashboard.applyTemplate': 'Apply template and open workspace',
     'dashboard.createAndOpen': 'Create and open workspace',
+    'dashboard.projectActions': 'Project actions',
+    'dashboard.deleteProject': 'Delete project',
+    'dashboard.deletingProject': 'Deleting...',
+    'dashboard.deleteProjectConfirm': 'Delete "{name}"? This will remove the site, its pages, and published files.',
+    'dashboard.deleteProjectFailed': 'Failed to delete project',
 
     'workspace.kicker': 'Site workspace',
     'workspace.loadingSite': 'Loading',
@@ -307,6 +312,11 @@ const messages = {
     'dashboard.creating': '建立中...',
     'dashboard.applyTemplate': '套用樣板並進入工作區',
     'dashboard.createAndOpen': '建立並進入工作區',
+    'dashboard.projectActions': '專案操作',
+    'dashboard.deleteProject': '刪除專案',
+    'dashboard.deletingProject': '刪除中...',
+    'dashboard.deleteProjectConfirm': '確定要刪除「{name}」嗎？這會移除網站、頁面與已發佈檔案。',
+    'dashboard.deleteProjectFailed': '刪除專案失敗',
 
     'workspace.kicker': '網站工作區',
     'workspace.loadingSite': '載入中',

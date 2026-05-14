@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SiteForge - Workspace Preview</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f0f13;
+      --surface: #1c1c24;
+      --surface-variant: #2a2a35;
+      --surface-container: #23232e;
+      --surface-container-high: #2d2d3a;
+      --surface-container-lowest: #14141a;
+      --on-surface: #e4e2e9;
+      --on-surface-variant: #938f9d;
+      --primary: #d0bcff;
+      --on-primary: #381e72;
+      --primary-container: #4f378b;
+      --primary-fixed-dim: #9a82db;
+      --outline: #49454f;
+      --outline-variant: #3d3d4d;
+      --error: #ffb4ab;
+      --success: #4ade80;
+    }
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body { 
+      font-family: 'Inter', system-ui, sans-serif; 
+      background: var(--bg); 
+      color: var(--on-surface);
+      min-height: 100vh;
+    }
+    
+    /* TopBar */
+    .topbar {
+      height: 56px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--outline-variant);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 24px;
+    }
+    .topbar-brand { font-weight: 700; color: var(--primary); font-size: 18px; }
+    .topbar-nav { display: flex; gap: 24px; position: absolute; left: 50%; transform: translateX(-50%); }
+    .topbar-nav a { color: var(--on-surface-variant); text-decoration: none; font-size: 14px; font-weight: 500; }
+    .topbar-nav a.active { color: var(--primary); }
+    .topbar-right { display: flex; align-items: center; gap: 12px; }
+    .topbar-icon { 
+      width: 36px; height: 36px; border-radius: 8px; 
+      display: flex; align-items: center; justify-content: center;
+      color: var(--on-surface-variant); cursor: pointer;
+    }
+    .topbar-icon:hover { background: var(--surface-variant); }
+    .avatar { 
+      width: 32px; height: 32px; border-radius: 50%; 
+      background: var(--primary-container); 
+      display: flex; align-items: center; justify-content: center; 
+      font-size: 12px; font-weight: 600; color: var(--primary); 
+    }
+    
+    /* Main */
+    .main { max-width: 1200px; margin: 0 auto; padding: 24px 32px; }
+    
+    /* Breadcrumb */
+    .breadcrumb { 
+      display: flex; align-items: center; gap: 8px; 
+      margin-bottom: 16px; font-size: 13px; 
+      color: var(--on-surface-variant); 
+    }
+    .breadcrumb-current { color: var(--primary); font-weight: 500; }
+    
+    /* Header */
+    .header { 
+      display: flex; align-items: center; justify-content: space-between; 
+      margin-bottom: 24px;
+      padding: 20px 24px;
+      background: var(--surface);
+      border: 1px solid var(--outline-variant);
+      border-radius: 16px;
+    }
+    .header h1 { font-size: 28px; font-weight: 600; }
+    .new-btn { 
+      display: flex; align-items: center; gap: 8px; 
+      padding: 10px 20px; background: var(--primary); 
+      color: var(--on-primary); border: none; 
+      border-radius: 10px; font-size: 14px; font-weight: 600; cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    }
+    
+    /* Stats Row */
+    .stats-row {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+    .stat-card {
+      background: var(--surface-container-lowest);
+      border: 1px solid var(--outline-variant);
+      border-radius: 12px;
+      padding: 20px;
+      text-align: center;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .stat-card .number {
+      font-size: 32px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 4px;
+    }
+    .stat-card .label {
+      font-size: 13px;
+      color: var(--on-surface-variant);
+      font-weight: 500;
+    }
+    
+    /* Tabs */
+    .tabs { 
+      display: flex; gap: 8px; margin-bottom: 24px; 
+      padding: 4px; background: var(--surface-variant); 
+      border-radius: 12px; border: 1px solid var(--outline-variant);
+      width: fit-content;
+    }
+    .tabs button { 
+      padding: 10px 20px; border: none; background: transparent; 
+      color: var(--on-surface-variant); font-size: 14px; 
+      font-weight: 500; cursor: pointer; border-radius: 10px; 
+    }
+    .tabs button.active { 
+      color: var(--on-primary); background: var(--primary); 
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    }
+    
+    /* Grid */
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+    
+    /* Card */
+    .card { 
+      background: var(--surface-container-lowest); 
+      border: 1px solid var(--outline-variant); 
+      border-radius: 16px; padding: 20px; 
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      transition: all 0.2s; cursor: pointer;
+    }
+    .card:hover { 
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2); 
+      border-color: var(--outline);
+      transform: translateY(-2px);
+    }
+    .card-header { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 16px; }
+    .card-icon { 
+      width: 44px; height: 44px; border-radius: 12px; 
+      background: var(--surface-variant); 
+      border: 1px solid var(--outline-variant);
+      display: flex; align-items: center; justify-content: center;
+      color: var(--on-surface-variant); flex-shrink: 0;
+    }
+    .card-icon.home { 
+      background: var(--primary-container); 
+      color: var(--primary);
+      border-color: var(--primary-fixed-dim);
+    }
+    .card-icon .material-symbols-outlined { font-size: 22px; }
+    .card-info { flex: 1; }
+    .card-title { font-size: 16px; font-weight: 600; margin-bottom: 4px; }
+    .card-type { font-size: 12px; color: var(--on-surface-variant); }
+    .card-menu { 
+      width: 32px; height: 32px; border: none; background: transparent; 
+      color: var(--on-surface-variant); border-radius: 6px; 
+      display: flex; align-items: center; justify-content: center;
+      opacity: 0; transition: all 0.15s; cursor: pointer;
+    }
+    .card:hover .card-menu { opacity: 1; }
+    .card-menu:hover { background: var(--surface-variant); color: var(--on-surface); }
+    
+    /* Card Footer */
+    .card-footer { 
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 16px; margin-top: 16px; 
+      border-top: 1px solid var(--outline-variant);
+    }
+    .card-time { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--on-surface-variant); }
+    .card-time .material-symbols-outlined { font-size: 14px; }
+    .card-status { display: flex; align-items: center; gap: 10px; }
+    .status-published { 
+      font-size: 12px; color: var(--success); font-weight: 600;
+      padding: 2px 8px; background: rgba(74, 222, 128, 0.1); border-radius: 4px;
+    }
+    .status-draft { 
+      font-size: 12px; color: var(--on-surface-variant); font-weight: 500;
+      padding: 2px 8px; background: var(--surface-variant); border-radius: 4px;
+    }
+    
+    /* Toggle */
+    .toggle { position: relative; display: inline-block; width: 36px; height: 20px; }
+    .toggle input { opacity: 0; width: 0; height: 0; }
+    .toggle-track { 
+      position: absolute; inset: 0; background: var(--surface-variant); 
+      border-radius: 10px; transition: all 0.2s; 
+    }
+    .toggle-track::before { 
+      content: ''; position: absolute; width: 16px; height: 16px;
+      left: 2px; top: 2px; background: white; border-radius: 50%;
+      transition: all 0.2s; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    }
+    .toggle input:checked + .toggle-track { background: var(--primary); }
+    .toggle input:checked + .toggle-track::before { transform: translateX(16px); }
+  </style>
+</head>
+<body>
+  <!-- TopBar -->
+  <header class="topbar">
+    <div class="topbar-brand">SiteForge AI</div>
+    <nav class="topbar-nav">
+      <a href="#" class="active">Dashboard</a>
+      <a href="#">Sites</a>
+      <a href="#">Templates</a>
+      <a href="#">Marketplace</a>
+    </nav>
+    <div class="topbar-right">
+      <div class="topbar-icon"><span class="material-symbols-outlined">notifications</span></div>
+      <div class="topbar-icon"><span class="material-symbols-outlined">help</span></div>
+      <div class="avatar">IL</div>
+    </div>
+  </header>
+
+  <div class="main">
+    <!-- Breadcrumb -->
+    <nav class="breadcrumb">
+      <span>Sites</span>
+      <span class="material-symbols-outlined" style="font-size: 16px;">chevron_right</span>
+      <span class="breadcrumb-current">美妝保養品牌網站</span>
+    </nav>
+
+    <!-- Header -->
+    <div class="header">
+      <h1>Page Management</h1>
+      <button class="new-btn">
+        <span class="material-symbols-outlined">add</span>
+        New Page
+      </button>
+    </div>
+
+    <!-- Stats -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="number">6</div>
+        <div class="label">Pages</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" style="color: var(--success);">3</div>
+        <div class="label">Published</div>
+      </div>
+      <div class="stat-card">
+        <div class="number" style="color: var(--error);">3</div>
+        <div class="label">Drafts</div>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="active">Pages</button>
+      <button>Templates</button>
+      <button>Theme</button>
+    </div>
+
+    <!-- Pages Grid -->
+    <div class="grid">
+      <!-- Card 1: Home -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon home">
+            <span class="material-symbols-outlined">home</span>
+          </div>
+          <div class="card-info">
+            <div class="card-title">Home</div>
+            <div class="card-type">Home Page</div>
+          </div>
+          <button class="card-menu">
+            <span class="material-symbols-outlined">more_vert</span>
+          </button>
+        </div>
+        <div class="card-footer">
+          <div class="card-time">
+            <span class="material-symbols-outlined">schedule</span>
+            Updated 2 hours ago
+          </div>
+          <div class="card-status">
+            <span class="status-published">Published</span>
+            <label class="toggle">
+              <input type="checkbox" checked>
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2: About -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">
+            <span class="material-symbols-outlined">info</span>
+          </div>
+          <div class="card-info">
+            <div class="card-title">About Us</div>
+            <div class="card-type">Standard Page</div>
+          </div>
+          <button class="card-menu">
+            <span class="material-symbols-outlined">more_vert</span>
+          </button>
+        </div>
+        <div class="card-footer">
+          <div class="card-time">
+            <span class="material-symbols-outlined">schedule</span>
+            Updated 1 day ago
+          </div>
+          <div class="card-status">
+            <span class="status-published">Published</span>
+            <label class="toggle">
+              <input type="checkbox" checked>
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3: Products -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">
+            <span class="material-symbols-outlined">shopping_bag</span>
+          </div>
+          <div class="card-info">
+            <div class="card-title">Products</div>
+            <div class="card-type">Standard Page</div>
+          </div>
+          <button class="card-menu">
+            <span class="material-symbols-outlined">more_vert</span>
+          </button>
+        </div>
+        <div class="card-footer">
+          <div class="card-time">
+            <span class="material-symbols-outlined">schedule</span>
+            Updated 3 days ago
+          </div>
+          <div class="card-status">
+            <span class="status-draft">Draft</span>
+            <label class="toggle">
+              <input type="checkbox">
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4: Contact -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">
+            <span class="material-symbols-outlined">contact_mail</span>
+          </div>
+          <div class="card-info">
+            <div class="card-title">Contact</div>
+            <div class="card-type">Form Page</div>
+          </div>
+          <button class="card-menu">
+            <span class="material-symbols-outlined">more_vert</span>
+          </button>
+        </div>
+        <div class="card-footer">
+          <div class="card-time">
+            <span class="material-symbols-outlined">schedule</span>
+            Updated 5 days ago
+          </div>
+          <div class="card-status">
+            <span class="status-draft">Draft</span>
+            <label class="toggle">
+              <input type="checkbox">
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5: Blog -->
+      <div class="card">
+        <div class="card-header">
+          <div class="card-icon">
+            <span class="material-symbols-outlined">article</span>
+          </div>
+          <div class="card-info">
+            <div class="card-title">Blog</div>
+            <div class="card-type">Blog Page</div>
+          </div>
+          <button class="card-menu">
+            <span class="material-symbols-outlined">more_vert</span>
+          </button>
+        </div>
+        <div class="card-footer">
+          <div class="card-time">
+            <span class="material-symbols-outlined">schedule</span>
+            Updated 1 week ago
+          </div>
+          <div class="card-status">
+            <span class="status-published">Published</span>
+            <label class="toggle">
+              <input type="checkbox" checked>
+              <span class="toggle-track"></span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

@@ -336,8 +336,12 @@ onMounted(() => {
 
 <style scoped>
 .sf-workspace {
-  padding: 24px 32px;
-  max-width: 1200px;
+  width: 100%;
+  max-width: 1680px;
+  min-width: 0;
+  flex: 1 1 auto;
+  align-self: stretch;
+  padding: 32px clamp(32px, 5vw, 80px);
   margin: 0 auto;
   min-height: calc(100vh - 56px);
 }
@@ -447,8 +451,8 @@ onMounted(() => {
 /* Grid */
 .sf-ws-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 20px;
 }
 
 /* Card */
@@ -456,7 +460,7 @@ onMounted(() => {
   background: var(--sf-surface);
   border: 1px solid var(--sf-outline-variant);
   border-radius: 12px;
-  padding: 16px;
+  padding: 18px;
   cursor: pointer;
   transition: all 0.2s;
 }
@@ -899,5 +903,22 @@ onMounted(() => {
   padding: 64px;
   color: var(--sf-on-surface-variant);
   font-size: 14px;
+}
+
+@media (max-width: 760px) {
+  .sf-workspace {
+    padding: 24px 18px;
+  }
+
+  .sf-ws-header {
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .sf-ws-grid,
+  .sf-ws-templates-grid {
+    grid-template-columns: 1fr;
+  }
 }
 </style>

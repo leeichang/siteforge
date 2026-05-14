@@ -12,7 +12,7 @@
           <button :class="{ active: device === 'Tablet' }" @click="setDevice('Tablet')" type="button">{{ t('editor.tablet') }}</button>
           <button :class="{ active: device === 'Mobile portrait' }" @click="setDevice('Mobile portrait')" type="button">{{ t('editor.mobile') }}</button>
         </div>
-        <button class="tool-button" @click="togglePreview" type="button">{{ previewMode ? t('common.edit') : t('editor.preview') }}</button>
+        <button class="tool-button" @click="togglePreview" type="button">{{ t('editor.preview') }}</button>
         <button class="tool-button icon-only undo" @click="undo" type="button" aria-label="Undo"></button>
         <button class="tool-button icon-only redo" @click="redo" type="button" aria-label="Redo"></button>
       </div>
@@ -402,6 +402,7 @@ import { useRoute, useRouter } from 'vue-router'
 import { useThemeStore } from '../stores/theme'
 import { useLocaleStore } from '../stores/locale'
 import api, { errorMessage, unwrap } from '../api/client'
+import stitchFallbackCss from '../styles/stitch-fallback.css?raw'
 
 const route = useRoute()
 const router = useRouter()
@@ -427,6 +428,123 @@ const MIN_PROJECT_TREE = 120
 const MIN_LAYERS = 140
 const PROJECT_RESIZER_HEIGHT = 14
 const DEFAULT_PROJECT_TREE = 360
+const TAILWIND_CDN_URL = 'https://cdn.tailwindcss.com?plugins=forms,container-queries'
+const STITCH_FONT_URL = 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600&family=Inter:wght@400;600&display=swap'
+const MATERIAL_SYMBOLS_URL = 'https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap'
+const STITCH_TAILWIND_CONFIG_SCRIPT = `window.tailwind = window.tailwind || {};
+window.tailwind.config = {
+  darkMode: "class",
+  theme: {
+    extend: {
+      colors: {
+        "error-container": "#ffdad6",
+        "surface-container": "#efeeec",
+        "on-primary": "#ffffff",
+        "tertiary-container": "#e5c1b3",
+        "inverse-on-surface": "#f1f1ef",
+        "on-secondary-fixed-variant": "#3f4945",
+        "on-tertiary-container": "#684e43",
+        "outline": "#7f756d",
+        "secondary": "#56615c",
+        "surface-container-low": "#f4f3f1",
+        "primary-container": "#d9c5b2",
+        "on-tertiary-fixed-variant": "#5a4137",
+        "surface-container-lowest": "#ffffff",
+        "secondary-fixed": "#dae5df",
+        "on-secondary": "#ffffff",
+        "primary-fixed": "#f4dfcb",
+        "on-tertiary-fixed": "#2a170e",
+        "surface-tint": "#6b5c4c",
+        "primary-fixed-dim": "#d7c3b0",
+        "tertiary": "#74584d",
+        "secondary-container": "#d7e2dc",
+        "on-secondary-fixed": "#141e1a",
+        "on-primary-fixed-variant": "#524436",
+        "on-error": "#ffffff",
+        "secondary-fixed-dim": "#bec9c3",
+        "surface-variant": "#e3e2e0",
+        "on-tertiary": "#ffffff",
+        "inverse-primary": "#d7c3b0",
+        "primary": "#6b5c4c",
+        "tertiary-fixed": "#ffdbcd",
+        "inverse-surface": "#2f3130",
+        "error": "#ba1a1a",
+        "on-background": "#1a1c1b",
+        "surface-container-high": "#e9e8e6",
+        "on-primary-container": "#605142",
+        "on-secondary-container": "#5a6560",
+        "surface": "#faf9f7",
+        "surface-dim": "#dadad8",
+        "surface-bright": "#faf9f7",
+        "on-surface-variant": "#4d453e",
+        "on-primary-fixed": "#241a0e",
+        "tertiary-fixed-dim": "#e3bfb1",
+        "on-error-container": "#93000a",
+        "outline-variant": "#d0c4bb",
+        "surface-container-highest": "#e3e2e0",
+        "background": "#faf9f7",
+        "on-surface": "#1a1c1b"
+      },
+      borderRadius: {
+        DEFAULT: "0.125rem",
+        lg: "0.25rem",
+        xl: "0.5rem",
+        full: "0.75rem"
+      },
+      spacing: {
+        sm: "8px",
+        md: "16px",
+        gutter: "24px",
+        unit: "4px",
+        xxl: "80px",
+        "container-max": "1200px",
+        xs: "4px",
+        xl: "48px",
+        lg: "24px"
+      },
+      fontFamily: {
+        h2: ["Playfair Display"],
+        "label-sm": ["Inter"],
+        "body-md": ["Inter"],
+        "body-lg": ["Inter"],
+        "display-lg": ["Playfair Display"],
+        h1: ["Playfair Display"],
+        h3: ["Playfair Display"]
+      },
+      fontSize: {
+        h2: ["28px", { lineHeight: "1.4", letterSpacing: "0em", fontWeight: "500" }],
+        "label-sm": ["13px", { lineHeight: "1.2", letterSpacing: "0.08em", fontWeight: "600" }],
+        "body-md": ["16px", { lineHeight: "1.6", letterSpacing: "0.01em", fontWeight: "400" }],
+        "body-lg": ["18px", { lineHeight: "1.7", letterSpacing: "0.01em", fontWeight: "400" }],
+        "display-lg": ["48px", { lineHeight: "1.2", letterSpacing: "-0.02em", fontWeight: "600" }],
+        h1: ["36px", { lineHeight: "1.3", letterSpacing: "0em", fontWeight: "500" }],
+        h3: ["22px", { lineHeight: "1.4", letterSpacing: "0.02em", fontWeight: "500" }]
+      }
+    }
+  }
+};`
+const STITCH_TAILWIND_CONFIG_URL = `data:text/javascript;charset=utf-8,${encodeURIComponent(STITCH_TAILWIND_CONFIG_SCRIPT)}`
+const STITCH_ICON_FALLBACK_SCRIPT = `(() => {
+  const applyFallback = () => document.documentElement.classList.add('siteforge-icon-fallback')
+  const checkSymbols = () => {
+    try {
+      if (!document.fonts || !document.fonts.check('24px "Material Symbols Outlined"')) {
+        applyFallback()
+      }
+    } catch {
+      applyFallback()
+    }
+  }
+
+  if (!document.fonts || !document.fonts.ready) {
+    applyFallback()
+    return
+  }
+
+  document.fonts.ready.then(checkSymbols).catch(applyFallback)
+  setTimeout(checkSymbols, 300)
+  setTimeout(checkSymbols, 1800)
+})()`
 
 const site = ref(null)
 const page = ref(null)
@@ -443,7 +561,6 @@ const activePanel = ref('project')
 const isLeftPanelOpen = ref(true)
 const rightTab = ref('styles')
 const device = ref('Desktop')
-const previewMode = ref(false)
 const showCode = ref(false)
 const aiPrompt = ref('')
 const aiPageType = ref('home')
@@ -887,7 +1004,8 @@ function initGrapesJS() {
       assets: filteredAssets.value.map((asset) => asset.publicUrl || asset)
     },
     canvas: {
-      styles: ['https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css']
+      styles: [STITCH_FONT_URL, MATERIAL_SYMBOLS_URL],
+      scripts: [STITCH_TAILWIND_CONFIG_URL, TAILWIND_CDN_URL]
     }
   })
 
@@ -1171,12 +1289,49 @@ function preserveTemplateHead(originalJs, nextJs) {
   return head ? `/*SITEFORGE_TEMPLATE_HEAD_START\n${head}\nSITEFORGE_TEMPLATE_HEAD_END*/\n${nextJs || ''}` : nextJs
 }
 
+function stripTemplateHead(js) {
+  const start = '/*SITEFORGE_TEMPLATE_HEAD_START'
+  const end = 'SITEFORGE_TEMPLATE_HEAD_END*/'
+  const startIndex = js.indexOf(start)
+  if (startIndex < 0) return js || ''
+  const endIndex = js.indexOf(end, startIndex)
+  if (endIndex < 0) return js || ''
+  return `${js.slice(0, startIndex)}${js.slice(endIndex + end.length)}`.trim()
+}
+
+function normalizeTemplateHead(headHtml) {
+  if (!headHtml) return ''
+  const configPattern = /<script\s+id=["']tailwind-config["'][^>]*>[\s\S]*?<\/script>/i
+  const cdnPattern = /<script[^>]+src=["']https:\/\/cdn\.tailwindcss\.com[^"']*["'][^>]*>\s*<\/script>/i
+  const configMatch = headHtml.match(configPattern)
+  const cdnMatch = headHtml.match(cdnPattern)
+  if (!configMatch || !cdnMatch || configMatch.index < cdnMatch.index) return headHtml
+
+  const withoutConfig = headHtml.replace(configPattern, '').trim()
+  return withoutConfig.replace(cdnPattern, `${configMatch[0]}\n$&`)
+}
+
+function stripRuntimeTailwindAssets(headHtml) {
+  return normalizeTemplateHead(headHtml)
+    .replace(/<script\s+id=["']tailwind-config["'][^>]*>[\s\S]*?<\/script>/gi, '')
+    .replace(/<script[^>]+src=["']https:\/\/cdn\.tailwindcss\.com[^"']*["'][^>]*>\s*<\/script>/gi, '')
+    .trim()
+}
+
 function applyTemplateHeadAssets(js) {
-  const headHtml = extractTemplateHead(js)
+  const headHtml = stripRuntimeTailwindAssets(extractTemplateHead(js))
   const canvasDoc = editor?.Canvas?.getDocument?.()
-  if (!headHtml || !canvasDoc?.head) return
+  if (!canvasDoc?.head) return
 
   canvasDoc.head.querySelectorAll('[data-siteforge-template-head]').forEach((node) => node.remove())
+  canvasDoc.head.querySelectorAll('[data-siteforge-stitch-fallback]').forEach((node) => node.remove())
+  canvasDoc.documentElement.classList.add('light')
+  if (!headHtml) return
+
+  const fallbackStyle = canvasDoc.createElement('style')
+  fallbackStyle.setAttribute('data-siteforge-stitch-fallback', 'true')
+  fallbackStyle.textContent = stitchFallbackCss
+  canvasDoc.head.appendChild(fallbackStyle)
 
   const template = document.createElement('template')
   template.innerHTML = headHtml
@@ -1194,6 +1349,32 @@ function applyTemplateHeadAssets(js) {
     copy.setAttribute('data-siteforge-template-head', 'true')
     canvasDoc.head.appendChild(copy)
   })
+  installStitchIconFallback(canvasDoc)
+}
+
+function installStitchIconFallback(doc) {
+  const root = doc?.documentElement
+  if (!root) return
+
+  const applyFallback = () => root.classList.add('siteforge-icon-fallback')
+  const checkSymbols = () => {
+    try {
+      if (!doc.fonts || !doc.fonts.check('24px "Material Symbols Outlined"')) {
+        applyFallback()
+      }
+    } catch {
+      applyFallback()
+    }
+  }
+
+  if (!doc.fonts || !doc.fonts.ready) {
+    applyFallback()
+    return
+  }
+
+  doc.fonts.ready.then(checkSymbols).catch(applyFallback)
+  doc.defaultView?.setTimeout(checkSymbols, 300)
+  doc.defaultView?.setTimeout(checkSymbols, 1800)
 }
 
 function selectAsset(url) {
@@ -1208,12 +1389,76 @@ function setDevice(targetDevice) {
 
 function togglePreview() {
   if (!editor) return
-  previewMode.value = !previewMode.value
-  if (previewMode.value) {
-    editor.runCommand('preview')
-  } else {
-    editor.stopCommand('preview')
+  showCode.value = false
+  const html = editor.getHtml()
+  const css = editor.getCss()
+  const rawJs = preserveTemplateHead(page.value?.jsContent || '', editor.getJs?.() || '')
+  const headHtml = normalizeTemplateHead(extractTemplateHead(rawJs))
+  const js = stripTemplateHead(rawJs)
+  const previewDocument = buildPreviewDocument({
+    title: page.value?.title || site.value?.name || 'SiteForge Preview',
+    headHtml,
+    html,
+    css,
+    js
+  })
+  const blob = new Blob([previewDocument], { type: 'text/html;charset=utf-8' })
+  const previewUrl = URL.createObjectURL(blob)
+  const previewWindow = window.open(previewUrl, '_blank')
+  if (!previewWindow) {
+    URL.revokeObjectURL(previewUrl)
+    alert(t('common.operationFailed'))
+    return
   }
+  setTimeout(() => URL.revokeObjectURL(previewUrl), 60000)
+}
+
+function buildPreviewDocument({ title, headHtml, html, css, js }) {
+  const isStitchPreview = html?.includes('siteforge-stitch-template') || headHtml?.includes('tailwind-config')
+  return `<!doctype html>
+<html class="light" lang="${locale.value === 'en' ? 'en' : 'zh-Hant'}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>${escapeHtml(title)}</title>
+  ${isStitchPreview ? `<style data-siteforge-stitch-fallback>${stitchFallbackCss}</style>` : ''}
+  ${headHtml || fallbackPreviewHead()}
+  ${isStitchPreview ? scriptTag(STITCH_ICON_FALLBACK_SCRIPT) : ''}
+  <style>
+    html, body { margin: 0; min-height: 100%; }
+    body { overflow-x: hidden; }
+    ${css || ''}
+  </style>
+</head>
+<body>
+${html || ''}
+${js ? scriptTag(js) : ''}
+</body>
+</html>`
+}
+
+function escapeHtml(value) {
+  return String(value || '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#39;')
+}
+
+function safeScriptContent(value) {
+  return String(value || '').replaceAll('</script', '<\\/script')
+}
+
+function scriptTag(value) {
+  return `<scr${'ipt'}>${safeScriptContent(value)}</scr${'ipt'}>`
+}
+
+function fallbackPreviewHead() {
+  return `<link href="${STITCH_FONT_URL}" rel="stylesheet">
+<link href="${MATERIAL_SYMBOLS_URL}" rel="stylesheet">
+<script>${STITCH_TAILWIND_CONFIG_SCRIPT}</scr${'ipt'}>
+<script src="${TAILWIND_CDN_URL}"></scr${'ipt'}>`
 }
 
 function undo() {
