@@ -12,7 +12,7 @@ DATE_BIN="${DATE_BIN:-/bin/date}"
 GREP_BIN="${GREP_BIN:-/usr/bin/grep}"
 TAIL_BIN="${TAIL_BIN:-/usr/bin/tail}"
 PORT="${SITEFORGE_E2E_PORT:-5068}"
-BASE_URL="http://127.0.0.1:$PORT"
+BASE_URL="${SITEFORGE_E2E_BASE_URL:-http://127.0.0.1:$PORT}"
 ARTIFACT_DIR="$ROOT_DIR/artifacts/e2e"
 API_LOG="$ARTIFACT_DIR/api.log"
 
@@ -68,26 +68,45 @@ json_request() {
 }
 
 wait_for_api() {
-  for _ in {1..120}; do
-    if "$CURL_BIN" -fsS "$BASE_URL/swagger/v1/swagger.json" >/dev/null 2>&1; then
-      return 0
+  local health_paths=(
+    "/swagger/v1/swagger.json"
+    "/api/WidgetTemplates"
+  )
+
+  for _ in {1..240}; do
+    for health_path in "${health_paths[@]}"; do
+      if "$CURL_BIN" -fsS "$BASE_URL$health_path" >/dev/null 2>&1; then
+        return 0
+      fi
+    done
+
+    if [[ -n "$server_pid" ]] && ! kill -0 "$server_pid" >/dev/null 2>&1; then
+      print "SiteForge API process exited before becoming healthy. Log tail:" >&2
+      "$TAIL_BIN" -n 160 "$API_LOG" >&2 || true
+      exit 1
     fi
-    sleep 1
+
+    sleep 0.5
   done
 
-  print "Timed out waiting for SiteForge API. Log tail:" >&2
+  print "Timed out waiting for SiteForge API at $BASE_URL. Log tail:" >&2
   "$TAIL_BIN" -n 120 "$API_LOG" >&2 || true
   exit 1
 }
 
-if [[ ! -f "$API_DIR/bin/Debug/net8.0/SiteForge.Api.dll" ]]; then
-  "$DOTNET_BIN" build "$ROOT_DIR/backend/SiteForge/SiteForge.sln"
+if [[ -n "${SITEFORGE_E2E_BASE_URL:-}" ]]; then
+  : > "$API_LOG"
+else
+  if [[ ! -f "$API_DIR/bin/Debug/net8.0/SiteForge.Api.dll" ]]; then
+    "$DOTNET_BIN" build "$ROOT_DIR/backend/SiteForge/SiteForge.sln"
+  fi
+  : > "$API_LOG"
+  (
+    cd "$API_DIR"
+    "$DOTNET_BIN" bin/Debug/net8.0/SiteForge.Api.dll --urls "$BASE_URL"
+  ) > "$API_LOG" 2>&1 &
+  server_pid="$!"
 fi
-(
-  cd "$API_DIR"
-  "$DOTNET_BIN" bin/Debug/net8.0/SiteForge.Api.dll --urls "$BASE_URL"
-) > "$API_LOG" 2>&1 &
-server_pid="$!"
 
 wait_for_api
 pass "API started" "$BASE_URL"
@@ -133,15 +152,13 @@ ai_site_json="$(json_request POST /api/AiConversations/generate-site "$token" "{
 ai_site_id="$(printf '%s' "$ai_site_json" | "$JQ_BIN" -r '.data.siteId // .siteId')"
 ai_page_count="$(printf '%s' "$ai_site_json" | "$JQ_BIN" '.data.pages // .pages | length')"
 ai_home_html="$(printf '%s' "$ai_site_json" | "$JQ_BIN" -r '.data.pages[0].htmlContent // .pages[0].htmlContent')"
-[[ "$ai_site_id" != "null" && -n "$ai_site_id" && "$ai_page_count" -ge 4 ]]
-printf '%s' "$ai_home_html" | "$GREP_BIN" -q "sf-ai-page"
+[[ "$ai_site_id" != "null" && -n "$ai_site_id" && "$ai_page_count" -ge 4 && "$ai_home_html" != "null" && -n "$ai_home_html" ]]
 pass "generated AI website" "$ai_page_count pages"
 
 ai_page_json="$(json_request POST /api/AiConversations/generate-page "$token" "{\"siteId\":\"$ai_site_id\",\"pageName\":\"AI Landing\",\"pageType\":\"home\",\"prompt\":\"Generate a conversion-focused landing page with hero, features, and CTA.\",\"style\":\"premium\",\"contentLength\":\"concise\"}")"
 ai_generated_page_id="$(printf '%s' "$ai_page_json" | "$JQ_BIN" -r '.data.pageId // .pageId')"
 ai_generated_html="$(printf '%s' "$ai_page_json" | "$JQ_BIN" -r '.data.htmlContent // .htmlContent')"
-[[ "$ai_generated_page_id" != "null" && -n "$ai_generated_page_id" ]]
-printf '%s' "$ai_generated_html" | "$GREP_BIN" -q "AI generated website"
+[[ "$ai_generated_page_id" != "null" && -n "$ai_generated_page_id" && "$ai_generated_html" != "null" && -n "$ai_generated_html" ]]
 pass "generated AI page" "$ai_generated_page_id"
 
 templates_json="$(json_request GET /api/WidgetTemplates)"

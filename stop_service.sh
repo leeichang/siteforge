@@ -1,5 +1,6 @@
 #!/usr/bin/env zsh
 set -euo pipefail
+unsetopt BG_NICE 2>/dev/null || true
 
 ROOT_DIR="$(cd "$(dirname "$0")" && pwd)"
 RUN_DIR="$ROOT_DIR/artifacts/service"
@@ -50,6 +51,16 @@ stop_port() {
 
   for pid in ${(f)pids}; do
     kill "$pid" >/dev/null 2>&1 || true
+  done
+  for _ in {1..30}; do
+    if [[ -z "$(lsof -ti tcp:"$port" 2>/dev/null || true)" ]]; then
+      break
+    fi
+    sleep 0.2
+  done
+  pids="$(lsof -ti tcp:"$port" 2>/dev/null || true)"
+  for pid in ${(f)pids}; do
+    kill -9 "$pid" >/dev/null 2>&1 || true
   done
   print "Stopped remaining $label process(es) on port $port."
 }

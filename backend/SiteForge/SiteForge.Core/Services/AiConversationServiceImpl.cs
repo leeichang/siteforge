@@ -214,6 +214,8 @@ public class AiConversationServiceImpl : AiConversationService
         var isIncrementalPageEdit = page is not null && !hasTemplate;
         var generated = hasTemplate && selectedTemplate is not null && templatePage is not null
             ? GenerateTemplatePageDocument(site.Name, pageName, prompt, templatePage, selectedTemplate)
+            : isIncrementalPageEdit && page is not null
+                ? await GenerateIncrementalPageEditDocumentAsync(site.Name, page, prompt, request)
             : await GenerateAiPageDocumentAsync(site.Name, pageName, pageType, prompt, request, page);
 
         if (page is null)
@@ -237,19 +239,8 @@ public class AiConversationServiceImpl : AiConversationService
         }
         else
         {
-            if (!isIncrementalPageEdit)
-            {
-                page.Title = pageName;
-                page.PageType = pageType;
-            }
-            page.HtmlContent = generated.Html;
-            page.CssContent = generated.Css;
-            page.JsContent = generated.Js;
-            page.Components = "[]";
-            page.Styles = "[]";
-            page.MetaTitle = generated.MetaTitle;
-            page.MetaDescription = generated.MetaDescription;
-            await _pages.UpdateAsync(page);
+            // Existing editor pages are applied client-side as block-level edits.
+            // Do not persist or overwrite the full saved page until the user clicks Save.
         }
 
         var response = ToGeneratedPageDto(page, generated, stopwatch.ElapsedMilliseconds);
@@ -761,43 +752,50 @@ public class AiConversationServiceImpl : AiConversationService
         GenerationTimeMs = elapsedMs
     };
 
-    private static GeneratedPageDocument GenerateIncrementalPageEditDocument(
+    private async Task<GeneratedPageDocument> GenerateIncrementalPageEditDocumentAsync(
         string siteName,
         Page page,
         string prompt,
         AiGeneratePageRequest request)
     {
-        var sourceHtml = FirstNonEmpty(request.CurrentHtmlContent, page.HtmlContent, "<main></main>");
-        var sourceCss = FirstNonEmpty(request.CurrentCssContent, page.CssContent, string.Empty);
-        var sourceJs = FirstNonEmpty(request.CurrentJsContent, page.JsContent, string.Empty);
         var cleanPrompt = StripTags(prompt);
         var escapedPrompt = WebUtility.HtmlEncode(cleanPrompt);
-        var additionHtml = BuildIncrementalAdditionHtml(page.PageType, cleanPrompt);
-        var mergedHtml = InsertBeforeClosingContainer(sourceHtml, additionHtml);
-        var mergedCss = MergeCss(sourceCss, IncrementalEditCss());
+        var provider = ResolveAiProvider(request.ProviderKey);
+        var additionHtml = await BuildIncrementalAdditionHtmlAsync(siteName, page, cleanPrompt, provider);
 
         return new GeneratedPageDocument(
-            mergedHtml,
-            mergedCss,
-            sourceJs,
+            additionHtml,
+            IncrementalEditCss(),
+            string.Empty,
             page.MetaTitle ?? $"{page.Title} | {siteName}",
             page.MetaDescription ?? $"Updated from request: {escapedPrompt}",
             new List<string>
             {
-                "已保留原本頁面結構，只把新內容加入目前頁面。",
-                "如果只要增加圖片，AI 會新增圖片區塊，不再重建整頁。",
+                "已保留原本頁面結構，只回傳可新增或替換的區塊。",
+                "如果只要增加圖片，AI 會新增圖片區塊，不會重建整頁。",
                 "請檢查新增區塊的位置，再依需要拖曳或調整樣式。"
             });
     }
 
-    private static string BuildIncrementalAdditionHtml(string pageType, string prompt)
+    private async Task<string> BuildIncrementalAdditionHtmlAsync(
+        string siteName,
+        Page page,
+        string prompt,
+        AiProviderSettings provider)
     {
         var wantsImages = Regex.IsMatch(prompt, "(照片|圖片|相片|photo|image|picture|gallery|visual)", RegexOptions.IgnoreCase);
+        var wantsIngredientExplanation = Regex.IsMatch(prompt, "(透明質酸|玻尿酸|hyaluron|胜肽|肽複合|peptide|煙酰胺|菸鹼醯胺|niacinamide|成分|功用|ingredient)", RegexOptions.IgnoreCase);
         var title = wantsImages ? "更多品牌照片" : "新增內容";
         var subtitle = string.IsNullOrWhiteSpace(prompt)
             ? "延伸目前頁面的內容與視覺素材。"
             : WebUtility.HtmlEncode(prompt);
-        var images = GalleryImagesFor(pageType, prompt);
+        var images = GalleryImagesFor(page.PageType, prompt);
+
+        if (wantsIngredientExplanation)
+        {
+            var ingredients = await GenerateIngredientBlockContentAsync(provider, siteName, page.Title, prompt);
+            return BuildIngredientExplanationHtml(ingredients);
+        }
 
         if (!wantsImages)
         {
@@ -822,19 +820,191 @@ public class AiConversationServiceImpl : AiConversationService
             <p>{{subtitle}}</p>
             <div class="sf-ai-photo-grid">
               <figure>
-                <img src="{{images[0]}}" alt="Brand visual 1" loading="lazy" />
+                <img src="{{images[0]}}" alt="Product visual 1" loading="lazy" />
               </figure>
               <figure>
-                <img src="{{images[1]}}" alt="Brand visual 2" loading="lazy" />
+                <img src="{{images[1]}}" alt="Product visual 2" loading="lazy" />
               </figure>
               <figure>
-                <img src="{{images[2]}}" alt="Brand visual 3" loading="lazy" />
+                <img src="{{images[2]}}" alt="Product visual 3" loading="lazy" />
+              </figure>
+              <figure>
+                <img src="{{images[3]}}" alt="Product visual 4" loading="lazy" />
+              </figure>
+              <figure>
+                <img src="{{images[4]}}" alt="Product visual 5" loading="lazy" />
+              </figure>
+              <figure>
+                <img src="{{images[5]}}" alt="Product visual 6" loading="lazy" />
               </figure>
             </div>
           </div>
         </section>
         """;
     }
+
+    private async Task<List<IngredientBlockItem>> GenerateIngredientBlockContentAsync(
+        AiProviderSettings provider,
+        string siteName,
+        string pageName,
+        string prompt)
+    {
+        var systemPrompt = """
+        You are a senior Traditional Chinese skincare copywriter and cosmetic formulation explainer.
+        Generate factual, consumer-friendly cosmetic ingredient explanations. Avoid medical claims, disease treatment claims, guaranteed effects, and exaggerated promises.
+        Return JSON only. Do not include markdown, HTML, code fences, comments, or abbreviated text.
+        """;
+
+        var userPrompt = $$"""
+        Brand/site: {{siteName}}
+        Page: {{pageName}}
+        User request: {{prompt}}
+
+        Task:
+        - Explain exactly these three skincare ingredients if present in the request: 透明質酸, 胜肽複合物, 煙酰胺.
+        - Write in Traditional Chinese for a premium beauty website.
+        - For each ingredient, provide:
+          name: Chinese ingredient name
+          englishName: English or INCI-style name
+          icon: one short Traditional Chinese character that represents the benefit
+          description: 45-70 Traditional Chinese characters explaining what it does cosmetically
+          benefits: exactly 3 short benefit bullet strings, each 10-18 Traditional Chinese characters
+
+        JSON schema:
+        [
+          {
+            "name": "透明質酸",
+            "englishName": "Hyaluronic Acid",
+            "icon": "水",
+            "description": "...",
+            "benefits": ["...", "...", "..."]
+          }
+        ]
+        """;
+
+        try
+        {
+            var raw = await CompletePagePromptAsync(provider, systemPrompt, userPrompt);
+            var items = ParseIngredientItems(raw);
+            if (items.Count >= 3) return items.Take(3).ToList();
+
+            _logger.LogWarning("AI ingredient content returned too few items. Count={Count}. Raw={Raw}", items.Count, Truncate(raw, 500));
+        }
+        catch (Exception ex)
+        {
+            _logger.LogWarning(ex, "Failed to generate ingredient block content with {Provider}. Falling back to curated copy.", provider.Key);
+        }
+
+        return DefaultIngredientItems();
+    }
+
+    private static List<IngredientBlockItem> ParseIngredientItems(string raw)
+    {
+        var json = ExtractJsonArray(raw);
+        if (string.IsNullOrWhiteSpace(json)) return new();
+
+        var items = JsonSerializer.Deserialize<List<IngredientBlockItem>>(
+            json,
+            new JsonSerializerOptions { PropertyNameCaseInsensitive = true }) ?? new();
+
+        return items
+            .Where(item => !string.IsNullOrWhiteSpace(item.Name))
+            .Select(NormalizeIngredientItem)
+            .Where(item => !string.IsNullOrWhiteSpace(item.Description))
+            .ToList();
+    }
+
+    private static string ExtractJsonArray(string raw)
+    {
+        if (string.IsNullOrWhiteSpace(raw)) return string.Empty;
+
+        var cleaned = Regex.Replace(raw.Trim(), @"^```(?:json)?\s*|\s*```$", string.Empty, RegexOptions.IgnoreCase).Trim();
+        var start = cleaned.IndexOf('[', StringComparison.Ordinal);
+        var end = cleaned.LastIndexOf(']');
+        return start >= 0 && end > start ? cleaned[start..(end + 1)] : string.Empty;
+    }
+
+    private static IngredientBlockItem NormalizeIngredientItem(IngredientBlockItem item)
+    {
+        var benefits = item.Benefits
+            .Where(benefit => !string.IsNullOrWhiteSpace(benefit))
+            .Select(benefit => benefit.Trim())
+            .Take(3)
+            .ToList();
+
+        while (benefits.Count < 3)
+        {
+            benefits.Add("提升日常保養質感");
+        }
+
+        item.Name = item.Name.Trim();
+        item.EnglishName = item.EnglishName.Trim();
+        item.Icon = string.IsNullOrWhiteSpace(item.Icon) ? item.Name[..1] : item.Icon.Trim()[..1];
+        item.Description = item.Description.Trim();
+        item.Benefits = benefits;
+        return item;
+    }
+
+    private static string BuildIngredientExplanationHtml(IReadOnlyList<IngredientBlockItem> ingredients)
+    {
+        var cards = new StringBuilder();
+        foreach (var item in ingredients.Take(3))
+        {
+            cards.AppendLine($$"""
+                  <article class="sf-ai-ingredient-card">
+                    <div class="sf-ai-ingredient-icon">{{WebUtility.HtmlEncode(item.Icon)}}</div>
+                    <h3>{{WebUtility.HtmlEncode(item.Name)}}</h3>
+                    <span>{{WebUtility.HtmlEncode(item.EnglishName)}}</span>
+                    <p>{{WebUtility.HtmlEncode(item.Description)}}</p>
+                    <ul>
+                      {{string.Join(Environment.NewLine, item.Benefits.Take(3).Select(benefit => $"<li>{WebUtility.HtmlEncode(benefit)}</li>"))}}
+                    </ul>
+                  </article>
+            """);
+        }
+
+        return $$"""
+
+        <section class="sf-ai-incremental-section sf-ai-ingredient-section" data-siteforge-ai-block="ingredient-explanation">
+          <div class="sf-ai-incremental-inner">
+            <p class="sf-ai-incremental-kicker">Ingredient science</p>
+            <h2>透明質酸、胜肽複合物、煙酰胺</h2>
+            <p>以下成分說明依照您的需求由 AI 生成，再套用到穩定的成分卡片版型中，保留頁面原有排版。</p>
+            <div class="sf-ai-ingredient-grid">
+        {{cards.ToString().TrimEnd()}}
+            </div>
+          </div>
+        </section>
+        """;
+    }
+
+    private static List<IngredientBlockItem> DefaultIngredientItems() => new()
+    {
+        new IngredientBlockItem
+        {
+            Name = "透明質酸",
+            EnglishName = "Hyaluronic Acid",
+            Icon = "水",
+            Description = "透明質酸能協助角質層維持水分，使乾燥肌膚看起來更柔軟、飽滿並減少緊繃感。",
+            Benefits = new List<string> { "補充角質層水分", "提升柔嫩飽滿感", "改善乾燥緊繃感" }
+        },
+        new IngredientBlockItem
+        {
+            Name = "胜肽複合物",
+            EnglishName = "Peptide Complex",
+            Icon = "修",
+            Description = "胜肽複合物提供修護型保養支持，幫助肌膚維持彈潤外觀與更細緻平滑的質感。",
+            Benefits = new List<string> { "支持彈潤膚觸", "細緻肌膚紋理", "強化修護保養感" }
+        },
+        new IngredientBlockItem
+        {
+            Name = "煙酰胺",
+            EnglishName = "Niacinamide",
+            Icon = "亮",
+            Description = "煙酰胺有助於調理暗沉與油水平衡，讓膚色看起來更均勻，肌膚狀態更穩定。",
+            Benefits = new List<string> { "改善暗沉膚色", "平衡油水狀態", "提升均勻透亮感" }
+        }
+    };
 
     private static string InsertBeforeClosingContainer(string html, string addition)
     {
@@ -879,12 +1049,27 @@ public class AiConversationServiceImpl : AiConversationService
             _ => "brand product lifestyle"
         };
 
-        var escaped = Uri.EscapeDataString(query);
+        if (query.Contains("skincare", StringComparison.OrdinalIgnoreCase))
+        {
+            return new[]
+            {
+                "https://images.unsplash.com/photo-1556228720-195a672e8a03?auto=format&fit=crop&w=900&q=80",
+                "https://images.unsplash.com/photo-1571781926291-c477ebfd024b?auto=format&fit=crop&w=900&q=80",
+                "https://images.unsplash.com/photo-1596462502278-27bfdc403348?auto=format&fit=crop&w=900&q=80",
+                "https://images.unsplash.com/photo-1608248543803-ba4f8c70ae0b?auto=format&fit=crop&w=900&q=80",
+                "https://images.unsplash.com/photo-1620916566398-39f1143ab7be?auto=format&fit=crop&w=900&q=80",
+                "https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&w=900&q=80"
+            };
+        }
+
         return new[]
         {
-            $"https://source.unsplash.com/900x700/?{escaped}&sig=11",
-            $"https://source.unsplash.com/900x700/?{escaped}&sig=22",
-            $"https://source.unsplash.com/900x700/?{escaped}&sig=33"
+            "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=900&q=80",
+            "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=900&q=80",
+            "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=900&q=80",
+            "https://images.unsplash.com/photo-1526170375885-4d8ecf77b99f?auto=format&fit=crop&w=900&q=80",
+            "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&w=900&q=80",
+            "https://images.unsplash.com/photo-1560343090-f0409e92791a?auto=format&fit=crop&w=900&q=80"
         };
     }
 
@@ -940,8 +1125,65 @@ public class AiConversationServiceImpl : AiConversationService
           min-height: 260px;
           object-fit: cover;
         }
+        .sf-ai-ingredient-section {
+          background: #f8f5f0;
+        }
+        .sf-ai-ingredient-grid {
+          display: grid;
+          grid-template-columns: repeat(3, minmax(0, 1fr));
+          gap: 22px;
+          margin-top: 34px;
+        }
+        .sf-ai-ingredient-card {
+          display: grid;
+          align-content: start;
+          gap: 12px;
+          border: 1px solid rgba(107, 92, 76, .18);
+          border-radius: 8px;
+          background: #fff;
+          padding: 28px;
+          box-shadow: 0 16px 44px rgba(77, 65, 52, .08);
+        }
+        .sf-ai-ingredient-icon {
+          width: 48px;
+          height: 48px;
+          display: grid;
+          place-items: center;
+          border-radius: 50%;
+          background: #efe5dc;
+          color: #6b5c4c;
+          font-weight: 800;
+        }
+        .sf-ai-ingredient-card h3 {
+          margin: 0;
+          color: #2f2a25;
+          font-size: 24px;
+          line-height: 1.25;
+        }
+        .sf-ai-ingredient-card span {
+          color: #8a7a68;
+          font-size: 13px;
+          font-weight: 800;
+          letter-spacing: 0;
+        }
+        .sf-ai-ingredient-card p {
+          margin: 0;
+          color: #544b43;
+          font-size: 15px;
+          line-height: 1.75;
+        }
+        .sf-ai-ingredient-card ul {
+          display: grid;
+          gap: 8px;
+          margin: 4px 0 0;
+          padding-left: 18px;
+          color: #5f564d;
+          font-size: 14px;
+          line-height: 1.55;
+        }
         @media (max-width: 760px) {
-          .sf-ai-photo-grid {
+          .sf-ai-photo-grid,
+          .sf-ai-ingredient-grid {
             grid-template-columns: 1fr;
           }
         }
@@ -1357,6 +1599,15 @@ public class AiConversationServiceImpl : AiConversationService
         string MetaTitle,
         string MetaDescription,
         List<string> Suggestions);
+
+    private sealed class IngredientBlockItem
+    {
+        public string Name { get; set; } = string.Empty;
+        public string EnglishName { get; set; } = string.Empty;
+        public string Icon { get; set; } = string.Empty;
+        public string Description { get; set; } = string.Empty;
+        public List<string> Benefits { get; set; } = new();
+    }
 
     private sealed record AiProviderSettings(
         string Key,

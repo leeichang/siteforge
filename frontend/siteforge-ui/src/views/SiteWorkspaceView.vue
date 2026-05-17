@@ -2,7 +2,9 @@
   <div class="sf-workspace" :class="`theme-${theme}`">
     <!-- Breadcrumb -->
     <nav class="sf-ws-breadcrumb">
-      <span class="sf-ws-breadcrumb-item">Sites</span>
+      <button class="sf-ws-breadcrumb-item" type="button" @click="backToSites">
+        Sites
+      </button>
       <span class="material-symbols-outlined sf-ws-breadcrumb-sep">chevron_right</span>
       <span class="sf-ws-breadcrumb-current">{{ site?.name || 'Loading...' }}</span>
     </nav>
@@ -243,6 +245,10 @@ async function fetchPages() {
 }
 
 // Actions
+function backToSites() {
+  router.push('/')
+}
+
 async function createPage() {
   if (!newPage.value.title) return
 
@@ -357,6 +363,12 @@ onMounted(() => {
 }
 
 .sf-ws-breadcrumb-item {
+  appearance: none;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  font: inherit;
+  color: inherit;
   cursor: pointer;
 }
 

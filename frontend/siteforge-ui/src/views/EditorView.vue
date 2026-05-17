@@ -263,15 +263,20 @@
                 <option value="fashion">Fashion</option>
               </select>
             </label>
+            <label>
+              {{ t('editor.contentLength') }}
+              <select v-model="aiContentLength">
+                <option value="concise">{{ t('editor.contentLengthConcise') }}</option>
+                <option value="medium">{{ t('editor.contentLengthMedium') }}</option>
+                <option value="long">{{ t('editor.contentLengthLong') }}</option>
+              </select>
+            </label>
           </div>
           <div class="ai-input-row">
-            <button type="button">+</button>
+            <button type="button" :aria-label="t('editor.addContext')">+</button>
             <textarea v-model="aiPrompt" :placeholder="t('editor.askAnything')"></textarea>
-            <button type="button" @click="generateCurrentPage" :disabled="generatingCurrentPage || !editorReady">↑</button>
+            <button type="button" @click="generateCurrentPage" :disabled="generatingCurrentPage || !editorReady" :aria-label="t('editor.sendPrompt')">↑</button>
           </div>
-          <button class="panel-action ai-apply-button" type="button" @click="generateCurrentPage" :disabled="generatingCurrentPage || !editorReady">
-            {{ generatingCurrentPage ? t('editor.generatingCurrentPage') : t('editor.generateCurrentPage') }}
-          </button>
         </section>
       </aside>
 
@@ -356,6 +361,42 @@
               <strong>{{ page?.slug ? `/${page.slug}` : t('common.draft') }}</strong>
             </header>
             <p>{{ page?.metaDescription || t('editor.propertiesHelp') }}</p>
+          </div>
+          <div v-if="isImageSelected" class="image-property-tools">
+            <input
+              ref="imageFileInput"
+              class="hidden-file-input"
+              type="file"
+              accept="image/*"
+              @change="replaceSelectedImageFile"
+            />
+            <div class="image-property-actions">
+              <button class="panel-action" type="button" @click="chooseSelectedImageFile">
+                {{ t('editor.uploadImage') }}
+              </button>
+              <button class="panel-action" type="button" @click="openImageAssetManager">
+                {{ t('editor.chooseAsset') }}
+              </button>
+            </div>
+            <label>
+              {{ t('editor.imageUrl') }}
+              <input
+                v-model="selectedImageUrl"
+                type="url"
+                placeholder="https://example.com/image.jpg"
+                @change="replaceSelectedImageUrl"
+                @keydown.enter.prevent="replaceSelectedImageUrl"
+              />
+            </label>
+            <label>
+              {{ t('editor.altText') }}
+              <input
+                v-model="selectedImageAlt"
+                type="text"
+                @change="replaceSelectedImageAlt"
+                @keydown.enter.prevent="replaceSelectedImageAlt"
+              />
+            </label>
           </div>
           <div id="traits-panel" class="gjs-panel-host"></div>
           <div class="property-summary">
@@ -565,6 +606,7 @@ const showCode = ref(false)
 const aiPrompt = ref('')
 const aiPageType = ref('home')
 const aiStyle = ref('studio')
+const aiContentLength = ref('medium')
 const aiTemplates = ref([])
 const aiTemplateKey = ref('')
 const generatingCurrentPage = ref(false)
@@ -572,6 +614,10 @@ const blockSearch = ref('')
 const assetSearch = ref('')
 const assetUrl = ref('')
 const selectedComponentName = ref('')
+const selectedComponentType = ref('')
+const selectedImageUrl = ref('')
+const selectedImageAlt = ref('')
+const imageFileInput = ref(null)
 const fontFamily = ref('Inter')
 const lineHeight = ref(1.55)
 const sampleTable = ref([])
@@ -639,9 +685,11 @@ const filteredAssets = computed(() => {
     return value.includes(query)
   })
 })
+const isImageSelected = computed(() => selectedComponentType.value === 'image')
 let editor = null
 let resizeState = null
 let projectSplitResizeState = null
+let templateCanvasAssetTimer = null
 
 onMounted(async () => {
   restorePaneLayout()
@@ -661,6 +709,7 @@ onUnmounted(() => {
   stopPaneResize()
   stopProjectSplitResize()
   if (editor) {
+    clearTemplateCanvasAssetTimer()
     editor.destroy()
     editor = null
   }
@@ -934,6 +983,44 @@ function clamp(value, min, max) {
   return Math.min(max, Math.max(min, value))
 }
 
+function escapeTailwindSelectorName(name) {
+  return `${name}`.trim().replace(/([^a-z 0-9\w-:/]+)/gi, '-')
+}
+
+function grapesPluginSetup() {
+  const plugins = []
+  const formPlugin = window['grapesjs-plugin-forms']?.default
+  const tailwindPlugin = window['grapesjs-tailwind']?.default
+
+  if (typeof formPlugin === 'function') {
+    plugins.push((editorInstance) => formPlugin(editorInstance, {
+      category: 'Forms'
+    }))
+  }
+
+  if (typeof tailwindPlugin === 'function') {
+    plugins.push((editorInstance) => tailwindPlugin(editorInstance, {
+      tailwindPlayCdn: 'https://cdn.tailwindcss.com',
+      tailwindConfig: {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              primary: '#6b5c4c',
+              surface: '#faf9f7',
+              accent: '#8358ed'
+            }
+          }
+        }
+      },
+      loadBlocks: true,
+      changeThemeText: 'Change Tailwind Theme'
+    }))
+  }
+
+  return { plugins, pluginsOpts: {} }
+}
+
 async function loadEditorData() {
   loading.value = true
   editorError.value = ''
@@ -977,6 +1064,8 @@ function initGrapesJS() {
     return
   }
 
+  const pluginSetup = grapesPluginSetup()
+
   editor = window.grapesjs.init({
     container: '#gjs',
     height: '100%',
@@ -986,7 +1075,10 @@ function initGrapesJS() {
     panels: { defaults: [] },
     blockManager: { appendTo: '#blocks-panel' },
     layerManager: { appendTo: '#layers-panel' },
-    selectorManager: { appendTo: '#selectors-panel' },
+    selectorManager: {
+      appendTo: '#selectors-panel',
+      escapeName: escapeTailwindSelectorName
+    },
     styleManager: {
       appendTo: '#styles-panel',
       sectors: defaultStyleSectors()
@@ -1006,21 +1098,30 @@ function initGrapesJS() {
     canvas: {
       styles: [STITCH_FONT_URL, MATERIAL_SYMBOLS_URL],
       scripts: [STITCH_TAILWIND_CONFIG_URL, TAILWIND_CDN_URL]
-    }
+    },
+    plugins: pluginSetup.plugins,
+    pluginsOpts: pluginSetup.pluginsOpts
   })
 
   registerBlocks()
   loadPageIntoEditor()
   editor.setDevice(device.value)
+  editor.on('load', () => scheduleTemplateCanvasAssets())
+  editor.on('canvas:frame:load', () => scheduleTemplateCanvasAssets())
   editor.on('update', () => {
     hasUnsavedChanges.value = true
   })
   editor.on('component:selected', (component) => {
-    selectedComponentName.value = component.getName?.() || component.get('tagName') || component.getId?.() || 'Component'
-    rightTab.value = 'styles'
+    syncSelectedComponent(component)
+    rightTab.value = isImageComponent(component) ? 'properties' : 'styles'
+  })
+  editor.on('component:update', (component) => {
+    if (component === editor?.getSelected?.()) {
+      syncSelectedComponent(component)
+    }
   })
   editor.on('component:deselected', () => {
-    selectedComponentName.value = ''
+    clearSelectedComponent()
   })
   editorReady.value = true
 }
@@ -1062,7 +1163,7 @@ function registerBlocks() {
       id: 'basic-image',
       label: t('editor.blockImage'),
       media: blockIcon('image'),
-      content: `<img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200" alt="${t('editor.blockTeamAlt')}" class="w-full rounded-lg" />`
+      content: `<img data-gjs-type="image" src="${imagePlaceholderDataUrl()}" alt="${t('editor.blockTeamAlt')}" class="w-full rounded-lg" />`
     },
     {
       id: 'basic-form',
@@ -1072,6 +1173,18 @@ function registerBlocks() {
     }
   ]
   basicBlocks.forEach((block) => editor.BlockManager.add(block.id, { ...block, category: t('editor.basic') }))
+}
+
+function imagePlaceholderDataUrl() {
+  const label = escapeHtml(t('editor.uploadImage'))
+  const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="680" viewBox="0 0 1200 680">
+    <rect width="1200" height="680" rx="28" fill="#f4f1ec"/>
+    <rect x="420" y="196" width="360" height="288" rx="24" fill="#ffffff" stroke="#cfc7bd" stroke-width="8"/>
+    <path d="M506 402l82-88 64 68 42-46 108 112H438z" fill="#8a7a68"/>
+    <circle cx="704" cy="282" r="36" fill="#d9c5b2"/>
+    <text x="600" y="552" fill="#6b5c4c" font-family="Arial, sans-serif" font-size="42" font-weight="700" text-anchor="middle">${label}</text>
+  </svg>`
+  return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`
 }
 
 function blockIcon(value = '') {
@@ -1118,7 +1231,7 @@ function loadPageIntoEditor() {
     editor.setStyle(currentPage.cssContent)
   }
 
-  applyTemplateHeadAssets(currentPage.jsContent || '')
+  scheduleTemplateCanvasAssets(currentPage.jsContent || '', currentPage.htmlContent || '')
   hasUnsavedChanges.value = false
 }
 
@@ -1226,16 +1339,18 @@ async function registerAssetUrl() {
 async function generateCurrentPage() {
   if (!editor || !pageId.value) return
   generatingCurrentPage.value = true
+  const selectedForAiEdit = editor.getSelected?.()
+  const prompt = aiPrompt.value || `Generate a polished ${aiPageType.value} page for ${site.value?.name || 'this website'}.`
   try {
     const response = await api.post('/AiConversations/generate-page', {
       siteId,
       pageId: pageId.value,
       pageName: page.value?.title || 'Generated Page',
       pageType: aiPageType.value,
-      templateKey: aiTemplateKey.value,
-      prompt: aiPrompt.value || `Generate a polished ${aiPageType.value} page for ${site.value?.name || 'this website'}.`,
+      templateKey: '',
+      prompt,
       style: aiStyle.value,
-      contentLength: 'medium',
+      contentLength: aiContentLength.value,
       currentHtmlContent: editor.getHtml(),
       currentCssContent: editor.getCss(),
       currentJsContent: editor.getJs?.() || page.value?.jsContent || ''
@@ -1245,24 +1360,284 @@ async function generateCurrentPage() {
       ...page.value,
       title: generated.pageName,
       slug: generated.slug,
-      pageType: generated.pageType,
-      htmlContent: generated.htmlContent,
-      cssContent: generated.cssContent,
-      jsContent: generated.jsContent,
-      components: generated.components,
-      styles: generated.styles
+      pageType: generated.pageType
     }
-    editor.setComponents(generated.htmlContent || defaultBlankPage())
-    editor.setStyle(generated.cssContent || '')
-    applyTemplateHeadAssets(generated.jsContent || '')
-    hasUnsavedChanges.value = false
-    selectedComponentName.value = ''
+    applyGeneratedBlockEdit(generated, selectedForAiEdit, aiPrompt.value)
     alert(t('editor.generatedApplied'))
   } catch (e) {
     alert(errorMessage(e, t('common.operationFailed')))
   } finally {
     generatingCurrentPage.value = false
   }
+}
+
+function applyGeneratedBlockEdit(generated, targetComponent, prompt = '') {
+  if (!editor) return
+  const isIngredientEdit = isIngredientPrompt(prompt)
+  const html = extractGeneratedFragment(generated?.htmlContent || '', prompt) ||
+    (isIngredientEdit ? ingredientExplanationFragment() : '')
+  if (!html) return
+
+  const css = [
+    generated?.cssContent || '',
+    isIngredientEdit && !generated?.cssContent ? ingredientExplanationCss() : ''
+  ].filter(Boolean).join('\n\n')
+  if (css.trim()) editor.addStyle(css)
+
+  const shouldReplaceTarget = targetComponent && !isWrapperComponent(targetComponent) && isReplacePrompt(prompt)
+  let appliedComponents
+  editor.UndoManager?.start?.()
+  if (shouldReplaceTarget && typeof targetComponent.replaceWith === 'function') {
+    appliedComponents = targetComponent.replaceWith(html)
+  } else if (shouldReplaceTarget) {
+    targetComponent.components(html)
+    appliedComponents = [targetComponent]
+  } else {
+    appliedComponents = insertGeneratedSection(html, targetComponent)
+  }
+  editor.UndoManager?.stop?.()
+
+  const firstApplied = Array.isArray(appliedComponents) ? appliedComponents[0] : appliedComponents
+  if (firstApplied) editor.select(firstApplied)
+  scheduleTemplateCanvasAssets(page.value?.jsContent || '', editor.getHtml())
+  hasUnsavedChanges.value = true
+}
+
+function isReplacePrompt(prompt) {
+  const value = String(prompt || '').toLowerCase()
+  if (!value) return false
+  const hasReplaceIntent = /(替換|取代|替代|改成|換成|覆蓋|replace|rewrite)/i.test(value)
+  const hasAddIntent = /(增加|新增|添加|加入|補上|加上|add|insert|append|more)/i.test(value)
+  return hasReplaceIntent && !hasAddIntent
+}
+
+function insertGeneratedSection(html, targetComponent) {
+  const anchor = findInsertionAnchor(targetComponent)
+  if (!anchor) return editor.addComponents(html)
+
+  const parent = anchor.parent?.()
+  const siblings = parent?.components?.()
+  if (!siblings?.add) return editor.addComponents(html)
+
+  const at = typeof anchor.index === 'function'
+    ? anchor.index() + 1
+    : Math.max(0, siblings.models?.indexOf(anchor) ?? -1) + 1
+  return siblings.add(html, { at })
+}
+
+function findInsertionAnchor(component) {
+  if (!component || isWrapperComponent(component)) return null
+
+  let current = component
+  let lastContentBlock = component
+  while (current && !isWrapperComponent(current)) {
+    const tagName = componentTagName(current)
+    if (isChromeTag(tagName)) return null
+    if (tagName === 'section' || tagName === 'main') return current
+    lastContentBlock = current
+    const parent = current.parent?.()
+    if (!parent || isWrapperComponent(parent)) return current
+    current = parent
+  }
+
+  return lastContentBlock
+}
+
+function extractGeneratedFragment(html, prompt = '') {
+  const value = String(html || '').trim()
+  if (!value) return ''
+
+  const doc = new DOMParser().parseFromString(value, 'text/html')
+  doc.querySelectorAll('script').forEach((node) => node.remove())
+  removeBrevityArtifacts(doc)
+  const incrementalSections = Array.from(doc.body.querySelectorAll('.sf-ai-incremental-section'))
+  if (incrementalSections.length > 0) {
+    return incrementalSections.map((node) => node.outerHTML).join('\n')
+  }
+  if (isAddPrompt(prompt) && containsFullPageChrome(doc)) {
+    return genericAdditionFragment(prompt)
+  }
+  return doc.body.innerHTML.trim()
+}
+
+function removeBrevityArtifacts(doc) {
+  Array.from(doc.body.querySelectorAll('*')).forEach((node) => {
+    if (/details removed for brevity|removed for brevity|省略/i.test(node.textContent || '')) {
+      node.remove()
+    }
+  })
+}
+
+function containsFullPageChrome(doc) {
+  return !!doc.body.querySelector('header, nav, .siteforge-stitch-template')
+}
+
+function isAddPrompt(prompt) {
+  return /(增加|新增|添加|加入|補上|加上|add|insert|append|more)/i.test(String(prompt || ''))
+}
+
+function isIngredientPrompt(prompt) {
+  return /(透明質酸|玻尿酸|hyaluron|胜肽|肽複合|peptide|煙酰胺|菸鹼醯胺|niacinamide|成分|功用|ingredient)/i.test(String(prompt || ''))
+}
+
+function genericAdditionFragment(prompt) {
+  const safePrompt = escapeHtml(String(prompt || '新增內容'))
+  return `<section class="sf-ai-incremental-section"><div class="sf-ai-incremental-inner"><p class="sf-ai-incremental-kicker">AI update</p><h2>新增內容</h2><p>${safePrompt}</p></div></section>`
+}
+
+function ingredientExplanationFragment() {
+  return `<section class="sf-ai-incremental-section sf-ai-ingredient-section" data-siteforge-ai-block="ingredient-explanation">
+  <div class="sf-ai-incremental-inner">
+    <p class="sf-ai-incremental-kicker">Ingredient science</p>
+    <h2>透明質酸、胜肽複合物、煙酰胺</h2>
+    <p>以保濕、修護與提亮三個保養方向，讓顧客快速理解 AETHERIS 核心活性成分的實際功用。</p>
+    <div class="sf-ai-ingredient-grid">
+      <article class="sf-ai-ingredient-card">
+        <div class="sf-ai-ingredient-icon">水</div>
+        <h3>透明質酸</h3>
+        <span>Hyaluronic Acid</span>
+        <p>透明質酸能抓住大量水分，為角質層補充水潤支撐，改善乾燥造成的粗糙、緊繃與暗沉感。</p>
+        <ul>
+          <li>提升肌膚含水量與柔嫩度</li>
+          <li>讓後續保養更服貼</li>
+          <li>適合乾燥、缺水與換季膚況</li>
+        </ul>
+      </article>
+      <article class="sf-ai-ingredient-card">
+        <div class="sf-ai-ingredient-icon">修</div>
+        <h3>胜肽複合物</h3>
+        <span>Peptide Complex</span>
+        <p>胜肽是短鏈胺基酸，能協助肌膚維持彈性與細緻度，讓熟齡或疲憊膚況看起來更飽滿穩定。</p>
+        <ul>
+          <li>支持肌膚彈潤與緊緻感</li>
+          <li>淡化乾燥細紋的視覺感受</li>
+          <li>強化日常修護保養定位</li>
+        </ul>
+      </article>
+      <article class="sf-ai-ingredient-card">
+        <div class="sf-ai-ingredient-icon">亮</div>
+        <h3>煙酰胺</h3>
+        <span>Niacinamide</span>
+        <p>煙酰胺又稱維他命 B3，兼具膚色調理、油水平衡與屏障保養特色，是提亮與穩定膚況的關鍵成分。</p>
+        <ul>
+          <li>改善暗沉並提升透亮感</li>
+          <li>協助平衡油水與毛孔觀感</li>
+          <li>讓膚色看起來更均勻穩定</li>
+        </ul>
+      </article>
+    </div>
+  </div>
+</section>`
+}
+
+function ingredientExplanationCss() {
+  return `.sf-ai-incremental-section {
+  padding: 72px 24px;
+  background: #fff;
+}
+.sf-ai-incremental-inner {
+  max-width: 1120px;
+  margin: 0 auto;
+}
+.sf-ai-incremental-kicker {
+  margin: 0 0 10px;
+  color: #6b5c4c;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0;
+  text-transform: uppercase;
+}
+.sf-ai-incremental-section h2 {
+  margin: 0;
+  color: #2f2a25;
+  font-size: clamp(30px, 4vw, 48px);
+  line-height: 1.18;
+  font-weight: 600;
+  letter-spacing: 0;
+  font-family: "Playfair Display", Georgia, serif;
+}
+.sf-ai-incremental-section p {
+  max-width: 760px;
+  margin: 16px 0 0;
+  color: #544b43;
+  font-size: 18px;
+  line-height: 1.7;
+}
+.sf-ai-ingredient-section {
+  background: #f8f5f0;
+}
+.sf-ai-ingredient-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 22px;
+  margin-top: 34px;
+}
+.sf-ai-ingredient-card {
+  display: grid;
+  align-content: start;
+  gap: 12px;
+  border: 1px solid rgba(107, 92, 76, .18);
+  border-radius: 8px;
+  background: #fff;
+  padding: 28px;
+  box-shadow: 0 16px 44px rgba(77, 65, 52, .08);
+}
+.sf-ai-ingredient-icon {
+  width: 48px;
+  height: 48px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #efe5dc;
+  color: #6b5c4c;
+  font-weight: 800;
+}
+.sf-ai-ingredient-card h3 {
+  margin: 0;
+  color: #2f2a25;
+  font-size: 24px;
+  line-height: 1.25;
+}
+.sf-ai-ingredient-card span {
+  color: #8a7a68;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0;
+}
+.sf-ai-ingredient-card p {
+  margin: 0;
+  color: #544b43;
+  font-size: 15px;
+  line-height: 1.75;
+}
+.sf-ai-ingredient-card ul {
+  display: grid;
+  gap: 8px;
+  margin: 4px 0 0;
+  padding-left: 18px;
+  color: #5f564d;
+  font-size: 14px;
+  line-height: 1.55;
+}
+@media (max-width: 760px) {
+  .sf-ai-ingredient-grid {
+    grid-template-columns: 1fr;
+  }
+}`
+}
+
+function isWrapperComponent(component) {
+  const type = component?.get?.('type')
+  const tagName = componentTagName(component)
+  return type === 'wrapper' || tagName === 'body'
+}
+
+function componentTagName(component) {
+  return String(component?.get?.('tagName') || component?.getEl?.()?.tagName || '').toLowerCase()
+}
+
+function isChromeTag(tagName) {
+  return tagName === 'header' || tagName === 'nav' || tagName === 'footer'
 }
 
 function applyEditorTemplate() {
@@ -1318,20 +1693,49 @@ function stripRuntimeTailwindAssets(headHtml) {
     .trim()
 }
 
-function applyTemplateHeadAssets(js) {
+function clearTemplateCanvasAssetTimer() {
+  if (!templateCanvasAssetTimer) return
+  window.clearTimeout(templateCanvasAssetTimer)
+  templateCanvasAssetTimer = null
+}
+
+function scheduleTemplateCanvasAssets(js = page.value?.jsContent || '', html = page.value?.htmlContent || '') {
+  clearTemplateCanvasAssetTimer()
+  applyTemplateHeadAssets(js, html)
+  templateCanvasAssetTimer = window.setTimeout(() => {
+    applyTemplateHeadAssets(js, html)
+    templateCanvasAssetTimer = null
+  }, 120)
+}
+
+function isStitchContent(html = page.value?.htmlContent || '', js = page.value?.jsContent || '') {
+  return html?.includes('siteforge-stitch-template') ||
+    html?.includes('data-siteforge-template="site-beauty"') ||
+    js?.includes('siteforgeTemplate = "site-beauty"') ||
+    js?.includes('tailwind-config')
+}
+
+function applyTemplateHeadAssets(js, html = page.value?.htmlContent || '') {
   const headHtml = stripRuntimeTailwindAssets(extractTemplateHead(js))
   const canvasDoc = editor?.Canvas?.getDocument?.()
   if (!canvasDoc?.head) return
+  const shouldApplyStitchAssets = isStitchContent(html, js)
 
   canvasDoc.head.querySelectorAll('[data-siteforge-template-head]').forEach((node) => node.remove())
   canvasDoc.head.querySelectorAll('[data-siteforge-stitch-fallback]').forEach((node) => node.remove())
   canvasDoc.documentElement.classList.add('light')
-  if (!headHtml) return
 
-  const fallbackStyle = canvasDoc.createElement('style')
-  fallbackStyle.setAttribute('data-siteforge-stitch-fallback', 'true')
-  fallbackStyle.textContent = stitchFallbackCss
-  canvasDoc.head.appendChild(fallbackStyle)
+  if (shouldApplyStitchAssets) {
+    const fallbackStyle = canvasDoc.createElement('style')
+    fallbackStyle.setAttribute('data-siteforge-stitch-fallback', 'true')
+    fallbackStyle.textContent = stitchFallbackCss
+    canvasDoc.head.appendChild(fallbackStyle)
+  }
+
+  if (!headHtml) {
+    if (shouldApplyStitchAssets) installStitchIconFallback(canvasDoc)
+    return
+  }
 
   const template = document.createElement('template')
   template.innerHTML = headHtml
@@ -1349,7 +1753,7 @@ function applyTemplateHeadAssets(js) {
     copy.setAttribute('data-siteforge-template-head', 'true')
     canvasDoc.head.appendChild(copy)
   })
-  installStitchIconFallback(canvasDoc)
+  if (shouldApplyStitchAssets) installStitchIconFallback(canvasDoc)
 }
 
 function installStitchIconFallback(doc) {
@@ -1377,8 +1781,121 @@ function installStitchIconFallback(doc) {
   doc.defaultView?.setTimeout(checkSymbols, 1800)
 }
 
+function syncSelectedComponent(component) {
+  selectedComponentName.value = component?.getName?.() || component?.get?.('tagName') || component?.getId?.() || 'Component'
+  if (isImageComponent(component)) {
+    const attributes = component.getAttributes?.() || {}
+    selectedComponentType.value = 'image'
+    selectedImageUrl.value = attributes.src || component.get?.('src') || component.getEl?.()?.getAttribute('src') || ''
+    selectedImageAlt.value = attributes.alt || component.getEl?.()?.getAttribute('alt') || ''
+    return
+  }
+
+  selectedComponentType.value = ''
+  selectedImageUrl.value = ''
+  selectedImageAlt.value = ''
+}
+
+function clearSelectedComponent() {
+  selectedComponentName.value = ''
+  selectedComponentType.value = ''
+  selectedImageUrl.value = ''
+  selectedImageAlt.value = ''
+}
+
+function isImageComponent(component) {
+  if (!component) return false
+  const type = component.get?.('type')
+  const tagName = String(component.get?.('tagName') || component.getEl?.()?.tagName || '').toLowerCase()
+  return type === 'image' || tagName === 'img'
+}
+
+function selectedImageComponent() {
+  const component = editor?.getSelected?.()
+  return isImageComponent(component) ? component : null
+}
+
+function setSelectedImageSource(url) {
+  const component = selectedImageComponent()
+  if (!component || !url) return
+  component.addAttributes?.({ src: url })
+  component.set?.('src', url)
+  component.getEl?.()?.setAttribute('src', url)
+  selectedImageUrl.value = url
+  hasUnsavedChanges.value = true
+}
+
+function chooseSelectedImageFile() {
+  imageFileInput.value?.click()
+}
+
+function replaceSelectedImageFile(event) {
+  const file = event.target.files?.[0]
+  if (!file || !file.type.startsWith('image/')) return
+
+  const reader = new FileReader()
+  reader.onload = () => {
+    const url = String(reader.result || '')
+    if (!url) return
+    const asset = {
+      publicUrl: url,
+      fileName: file.name,
+      altText: file.name,
+      mimeType: file.type,
+      fileSize: file.size
+    }
+    assets.value = [asset, ...assets.value]
+    editor?.AssetManager.add(url)
+    setSelectedImageSource(url)
+    if (!selectedImageAlt.value) {
+      selectedImageAlt.value = file.name
+      replaceSelectedImageAlt()
+    }
+    event.target.value = ''
+  }
+  reader.readAsDataURL(file)
+}
+
+function replaceSelectedImageUrl() {
+  const url = selectedImageUrl.value.trim()
+  if (!url) return
+  editor?.AssetManager.add(url)
+  setSelectedImageSource(url)
+}
+
+function replaceSelectedImageAlt() {
+  const component = selectedImageComponent()
+  if (!component) return
+  const alt = selectedImageAlt.value.trim()
+  component.addAttributes?.({ alt })
+  component.getEl?.()?.setAttribute('alt', alt)
+  hasUnsavedChanges.value = true
+}
+
+function openImageAssetManager() {
+  const component = selectedImageComponent()
+  if (!component) {
+    openAssetManager()
+    return
+  }
+
+  editor?.AssetManager.open({
+    target: component,
+    types: ['image'],
+    select(asset, complete) {
+      const url = String(asset?.get?.('src') || asset?.src || asset || '')
+      if (url) setSelectedImageSource(url)
+      if (complete) editor?.AssetManager.close()
+    }
+  })
+}
+
 function selectAsset(url) {
   editor?.AssetManager.add(url)
+  if (selectedImageComponent()) {
+    setSelectedImageSource(url)
+    return
+  }
   editor?.runCommand('open-assets')
 }
 
@@ -1581,7 +2098,13 @@ function defaultStyleSectors() {
   --studio-primary-strong: var(--sf-primary-strong, var(--sf-primary));
   --studio-sidebar-bg: var(--sf-sidebar-bg, var(--sf-surface-container-lowest));
   --studio-sidebar-text: var(--sf-sidebar-text, var(--sf-on-surface-variant));
-  --studio-stage-bg: var(--sf-stage-bg, #303137);
+  --studio-stage-bg: var(--sf-stage-bg, #eef0f3);
+  --studio-panel-muted: #6c707a;
+  --studio-panel-soft: #f3f4f5;
+  --studio-panel-line: #d9dbdf;
+  --studio-panel-strong-line: #cbc4d2;
+  --studio-panel-input: #ffffff;
+  --studio-panel-card: #ffffff;
   width: 100vw;
   min-width: 100%;
   height: 100vh;
@@ -1657,7 +2180,7 @@ function defaultStyleSectors() {
 }
 
 .code-button {
-  color: #bfc2cb;
+  color: var(--sf-muted);
 }
 
 .device-menu {
@@ -1938,9 +2461,9 @@ button:disabled {
   gap: 5px;
   transform: translate(-50%, -50%);
   border-radius: 999px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  background: #292b33;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.18);
+  border: 1px solid rgba(103, 80, 164, 0.18);
+  background: #ffffff;
+  box-shadow: 0 10px 28px rgba(27, 27, 31, 0.12);
   opacity: 0.86;
   transition: background 160ms ease, border-color 160ms ease, opacity 160ms ease, transform 160ms ease;
 }
@@ -1949,7 +2472,7 @@ button:disabled {
   width: 4px;
   height: 4px;
   border-radius: 999px;
-  background: #9da0aa;
+  background: #7a7580;
   transition: background 160ms ease, transform 160ms ease;
 }
 
@@ -2046,7 +2569,7 @@ button:disabled {
   gap: 6px;
   transform: translate(-50%, -50%);
   border-radius: 999px;
-  background: #292b33;
+  background: #ffffff;
   opacity: 0.88;
   transition: background 160ms ease, opacity 160ms ease, transform 160ms ease;
 }
@@ -2059,7 +2582,7 @@ button:disabled {
   top: 50%;
   height: 1px;
   transform: translateY(-50%);
-  background: #30313a;
+  background: var(--studio-panel-line);
 }
 
 .stack-resizer-track span {
@@ -2068,7 +2591,7 @@ button:disabled {
   width: 4px;
   height: 4px;
   border-radius: 999px;
-  background: #9da0aa;
+  background: #7a7580;
 }
 
 .stack-resizer:hover,
@@ -2101,7 +2624,7 @@ button:disabled {
 }
 
 .panel-title-row h2 {
-  color: #bfc2cc;
+  color: var(--sf-muted);
   font-size: 14px;
   font-weight: 760;
 }
@@ -2120,7 +2643,7 @@ button:disabled {
   grid-template-columns: 1fr 1fr;
   margin: 8px 0 12px;
   border-radius: 999px;
-  background: #42444e;
+  background: var(--studio-panel-soft);
   padding: 4px;
 }
 
@@ -2129,33 +2652,35 @@ button:disabled {
   border: 0;
   border-radius: 999px;
   background: transparent;
-  color: #b8bbc6;
+  color: var(--sf-muted);
   cursor: pointer;
   font-size: 13px;
   font-weight: 760;
 }
 
 .segmented button.active {
-  background: #18191e;
-  color: #b998ff;
+  background: #ffffff;
+  color: var(--sf-primary);
+  box-shadow: 0 1px 5px rgba(27, 27, 31, 0.08);
 }
 
 .panel-search,
 .property-summary input,
+.image-property-tools input,
 .field-row input,
 .field-row select {
   width: 100%;
   min-height: 42px;
-  border: 1px solid #3a3b45;
+  border: 1px solid var(--studio-panel-strong-line);
   border-radius: 5px;
-  background: #15161b;
-  color: #dfe1e8;
+  background: var(--studio-panel-input);
+  color: var(--sf-ink);
   padding: 0 12px;
   font-size: 13px;
 }
 
 .panel-search::placeholder {
-  color: #777a84;
+  color: #999ca6;
 }
 
 .project-tree {
@@ -2169,14 +2694,14 @@ button:disabled {
   display: grid;
   align-items: center;
   border-radius: 7px;
-  color: #c7cad4;
+  color: var(--sf-muted);
 }
 
 .tree-root {
   grid-template-columns: 18px 22px minmax(0, 1fr);
   min-height: 32px;
   padding: 0 9px;
-  background: #1a1b21;
+  background: var(--studio-panel-soft);
   font-weight: 850;
 }
 
@@ -2223,7 +2748,7 @@ button:disabled {
   height: 6px;
   border-left: 2px solid currentColor;
   border-bottom: 2px solid currentColor;
-  background: #15161b;
+  background: #ffffff;
 }
 
 .tree-file-icon.home::before {
@@ -2235,8 +2760,8 @@ button:disabled {
   grid-template-columns: 16px 22px minmax(0, 1fr) auto;
   gap: 5px;
   min-height: 38px;
-  border: 1px solid #2f3038;
-  background: #15161b;
+  border: 1px solid var(--studio-panel-line);
+  background: #ffffff;
   padding: 5px 8px;
   cursor: pointer;
   text-align: left;
@@ -2245,14 +2770,14 @@ button:disabled {
 .tree-node:hover,
 .tree-node.active {
   border-color: #8b62f6;
-  background: #24242d;
+  background: #f7f4ff;
 }
 
 .tree-line {
   width: 10px;
   height: 18px;
-  border-left: 1px solid #4b4d57;
-  border-bottom: 1px solid #4b4d57;
+  border-left: 1px solid #c8c4ce;
+  border-bottom: 1px solid #c8c4ce;
   align-self: center;
   margin-left: 5px;
 }
@@ -2273,22 +2798,22 @@ button:disabled {
 }
 
 .tree-label strong {
-  color: #dfe1e8;
+  color: var(--sf-ink);
   flex: 0 1 auto;
   font-weight: 860;
 }
 
 .tree-label small {
-  color: #969aa5;
+  color: var(--sf-muted);
   flex: 1 1 auto;
   font-size: 12px;
 }
 
 .tree-node em {
-  border: 1px solid #4d3b78;
+  border: 1px solid #d0bcff;
   border-radius: 999px;
   padding: 1px 6px;
-  color: #d9c8ff;
+  color: var(--sf-primary);
   font-size: 10px;
   font-style: normal;
   font-weight: 850;
@@ -2296,10 +2821,10 @@ button:disabled {
 
 .block-section-title {
   margin: 12px -14px 8px;
-  border-top: 1px solid #30313a;
-  border-bottom: 1px solid #30313a;
+  border-top: 1px solid var(--studio-panel-line);
+  border-bottom: 1px solid var(--studio-panel-line);
   padding: 8px 14px;
-  color: #9da0aa;
+  color: var(--sf-muted);
   font-size: 13px;
   font-weight: 780;
 }
@@ -2331,10 +2856,10 @@ button:disabled {
 .studio-list button {
   display: block;
   width: 100%;
-  border: 1px solid #30313a;
+  border: 1px solid var(--studio-panel-line);
   border-radius: 5px;
-  background: transparent;
-  color: #b8bbc5;
+  background: #ffffff;
+  color: var(--sf-muted);
   cursor: pointer;
   padding: 10px 11px;
   text-align: left;
@@ -2342,8 +2867,9 @@ button:disabled {
 
 .studio-list button.active,
 .studio-list button:hover {
-  background: #3b3c45;
-  color: #fff;
+  border-color: #8b62f6;
+  background: #f7f4ff;
+  color: var(--sf-ink);
 }
 
 .studio-list span,
@@ -2356,13 +2882,13 @@ button:disabled {
 }
 
 .studio-list small {
-  color: #878a95;
+  color: var(--sf-muted);
 }
 
 .panel-divider {
   height: 1px;
   margin: 16px -14px 12px;
-  background: #30313a;
+  background: var(--studio-panel-line);
 }
 
 .asset-controls {
@@ -2395,10 +2921,10 @@ button:disabled {
 
 .asset-tile {
   overflow: hidden;
-  border: 1px solid #3a3b45;
+  border: 1px solid var(--studio-panel-line);
   border-radius: 5px;
-  background: #1d1e24;
-  color: #b9bcc7;
+  background: #ffffff;
+  color: var(--sf-muted);
   cursor: pointer;
   text-align: left;
 }
@@ -2408,7 +2934,7 @@ button:disabled {
   aspect-ratio: 1.45;
   display: block;
   object-fit: cover;
-  background: #242631;
+  background: var(--studio-panel-soft);
 }
 
 .asset-tile span {
@@ -2422,8 +2948,9 @@ button:disabled {
 
 .style-group {
   margin-top: 10px;
-  border: 1px solid #30313a;
+  border: 1px solid var(--studio-panel-line);
   border-radius: 5px;
+  background: #ffffff;
 }
 
 .style-group > button {
@@ -2433,9 +2960,9 @@ button:disabled {
   align-items: center;
   justify-content: space-between;
   border: 0;
-  border-bottom: 1px solid #30313a;
-  background: #26272d;
-  color: #bfc2cc;
+  border-bottom: 1px solid var(--studio-panel-line);
+  background: var(--studio-panel-soft);
+  color: var(--sf-ink);
   padding: 0 10px;
   font-weight: 780;
 }
@@ -2448,7 +2975,7 @@ button:disabled {
   align-items: center;
   gap: 9px;
   padding: 9px;
-  color: #aeb1bb;
+  color: var(--sf-muted);
 }
 
 .token-row input[type="color"] {
@@ -2459,7 +2986,7 @@ button:disabled {
 }
 
 .token-row code {
-  color: #9da0aa;
+  color: var(--sf-muted);
 }
 
 .field-row {
@@ -2472,7 +2999,7 @@ button:disabled {
   align-content: center;
   justify-items: center;
   gap: 12px;
-  color: #a2a5af;
+  color: var(--sf-muted);
   text-align: center;
 }
 
@@ -2480,12 +3007,12 @@ button:disabled {
   width: 54px;
   height: 36px;
   border-radius: 50%;
-  background: #a8abb5;
-  box-shadow: 0 11px 0 -1px #a8abb5, 0 22px 0 -2px #a8abb5;
+  background: #d5d8df;
+  box-shadow: 0 11px 0 -1px #d5d8df, 0 22px 0 -2px #d5d8df;
 }
 
 .data-empty h3 {
-  color: #bfc2cc;
+  color: var(--sf-ink);
   font-size: 22px;
 }
 
@@ -2497,34 +3024,40 @@ button:disabled {
 .data-table div {
   display: flex;
   justify-content: space-between;
-  border: 1px solid #30313a;
+  border: 1px solid var(--studio-panel-line);
   border-radius: 5px;
   padding: 9px;
-  background: #1c1d23;
+  background: #ffffff;
 }
 
 .ai-panel {
   min-height: 100%;
-  display: grid;
-  grid-template-rows: auto minmax(120px, 1fr) auto auto auto;
+  display: flex;
+  flex-direction: column;
   gap: 12px;
 }
 
 .ai-suggestions {
   display: grid;
-  align-content: center;
+  align-content: start;
   gap: 10px;
 }
 
 .ai-suggestions button {
   min-height: 42px;
-  border: 1px solid #3a3b45;
+  border: 1px solid var(--studio-panel-strong-line);
   border-radius: 5px;
-  background: transparent;
-  color: #aeb1bb;
+  background: #ffffff;
+  color: var(--sf-muted);
   cursor: pointer;
   font-size: 13px;
   padding: 0 12px;
+}
+
+.ai-suggestions button:hover {
+  border-color: #8b62f6;
+  background: #f7f4ff;
+  color: var(--sf-ink);
 }
 
 .ai-generate-controls {
@@ -2536,25 +3069,26 @@ button:disabled {
 .ai-generate-controls label {
   display: grid;
   gap: 6px;
-  color: #aeb1bb;
+  color: var(--sf-muted);
   font-size: 12px;
   font-weight: 780;
 }
 
 .ai-generate-controls select {
   min-height: 38px;
-  border: 1px solid #3a3b45;
+  border: 1px solid var(--studio-panel-strong-line);
   border-radius: 5px;
-  background: #15161b;
-  color: #dfe1e8;
+  background: #ffffff;
+  color: var(--sf-ink);
   padding: 0 9px;
 }
 
 .ai-input-row {
+  margin-top: auto;
   display: grid;
   grid-template-columns: 38px minmax(0, 1fr) 38px;
   gap: 8px;
-  border-top: 1px solid #30313a;
+  border-top: 1px solid var(--studio-panel-line);
   padding-top: 12px;
 }
 
@@ -2565,20 +3099,37 @@ button:disabled {
 }
 
 .ai-input-row button {
+  grid-row: 2;
   height: 38px;
-  border: 1px solid #3a3b45;
+  border: 1px solid var(--studio-panel-strong-line);
   border-radius: 50%;
-  background: #1c1d23;
-  color: #c7cad3;
+  background: #ffffff;
+  color: var(--sf-ink);
+  cursor: pointer;
+}
+
+.ai-input-row button:hover {
+  border-color: #8b62f6;
+  color: var(--sf-primary);
+}
+
+.ai-input-row button:first-child {
+  grid-column: 1;
+}
+
+.ai-input-row button:last-child {
+  grid-column: 3;
 }
 
 .ai-input-row textarea {
-  min-height: 88px;
+  grid-column: 1 / -1;
+  width: 100%;
+  min-height: 116px;
   resize: vertical;
-  border: 1px solid #3a3b45;
+  border: 1px solid var(--studio-panel-strong-line);
   border-radius: 5px;
-  background: #15161b;
-  color: #dfe1e8;
+  background: #ffffff;
+  color: var(--sf-ink);
   font-size: 13px;
   padding: 10px;
 }
@@ -2598,17 +3149,17 @@ button:disabled {
   display: flex;
   align-items: center;
   gap: 9px;
-  border: 1px solid rgba(255, 255, 255, 0.09);
+  border: 1px solid rgba(103, 80, 164, 0.16);
   border-radius: 999px;
   padding: 6px 10px;
-  background: rgba(20, 21, 26, 0.84);
-  color: #bfc2cc;
+  background: rgba(255, 255, 255, 0.88);
+  color: var(--sf-ink);
   backdrop-filter: blur(10px);
 }
 
 .canvas-meta span,
 .canvas-meta em {
-  color: #8f929d;
+  color: var(--sf-muted);
   font-size: 12px;
   font-style: normal;
 }
@@ -2627,14 +3178,14 @@ button:disabled {
   display: grid;
   place-items: center;
   z-index: 5;
-  background: #202127;
-  color: #dfe1e8;
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--sf-ink);
 }
 
 .right-tabs {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  border-bottom: 1px solid #30313a;
+  border-bottom: 1px solid var(--studio-panel-line);
 }
 
 .right-tabs button {
@@ -2642,7 +3193,7 @@ button:disabled {
   border: 0;
   border-bottom: 3px solid transparent;
   background: transparent;
-  color: #9da0aa;
+  color: var(--sf-muted);
   cursor: pointer;
   font-size: 13px;
   font-weight: 820;
@@ -2654,9 +3205,10 @@ button:disabled {
 }
 
 .selection-card {
-  border-bottom: 1px solid #30313a;
+  border-bottom: 1px solid var(--studio-panel-line);
   margin: -14px -14px 14px;
   padding: 14px;
+  background: #ffffff;
 }
 
 .selection-card header {
@@ -2668,7 +3220,7 @@ button:disabled {
 }
 
 .selection-card span {
-  color: #9da0aa;
+  color: var(--sf-muted);
   font-size: 11px;
   font-weight: 780;
   letter-spacing: 0.04em;
@@ -2677,24 +3229,54 @@ button:disabled {
 
 .selection-card strong {
   overflow: hidden;
-  border: 1px solid #3a3b45;
+  border: 1px solid var(--studio-panel-strong-line);
   border-radius: 5px;
   padding: 5px 8px;
-  color: #ffc2dd;
+  color: var(--sf-primary);
   font-size: 13px;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
 .selection-card p {
-  color: #a7aab4;
+  color: var(--sf-muted);
   font-size: 12px;
+}
+
+.hidden-file-input {
+  display: none;
+}
+
+.image-property-tools {
+  display: grid;
+  gap: 12px;
+  border-bottom: 1px solid var(--studio-panel-line);
+  margin: -2px -14px 14px;
+  padding: 0 14px 14px;
+}
+
+.image-property-tools label {
+  display: grid;
+  gap: 7px;
+  color: var(--sf-muted);
+  font-size: 12px;
+  font-weight: 780;
+}
+
+.image-property-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.image-property-actions .panel-action {
+  min-height: 38px;
 }
 
 .property-summary {
   display: grid;
   gap: 10px;
-  border-top: 1px solid #30313a;
+  border-top: 1px solid var(--studio-panel-line);
   padding-top: 14px;
 }
 
@@ -2839,11 +3421,11 @@ button:disabled {
 
 <style>
 .gjs-one-bg {
-  background-color: #17181d;
+  background-color: #ffffff;
 }
 
 .gjs-two-color {
-  color: #aeb1bb;
+  color: #565d6a;
 }
 
 .gjs-three-bg {
@@ -2858,11 +3440,12 @@ button:disabled {
 .gjs-block {
   width: calc(50% - 8px);
   min-height: 92px;
-  border: 1px solid #3a3b45;
+  border: 1px solid #d9dbdf;
   border-radius: 5px;
   margin: 0 8px 10px 0;
-  background: #17181d;
+  background: #ffffff;
   box-shadow: none;
+  color: #565d6a;
 }
 
 .gjs-block:hover {
@@ -2876,6 +3459,15 @@ button:disabled {
   place-items: center;
   margin-bottom: 8px;
   color: #b998ff;
+}
+
+.gjs-block svg {
+  display: block;
+  width: 100%;
+}
+
+.gjs-block:has(svg) {
+  min-height: auto;
 }
 
 .sf-block-icon {
@@ -2980,7 +3572,7 @@ button:disabled {
 }
 
 .gjs-block-label {
-  color: #bfc2cc;
+  color: #565d6a;
   font-size: 11px;
 }
 
@@ -2990,7 +3582,7 @@ button:disabled {
   top: 12px;
   left: 12px;
   border-radius: 4px;
-  background: #2a2b31;
+  background: #eef0f3;
 }
 
 .gjs-frame-wrapper {
@@ -2999,21 +3591,22 @@ button:disabled {
 
 .gjs-sm-sector,
 .gjs-clm-tags {
-  border-color: #30313a;
-  background: transparent;
+  border-color: #d9dbdf;
+  background: #ffffff;
 }
 
 .gjs-sm-sector-title,
 .gjs-clm-header,
 .gjs-layer-title {
-  background: #26272d;
-  color: #aeb1bb;
+  background: #f3f4f5;
+  color: #565d6a;
 }
 
 .gjs-field,
 .gjs-field input,
 .gjs-field select {
-  background: #15161b;
-  color: #dfe1e8;
+  border-color: #cbc4d2;
+  background: #ffffff;
+  color: #1f2328;
 }
 </style>
