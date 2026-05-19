@@ -59,7 +59,7 @@ x86/
 # (keep index.html and published/ which are runtime assets)
 # ============================================================
 backend/SiteForge/SiteForge.Api/wwwroot/assets/
-
+backend/SiteForge/.vs/*
 # ============================================================
 # Test / E2E artifacts
 # ============================================================
